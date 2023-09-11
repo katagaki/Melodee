@@ -62,9 +62,7 @@ class MediaPlayerManager: NSObject,
                 audioPlayer.play()
                 isPlaybackActive = true
                 isPaused = false
-                Task {
-                    await setNowPlaying(with: audioPlayer)
-                }
+                setNowPlaying()
             } else {
                 if let file = queue.first {
                     audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
@@ -79,11 +77,13 @@ class MediaPlayerManager: NSObject,
     func queueNext(file: FSFile) {
         queue.insert(file, at: max(0, min(queue.count, 1)))
         setQueueIDs()
+        setNowPlaying()
     }
 
     func queueLast(file: FSFile) {
         queue.append(file)
         setQueueIDs()
+        setNowPlaying()
     }
 
     func pause() {
@@ -107,24 +107,22 @@ class MediaPlayerManager: NSObject,
         queue.removeFirst()
         if let nextFile = queue.first {
             playImmediately(nextFile, addToQueue: false)
+        } else {
+            setNowPlaying()
         }
     }
 
     func backToStartOfTrack() {
         if let audioPlayer = audioPlayer {
             audioPlayer.currentTime = 0.0
-            Task {
-                await setNowPlaying(with: audioPlayer)
-            }
+            setNowPlaying()
         }
     }
 
     func seekTo(_ time: TimeInterval) {
         if let audioPlayer = audioPlayer {
             audioPlayer.currentTime = time
-            Task {
-                await setNowPlaying(with: audioPlayer)
-            }
+            setNowPlaying()
         }
     }
 
@@ -142,13 +140,21 @@ class MediaPlayerManager: NSObject,
         }
     }
 
+    func setNowPlaying() {
+        if let audioPlayer = audioPlayer {
+            Task {
+                await setNowPlaying(with: audioPlayer)
+            }
+        }
+    }
+
     func setNowPlaying(with audioPlayer: AVAudioPlayer) async {
         do {
             // Set up audio session
             try audioSession.setCategory(AVAudioSession.Category.playback)
             try audioSession.setActive(true)
             // Set up remote controls
-            remoteCommandCenter.playCommand.isEnabled = true
+            remoteCommandCenter.playCommand.isEnabled = canStartPlayback()
             remoteCommandCenter.playCommand.addTarget { _ in
                 if let audioPlayer = self.audioPlayer,
                    !audioPlayer.isPlaying {
@@ -157,7 +163,7 @@ class MediaPlayerManager: NSObject,
                 }
                 return .commandFailed
             }
-            remoteCommandCenter.pauseCommand.isEnabled = true
+            remoteCommandCenter.pauseCommand.isEnabled = audioPlayer.isPlaying
             remoteCommandCenter.pauseCommand.addTarget { _ in
                 if let audioPlayer = self.audioPlayer,
                    audioPlayer.isPlaying {
@@ -166,17 +172,17 @@ class MediaPlayerManager: NSObject,
                 }
                 return .commandFailed
             }
-            remoteCommandCenter.nextTrackCommand.isEnabled = queue.count > 1
+            remoteCommandCenter.nextTrackCommand.isEnabled = canGoToNextTrack()
             remoteCommandCenter.nextTrackCommand.addTarget { _ in
                 self.skipToNextTrack()
                 return .success
             }
-            remoteCommandCenter.previousTrackCommand.isEnabled = true
+            remoteCommandCenter.previousTrackCommand.isEnabled = audioPlayer.isPlaying
             remoteCommandCenter.previousTrackCommand.addTarget { _ in
                 self.backToStartOfTrack()
                 return .success
             }
-            remoteCommandCenter.changePlaybackPositionCommand.isEnabled = true
+            remoteCommandCenter.changePlaybackPositionCommand.isEnabled = audioPlayer.isPlaying
             remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
                 if let event = event as? MPChangePlaybackPositionCommandEvent {
                     self.seekTo(event.positionTime)

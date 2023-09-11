@@ -27,6 +27,10 @@ struct FileBrowserView: View {
                 }
             }
             .listStyle(.plain)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear
+                    .frame(height: 72.0)
+            }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
@@ -72,9 +76,6 @@ struct FileBrowserView: View {
                         .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
                     }
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                NowPlayingBar()
             }
             .navigationTitle(currentDirectory != nil ?
                              currentDirectory!.name :

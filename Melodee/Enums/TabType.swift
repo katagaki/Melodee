@@ -9,5 +9,6 @@ import Foundation
 
 enum TabType: Int {
     case fileManager = 0
-    case more = 1
+    case nowPlaying = 1
+    case more = 2
 }

@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "-00:00" : {
+
+    },
+    "00:00" : {
+
+    },
     "FileBrowser.Hint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -308,6 +314,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "次に再生"
+          }
+        }
+      }
+    },
+    "Shared.Queue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生キュー"
           }
         }
       }

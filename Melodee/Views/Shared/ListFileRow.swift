@@ -23,16 +23,16 @@ struct ListFileRow: View {
                 ActionButton(text: "Shared.Play",
                              icon: "play.fill",
                              isPrimary: true) {
-                    mediaPlayer.play(file: file)
+                    mediaPlayer.playImmediately(file)
                 }
                 ActionButton(text: "Shared.Play.Next", icon: "text.line.first.and.arrowtriangle.forward") {
                     withAnimation(.default.speed(2)) {
-                        mediaPlayer.playNext(file: file)
+                        mediaPlayer.queueNext(file: file)
                     }
                 }
                 ActionButton(text: "Shared.Play.Last", icon: "text.line.last.and.arrowtriangle.forward") {
                     withAnimation(.default.speed(2)) {
-                        mediaPlayer.playLast(file: file)
+                        mediaPlayer.queueLast(file: file)
                     }
                 }
             }

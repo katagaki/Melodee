@@ -12,6 +12,7 @@ struct FSFile: FilesystemObject {
 
     var name: String
     var path: String
+    var playbackQueueID: String = ""
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(path)

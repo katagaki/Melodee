@@ -17,6 +17,7 @@
 		E43C846B2AAF39C700D87A5F /* License.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C846A2AAF39C700D87A5F /* License.swift */; };
 		E43C846D2AAF39EA00D87A5F /* TabManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C846C2AAF39EA00D87A5F /* TabManager.swift */; };
 		E43C84702AAF3EE100D87A5F /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C846F2AAF3EE100D87A5F /* NowPlayingView.swift */; };
+		E43C84722AAF708500D87A5F /* MusicProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */; };
 		E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64A2AAEF11F0062D12C /* App.swift */; };
 		E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */; };
 		E4A4D64F2AAEF1200062D12C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D64E2AAEF1200062D12C /* Assets.xcassets */; };
@@ -47,6 +48,7 @@
 		E43C846A2AAF39C700D87A5F /* License.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = License.swift; sourceTree = "<group>"; };
 		E43C846C2AAF39EA00D87A5F /* TabManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabManager.swift; sourceTree = "<group>"; };
 		E43C846F2AAF3EE100D87A5F /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
+		E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicProgressSlider.swift; sourceTree = "<group>"; };
 		E4A4D6472AAEF11F0062D12C /* Melodee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Melodee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A4D64A2AAEF11F0062D12C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */,
 				E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */,
 				E4A4D67A2AAEFB750062D12C /* ActionButton.swift */,
+				E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 				E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */,
 				E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */,
 				E43C846B2AAF39C700D87A5F /* License.swift in Sources */,
+				E43C84722AAF708500D87A5F /* MusicProgressSlider.swift in Sources */,
 				E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */,
 				E4A4D66A2AAEF2BD0062D12C /* ListHintOverlay.swift in Sources */,
 				E4A4D6762AAEF4040062D12C /* ListFolderRow.swift in Sources */,

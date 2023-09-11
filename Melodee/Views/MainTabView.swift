@@ -22,11 +22,17 @@ struct MainTabView: View {
                 }
                 .toolbarBackground(.visible, for: .tabBar)
                 .tag(TabType.fileManager)
+                .overlay {
+                    ZStack(alignment: .bottom) {
+                        Color.clear
+                        NowPlayingBar()
+                    }
+                }
             NowPlayingView()
                 .tabItem {
-                    Label("TabTitle.NowPlaying", systemImage: "list.triangle")
+                    Label("TabTitle.NowPlaying", image: "Tab.NowPlaying")
                 }
-                .toolbarBackground(.visible, for: .tabBar)
+                .tag(TabType.nowPlaying)
             MoreView()
                 .tabItem {
                     Label("TabTitle.More", systemImage: "ellipsis")

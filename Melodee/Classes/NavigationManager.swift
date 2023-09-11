@@ -10,12 +10,15 @@ import Foundation
 class NavigationManager: ObservableObject {
 
     @Published var filesTabPath: [ViewPath] = []
+    @Published var nowPlayingTabPath: [ViewPath] = []
     @Published var moreTabPath: [ViewPath] = []
 
     func popToRoot(for tab: TabType) {
         switch tab {
         case .fileManager:
             filesTabPath.removeAll()
+        case .nowPlaying:
+            nowPlayingTabPath.removeAll()
         case .more:
             moreTabPath.removeAll()
         }
@@ -25,6 +28,8 @@ class NavigationManager: ObservableObject {
         switch tab {
         case .fileManager:
             filesTabPath.append(viewPath)
+        case .nowPlaying:
+            nowPlayingTabPath.append(viewPath)
         case .more:
             moreTabPath.append(viewPath)
         }

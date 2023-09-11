@@ -20,11 +20,13 @@ struct MainTabView: View {
                 .tabItem {
                     Label("TabTitle.Files", image: "Tab.FileBrowser")
                 }
+                .toolbarBackground(.visible, for: .tabBar)
                 .tag(TabType.fileManager)
             NowPlayingView()
                 .tabItem {
                     Label("TabTitle.NowPlaying", systemImage: "list.triangle")
                 }
+                .toolbarBackground(.visible, for: .tabBar)
             MoreView()
                 .tabItem {
                     Label("TabTitle.More", systemImage: "ellipsis")

@@ -49,7 +49,7 @@ class MediaPlayerManager: NSObject,
     }
 
     func playNext(file: FSFile) {
-        if let audioPlayer = audioPlayer {
+        if audioPlayer != nil {
             queue.insert(file, at: 0)
         } else {
             play(file: file)
@@ -57,7 +57,7 @@ class MediaPlayerManager: NSObject,
     }
 
     func playLast(file: FSFile) {
-        if let audioPlayer = audioPlayer {
+        if audioPlayer != nil {
             queue.append(file)
         } else {
             play(file: file)
@@ -77,6 +77,17 @@ class MediaPlayerManager: NSObject,
             isPlaybackActive = false
             isPaused = false
         }
+    }
+
+    func skipToNextTrack() {
+        if let nextFile = queue.first {
+            play(file: nextFile)
+            queue.removeFirst()
+        }
+    }
+
+    func canGoToNextTrack() -> Bool {
+        return !queue.isEmpty
     }
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {

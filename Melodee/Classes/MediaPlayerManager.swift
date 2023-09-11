@@ -21,6 +21,49 @@ class MediaPlayerManager: NSObject,
     @Published var isPaused: Bool = true
     @Published var queue: [FSFile] = []
 
+    override init() {
+        super.init()
+        do {
+            // Set up audio session
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setActive(true)
+            // Set up remote controls
+            remoteCommandCenter.playCommand.addTarget { _ in
+                if let audioPlayer = self.audioPlayer,
+                   !audioPlayer.isPlaying {
+                    self.play()
+                    return .success
+                }
+                return .commandFailed
+            }
+            remoteCommandCenter.pauseCommand.addTarget { _ in
+                if let audioPlayer = self.audioPlayer,
+                   audioPlayer.isPlaying {
+                    self.pause()
+                    return .success
+                }
+                return .commandFailed
+            }
+            remoteCommandCenter.nextTrackCommand.addTarget { _ in
+                self.skipToNextTrack()
+                return .success
+            }
+            remoteCommandCenter.previousTrackCommand.addTarget { _ in
+                self.backToStartOfTrack()
+                return .success
+            }
+            remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
+                if let event = event as? MPChangePlaybackPositionCommandEvent {
+                    self.seekTo(event.positionTime)
+                    return .success
+                }
+                return .commandFailed
+            }
+        } catch {
+            debugPrint(error.localizedDescription)
+        }
+    }
+
     func currentlyPlayingFilename() -> String? {
         if let audioPlayer = audioPlayer,
            let url = audioPlayer.url {
@@ -149,63 +192,25 @@ class MediaPlayerManager: NSObject,
     }
 
     func setNowPlaying(with audioPlayer: AVAudioPlayer) async {
-        do {
-            // Set up audio session
-            try audioSession.setCategory(AVAudioSession.Category.playback)
-            try audioSession.setActive(true)
-            // Set up remote controls
-            remoteCommandCenter.playCommand.isEnabled = canStartPlayback()
-            remoteCommandCenter.playCommand.addTarget { _ in
-                if let audioPlayer = self.audioPlayer,
-                   !audioPlayer.isPlaying {
-                    self.play()
-                    return .success
-                }
-                return .commandFailed
-            }
-            remoteCommandCenter.pauseCommand.isEnabled = audioPlayer.isPlaying
-            remoteCommandCenter.pauseCommand.addTarget { _ in
-                if let audioPlayer = self.audioPlayer,
-                   audioPlayer.isPlaying {
-                    self.pause()
-                    return .success
-                }
-                return .commandFailed
-            }
-            remoteCommandCenter.nextTrackCommand.isEnabled = canGoToNextTrack()
-            remoteCommandCenter.nextTrackCommand.addTarget { _ in
-                self.skipToNextTrack()
-                return .success
-            }
-            remoteCommandCenter.previousTrackCommand.isEnabled = audioPlayer.isPlaying
-            remoteCommandCenter.previousTrackCommand.addTarget { _ in
-                self.backToStartOfTrack()
-                return .success
-            }
-            remoteCommandCenter.changePlaybackPositionCommand.isEnabled = audioPlayer.isPlaying
-            remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
-                if let event = event as? MPChangePlaybackPositionCommandEvent {
-                    self.seekTo(event.positionTime)
-                    return .success
-                }
-                return .commandFailed
-            }
-            // Set up now playing info center
-            let albumArt = await albumArt()
-            var nowPlayingInfo = [String: Any]()
-            nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingFilename() ?? ""
-            nowPlayingInfo[MPMediaItemPropertyArtist] = Bundle.main
-                .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in
-                return albumArt
-            }
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.duration
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.rate
-            nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-        } catch {
-            debugPrint(error.localizedDescription)
+        // Set remote command center command enable/disable
+        remoteCommandCenter.playCommand.isEnabled = canStartPlayback()
+        remoteCommandCenter.pauseCommand.isEnabled = audioPlayer.isPlaying
+        remoteCommandCenter.nextTrackCommand.isEnabled = canGoToNextTrack()
+        remoteCommandCenter.previousTrackCommand.isEnabled = audioPlayer.isPlaying
+        remoteCommandCenter.changePlaybackPositionCommand.isEnabled = audioPlayer.isPlaying
+        // Set now playing info
+        let albumArt = await albumArt()
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingFilename() ?? ""
+        nowPlayingInfo[MPMediaItemPropertyArtist] = Bundle.main
+            .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in
+            return albumArt
         }
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.duration
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.rate
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 
     func albumArt() async -> UIImage {

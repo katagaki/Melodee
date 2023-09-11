@@ -46,8 +46,8 @@ struct NowPlayingView: View {
                                             emptyColor: .secondary.opacity(0.5),
                                             height: 24) { isEditing in
                                                 isSeekbarSeeking = isEditing
-                                                if !isSeekbarSeeking, let audioPlayer = mediaPlayer.audioPlayer {
-                                                    audioPlayer.currentTime = currentDuration
+                                                if !isSeekbarSeeking {
+                                                    mediaPlayer.seekTo(currentDuration)
                                                 }
                                             }
                         .frame(maxWidth: .infinity, minHeight: 32)

@@ -13,6 +13,9 @@ class MediaPlayerManager: NSObject,
                           ObservableObject,
                           AVAudioPlayerDelegate {
 
+    let audioSession = AVAudioSession.sharedInstance()
+    let remoteCommandCenter = MPRemoteCommandCenter.shared()
+    let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
     var audioPlayer: AVAudioPlayer?
     @Published var isPlaybackActive: Bool = false
     @Published var isPaused: Bool = true
@@ -113,6 +116,15 @@ class MediaPlayerManager: NSObject,
         }
     }
 
+    func seekTo(_ time: TimeInterval) {
+        if let audioPlayer = audioPlayer {
+            audioPlayer.currentTime = time
+            Task {
+                await setNowPlaying(with: audioPlayer)
+            }
+        }
+    }
+
     func canStartPlayback() -> Bool {
         return !queue.isEmpty
     }
@@ -130,14 +142,13 @@ class MediaPlayerManager: NSObject,
     func setNowPlaying(with audioPlayer: AVAudioPlayer) async {
         do {
             // Set up audio session
-            let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(AVAudioSession.Category.playback)
             try audioSession.setActive(true)
             // Set up remote controls
-            let remoteCommandCenter = MPRemoteCommandCenter.shared()
             remoteCommandCenter.playCommand.isEnabled = true
             remoteCommandCenter.playCommand.addTarget { [unowned self] _ in
-                if !(self.audioPlayer?.isPlaying ?? false) {
+                if let audioPlayer = self.audioPlayer,
+                   !audioPlayer.isPlaying {
                     self.play()
                     return .success
                 }
@@ -145,20 +156,25 @@ class MediaPlayerManager: NSObject,
             }
             remoteCommandCenter.pauseCommand.isEnabled = true
             remoteCommandCenter.pauseCommand.addTarget { [unowned self] _ in
-                if !(self.audioPlayer?.isPlaying ?? false) {
+                if let audioPlayer = self.audioPlayer,
+                   audioPlayer.isPlaying {
                     self.pause()
                     return .success
                 }
                 return .commandFailed
             }
+            remoteCommandCenter.nextTrackCommand.isEnabled = queue.count > 1
+            remoteCommandCenter.nextTrackCommand.addTarget { [unowned self] _ in
+                self.skipToNextTrack()
+                return .success
+            }
             // Set up now playing info center
-            let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
             let albumArt = await albumArt()
             var nowPlayingInfo = [String: Any]()
             nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingFilename() ?? ""
             nowPlayingInfo[MPMediaItemPropertyArtist] = Bundle.main
                 .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { size in
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in
                 return albumArt
             }
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime

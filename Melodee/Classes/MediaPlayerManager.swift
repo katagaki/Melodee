@@ -90,6 +90,7 @@ class MediaPlayerManager: NSObject,
         if let audioPlayer = audioPlayer {
             audioPlayer.stop()
             queue.removeAll()
+            self.audioPlayer = nil
             isPlaybackActive = false
             isPaused = false
         }

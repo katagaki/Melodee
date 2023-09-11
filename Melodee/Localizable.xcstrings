@@ -1,11 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "-00:00" : {
+    "" : {
 
     },
+    "-00:00" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
     "00:00" : {
-
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
     },
     "FileBrowser.Hint" : {
       "extractionState" : "manual",
@@ -318,6 +335,23 @@
         }
       }
     },
+    "Shared.PlayAll" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生"
+          }
+        }
+      }
+    },
     "Shared.Queue" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -331,6 +365,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生キュー"
+          }
+        }
+      }
+    },
+    "Shared.Shuffle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shuffle"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "シャッフル"
           }
         }
       }

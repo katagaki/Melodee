@@ -18,10 +18,15 @@ struct ActionButton: View {
                 action()
             } label: {
                 HStack(alignment: .center, spacing: 4.0) {
-                    Image(systemName: icon)
+                    Image(icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 18.0, height: 18.0)
                     Text(NSLocalizedString(text, comment: ""))
                         .bold()
                 }
+                .frame(minHeight: 24.0)
+                .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .clipShape(RoundedRectangle(cornerRadius: 99))
@@ -30,10 +35,15 @@ struct ActionButton: View {
                 action()
             } label: {
                 HStack(alignment: .center, spacing: 4.0) {
-                    Image(systemName: icon)
+                    Image(icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 18.0, height: 18.0)
                     Text(NSLocalizedString(text, comment: ""))
                         .bold()
                 }
+                .frame(minHeight: 24.0)
+                .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
             .clipShape(RoundedRectangle(cornerRadius: 99))

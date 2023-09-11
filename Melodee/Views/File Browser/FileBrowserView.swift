@@ -12,22 +12,91 @@ struct FileBrowserView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var fileManager: FilesystemManager
+    @EnvironmentObject var mediaPlayer: MediaPlayerManager
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
 
     var body: some View {
         NavigationStack(path: $navigationManager.filesTabPath) {
-            List($files, id: \.path) { $file in
-                if let directory = file as? FSDirectory {
-                    NavigationLink(value: ViewPath.fileBrowser(directory: directory)) {
-                        ListFolderRow(name: directory.name)
+            List {
+                Section {
+                    HStack(alignment: .center, spacing: 8.0) {
+                        Group {
+                            ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
+                                mediaPlayer.stop()
+                                for file in files {
+                                    if let file = file as? FSFile {
+                                        mediaPlayer.queueLast(file: file)
+                                    }
+                                }
+                                mediaPlayer.play()
+                            }
+                            ActionButton(text: "Shared.Shuffle", icon: "Shuffle") {
+                                mediaPlayer.stop()
+                                var filesReordered: [FSFile] = []
+                                for file in files {
+                                    if let file = file as? FSFile {
+                                        filesReordered.append(file)
+                                    }
+                                }
+                                filesReordered = filesReordered.shuffled()
+                                for file in filesReordered {
+                                    mediaPlayer.queueLast(file: file)
+                                }
+                                mediaPlayer.play()
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
                     }
-                } else if let file = file as? FSFile {
-                    ListFileRow(file: .constant(file))
-                        .listRowInsets(EdgeInsets(top: 8.0, leading: 0.0, bottom: 8.0, trailing: 0.0))
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                    .buttonStyle(.plain)
+                    .frame(maxWidth: .infinity)
+                } header: {
+                    Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.primary)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
+                }
+                Section {
+                    ForEach($files, id: \.path) { $file in
+                        if let directory = file as? FSDirectory {
+                            NavigationLink(value: ViewPath.fileBrowser(directory: directory)) {
+                                ListFolderRow(name: directory.name)
+                            }
+                        } else if let file = file as? FSFile {
+                            Button {
+                                mediaPlayer.playImmediately(file)
+                            } label: {
+                                ListFileRow(file: .constant(file))
+                                    .tint(.primary)
+                            }
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                Button {
+                                    withAnimation(.default.speed(2)) {
+                                        mediaPlayer.queueNext(file: file)
+                                    }
+                                } label: {
+                                    Label("Shared.Play.Next", systemImage: "text.line.first.and.arrowtriangle.forward")
+                                }
+                                .tint(.purple)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button {
+                                    withAnimation(.default.speed(2)) {
+                                        mediaPlayer.queueLast(file: file)
+                                    }
+                                } label: {
+                                    Label("Shared.Play.Last", systemImage: "text.line.last.and.arrowtriangle.forward")
+                                }
+                                .tint(.orange)
+                            }
+                        }
+                    }
                 }
             }
-            .listStyle(.plain)
+            .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) {
                 Color.clear
                     .frame(height: 72.0)
@@ -80,9 +149,8 @@ struct FileBrowserView: View {
                     }
                 }
             }
-            .navigationTitle(currentDirectory != nil ?
-                             currentDirectory!.name :
-                                NSLocalizedString("ViewTitle.Files", comment: ""))
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
             refreshFiles()

@@ -14,33 +14,15 @@ struct ListFileRow: View {
     @Binding var file: FSFile
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8.0) {
+        HStack(alignment: .center, spacing: 16.0) {
+            Image("AudioFile")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 28.0, height: 28.0)
             Text(file.name)
                 .font(.body)
                 .lineLimit(1)
                 .truncationMode(.middle)
-                .padding([.leading, .trailing], 20.0)
-            ScrollView(.horizontal) {
-                HStack(alignment: .center, spacing: 8.0) {
-                    ActionButton(text: "Shared.Play",
-                                 icon: "play.fill",
-                                 isPrimary: true) {
-                        mediaPlayer.playImmediately(file)
-                    }
-                    ActionButton(text: "Shared.Play.Next", icon: "text.line.first.and.arrowtriangle.forward") {
-                        withAnimation(.default.speed(2)) {
-                            mediaPlayer.queueNext(file: file)
-                        }
-                    }
-                    ActionButton(text: "Shared.Play.Last", icon: "text.line.last.and.arrowtriangle.forward") {
-                        withAnimation(.default.speed(2)) {
-                            mediaPlayer.queueLast(file: file)
-                        }
-                    }
-                }
-                .padding([.leading, .trailing], 20.0)
-            }
-            .scrollIndicators(.hidden)
         }
     }
 

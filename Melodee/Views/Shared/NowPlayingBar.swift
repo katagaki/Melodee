@@ -48,7 +48,7 @@ struct NowPlayingBar: View {
             .disabled(!mediaPlayer.canStartPlayback())
         }
         .padding()
-        .frame(maxWidth: .infinity, minHeight: 72.0, maxHeight: 72.0)
+        .frame(maxWidth: .infinity, minHeight: 56.0, maxHeight: 56.0)
         .background(.regularMaterial)
         .overlay(Rectangle().frame(width: nil,
                                     height: 1/3,
@@ -61,7 +61,7 @@ struct NowPlayingBar: View {
         Image(imageName)
             .resizable()
             .scaledToFit()
-            .frame(width: 24.0, height: 24.0)
+            .frame(width: 20.0, height: 20.0)
             .padding()
     }
 }

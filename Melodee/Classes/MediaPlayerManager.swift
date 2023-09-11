@@ -67,5 +67,6 @@ class MediaPlayerManager: NSObject,
         audioPlayer = nil
         isPlaybackActive = false
         isPaused = true
+        // TODO: Handle queue
     }
 }

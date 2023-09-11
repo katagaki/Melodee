@@ -26,6 +26,9 @@ struct MainTabView: View {
                     ZStack(alignment: .bottom) {
                         Color.clear
                         NowPlayingBar()
+                            .onTapGesture {
+                                tabManager.selectedTab = .nowPlaying
+                            }
                     }
                 }
             NowPlayingView()

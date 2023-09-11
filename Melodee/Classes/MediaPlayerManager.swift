@@ -113,6 +113,9 @@ class MediaPlayerManager: NSObject,
     func backToStartOfTrack() {
         if let audioPlayer = audioPlayer {
             audioPlayer.currentTime = 0.0
+            Task {
+                await setNowPlaying(with: audioPlayer)
+            }
         }
     }
 
@@ -168,8 +171,8 @@ class MediaPlayerManager: NSObject,
                 self.skipToNextTrack()
                 return .success
             }
-            remoteCommandCenter.skipBackwardCommand.isEnabled = true
-            remoteCommandCenter.skipBackwardCommand.addTarget { _ in
+            remoteCommandCenter.previousTrackCommand.isEnabled = true
+            remoteCommandCenter.previousTrackCommand.addTarget { _ in
                 self.backToStartOfTrack()
                 return .success
             }

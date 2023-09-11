@@ -26,10 +26,10 @@ struct ListFileRow: View {
                     mediaPlayer.play(file: file)
                 }
                 ActionButton(text: "Shared.Play.Next", icon: "text.line.first.and.arrowtriangle.forward") {
-                    // TODO: Play next
+                    mediaPlayer.playNext(file: file)
                 }
                 ActionButton(text: "Shared.Play.Last", icon: "text.line.last.and.arrowtriangle.forward") {
-                    // TODO: Play last
+                    mediaPlayer.playLast(file: file)
                 }
             }
         }

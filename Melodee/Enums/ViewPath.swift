@@ -9,4 +9,5 @@ import Foundation
 
 enum ViewPath: Hashable {
     case fileBrowser(directory: FSDirectory)
+    case moreAttributions
 }

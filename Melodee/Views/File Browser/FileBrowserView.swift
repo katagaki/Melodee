@@ -16,7 +16,7 @@ struct FileBrowserView: View {
     @State var files: [any FilesystemObject] = []
 
     var body: some View {
-        NavigationStack(path: $navigationManager.viewPath) {
+        NavigationStack(path: $navigationManager.filesTabPath) {
             List($files, id: \.path) { $file in
                 if let directory = file as? FSDirectory {
                     NavigationLink(value: ViewPath.fileBrowser(directory: directory)) {
@@ -30,6 +30,7 @@ struct FileBrowserView: View {
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
+                default: Color.clear
                 }
             })
             .refreshable {
@@ -69,25 +70,11 @@ struct FileBrowserView: View {
                             }
                         }
                         .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
-                        Divider()
-                        Button {
-                            // TODO: Open More sheet
-                        } label: {
-                            Image(systemName: "ellipsis")
-                        }
                     }
                 }
             }
             .safeAreaInset(edge: .bottom) {
                 NowPlayingBar()
-            }
-            .task {
-                if #available(iOS 17.0, *) {
-                    try? Tips.configure([
-                        .displayFrequency(.immediate),
-                        .datastoreLocation(.applicationDefault)
-                    ])
-                }
             }
             .navigationTitle(currentDirectory != nil ?
                              currentDirectory!.name :

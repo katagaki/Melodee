@@ -48,6 +48,22 @@ class MediaPlayerManager: NSObject,
         }
     }
 
+    func playNext(file: FSFile) {
+        if let audioPlayer = audioPlayer {
+            queue.insert(file, at: 0)
+        } else {
+            play(file: file)
+        }
+    }
+
+    func playLast(file: FSFile) {
+        if let audioPlayer = audioPlayer {
+            queue.append(file)
+        } else {
+            play(file: file)
+        }
+    }
+
     func pause() {
         if let audioPlayer = audioPlayer {
             audioPlayer.pause()
@@ -65,8 +81,11 @@ class MediaPlayerManager: NSObject,
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         audioPlayer = nil
-        isPlaybackActive = false
-        isPaused = true
-        // TODO: Handle queue
+        if let nextFile = queue.first {
+            play(file: nextFile)
+        } else {
+            isPlaybackActive = false
+            isPaused = true
+        }
     }
 }

@@ -9,14 +9,25 @@ import Foundation
 
 class NavigationManager: ObservableObject {
 
-    @Published var viewPath: [ViewPath] = []
+    @Published var filesTabPath: [ViewPath] = []
+    @Published var moreTabPath: [ViewPath] = []
 
-    func popToRoot() {
-        viewPath.removeAll()
+    func popToRoot(for tab: TabType) {
+        switch tab {
+        case .fileManager:
+            filesTabPath.removeAll()
+        case .more:
+            moreTabPath.removeAll()
+        }
     }
 
-    func push(_ viewPath: ViewPath) {
-        self.viewPath.append(viewPath)
+    func push(_ viewPath: ViewPath, for tab: TabType) {
+        switch tab {
+        case .fileManager:
+            filesTabPath.append(viewPath)
+        case .more:
+            moreTabPath.append(viewPath)
+        }
     }
 
 }

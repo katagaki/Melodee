@@ -10,11 +10,11 @@ import SwiftUI
 struct LicensesView: View {
 
     @State var licenses: [License] = [
-    License(libraryName: "MarqueeText", text:
+    License(libraryName: "Custom-Slider-Control", text:
 """
 MIT License
 
-Copyright (c) joekndy (https://github.com/joekndy)
+Copyright (c) 2023 Pratik Gadhesariya
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,11 +34,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """),
-    License(libraryName: "Custom-Slider-Control", text:
+    License(libraryName: "MarqueeText", text:
 """
 MIT License
 
-Copyright (c) 2023 Pratik Gadhesariya
+Copyright (c) joekndy (https://github.com/joekndy)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -55,7 +55,7 @@ struct FileBrowserView: View {
                     .frame(maxWidth: .infinity)
                 } header: {
                     Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
-                        .font(.title)
+                        .font(.largeTitle)
                         .bold()
                         .foregroundColor(.primary)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))

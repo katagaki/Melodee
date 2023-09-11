@@ -68,7 +68,7 @@ struct FileBrowserView: View {
                                 Text("Shared.OpenFilesApp")
                             }
                         }
-                        .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .bottom)
+                        .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
                         Divider()
                         Button {
                             // TODO: Open More sheet

@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct MelodeeApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     @StateObject var tabManager = TabManager()
     @StateObject var navigationManager = NavigationManager()
@@ -24,4 +25,16 @@ struct MelodeeApp: App {
                 .environmentObject(mediaPlayer)
         }
     }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+
+    // swiftlint:disable line_length
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        application.beginReceivingRemoteControlEvents()
+        return true
+    }
+    // swiftlint:enable line_length
+
 }

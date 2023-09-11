@@ -7,6 +7,7 @@
 
 import AVFAudio
 import Foundation
+import MediaPlayer
 
 class MediaPlayerManager: NSObject,
                           ObservableObject,
@@ -58,6 +59,7 @@ class MediaPlayerManager: NSObject,
                 audioPlayer.play()
                 isPlaybackActive = true
                 isPaused = false
+                setNowPlaying(with: audioPlayer)
             } else {
                 if let file = queue.first {
                     audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
@@ -120,6 +122,45 @@ class MediaPlayerManager: NSObject,
     func setQueueIDs() {
         for index in 0..<queue.count where queue[index].playbackQueueID.isEmpty {
             queue[index].playbackQueueID = UUID().uuidString
+        }
+    }
+
+    func setNowPlaying(with audioPlayer: AVAudioPlayer) {
+        do {
+            // Set up audio session
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setActive(true)
+            // Set up remote controls
+            let remoteCommandCenter = MPRemoteCommandCenter.shared()
+            remoteCommandCenter.playCommand.isEnabled = true
+            remoteCommandCenter.playCommand.addTarget { [unowned self] _ in
+                if !(self.audioPlayer?.isPlaying ?? false) {
+                    self.play()
+                    return .success
+                }
+                return .commandFailed
+            }
+            remoteCommandCenter.pauseCommand.isEnabled = true
+            remoteCommandCenter.pauseCommand.addTarget { [unowned self] _ in
+                if !(self.audioPlayer?.isPlaying ?? false) {
+                    self.pause()
+                    return .success
+                }
+                return .commandFailed
+            }
+            // Set up now playing info center
+            let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+            var nowPlayingInfo = [String: Any]()
+            nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingFilename() ?? ""
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = Bundle.main
+                .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.duration
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.rate
+            nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+        } catch {
+            debugPrint(error.localizedDescription)
         }
     }
 

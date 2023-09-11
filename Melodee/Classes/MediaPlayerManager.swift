@@ -168,6 +168,11 @@ class MediaPlayerManager: NSObject,
                 self.skipToNextTrack()
                 return .success
             }
+            remoteCommandCenter.skipBackwardCommand.isEnabled = true
+            remoteCommandCenter.skipBackwardCommand.addTarget { _ in
+                self.backToStartOfTrack()
+                return .success
+            }
             remoteCommandCenter.changePlaybackPositionCommand.isEnabled = true
             remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
                 if let event = event as? MPChangePlaybackPositionCommandEvent {

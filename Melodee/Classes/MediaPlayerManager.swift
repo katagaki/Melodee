@@ -42,6 +42,7 @@ class MediaPlayerManager: NSObject,
 
     func play() {
         if let audioPlayer = audioPlayer {
+            audioPlayer.delegate = self
             audioPlayer.play()
             isPlaybackActive = true
             isPaused = false
@@ -91,7 +92,7 @@ class MediaPlayerManager: NSObject,
     }
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        audioPlayer = nil
+        debugPrint("AVAudioPlayer finished playing!")
         if let nextFile = queue.first {
             play(file: nextFile)
             queue.removeFirst()

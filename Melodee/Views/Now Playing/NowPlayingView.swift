@@ -179,32 +179,9 @@ struct NowPlayingView: View {
     }
 
     func setAlbumArt() async {
-        do {
-            if let url = mediaPlayer.audioPlayer?.url {
-                let playerItem = AVPlayerItem(url: url)
-                let metadataList = try await playerItem.asset.load(.metadata)
-                for item in metadataList {
-                    switch item.commonKey {
-                    case .commonKeyArtwork?:
-                        if let data = try await item.load(.dataValue),
-                           let image = UIImage(data: data) {
-                            withAnimation(.default.speed(2)) {
-                                albumArt = Image(uiImage: image)
-                            }
-                        }
-                    default: break
-                    }
-                }
-            } else {
-                withAnimation(.default.speed(2)) {
-                    albumArt = Image("Album.Generic")
-                }
-            }
-        } catch {
-            debugPrint(error.localizedDescription)
-            withAnimation(.default.speed(2)) {
-                albumArt = Image("Album.Generic")
-            }
+        let albumArtUIImage = await mediaPlayer.albumArt()
+        withAnimation(.default.speed(2)) {
+            albumArt = Image(uiImage: albumArtUIImage)
         }
     }
 }

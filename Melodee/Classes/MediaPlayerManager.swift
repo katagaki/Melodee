@@ -59,7 +59,9 @@ class MediaPlayerManager: NSObject,
                 audioPlayer.play()
                 isPlaybackActive = true
                 isPaused = false
-                setNowPlaying(with: audioPlayer)
+                Task {
+                    await setNowPlaying(with: audioPlayer)
+                }
             } else {
                 if let file = queue.first {
                     audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
@@ -125,7 +127,7 @@ class MediaPlayerManager: NSObject,
         }
     }
 
-    func setNowPlaying(with audioPlayer: AVAudioPlayer) {
+    func setNowPlaying(with audioPlayer: AVAudioPlayer) async {
         do {
             // Set up audio session
             let audioSession = AVAudioSession.sharedInstance()
@@ -151,10 +153,14 @@ class MediaPlayerManager: NSObject,
             }
             // Set up now playing info center
             let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+            let albumArt = await albumArt()
             var nowPlayingInfo = [String: Any]()
             nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingFilename() ?? ""
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = Bundle.main
+            nowPlayingInfo[MPMediaItemPropertyArtist] = Bundle.main
                 .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { size in
+                return albumArt
+            }
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.duration
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.rate
@@ -162,6 +168,28 @@ class MediaPlayerManager: NSObject,
         } catch {
             debugPrint(error.localizedDescription)
         }
+    }
+
+    func albumArt() async -> UIImage {
+        do {
+            if let url = audioPlayer?.url {
+                let playerItem = AVPlayerItem(url: url)
+                let metadataList = try await playerItem.asset.load(.metadata)
+                for item in metadataList {
+                    switch item.commonKey {
+                    case .commonKeyArtwork?:
+                        if let data = try await item.load(.dataValue),
+                           let image = UIImage(data: data) {
+                            return image
+                        }
+                    default: break
+                    }
+                }
+            }
+        } catch {
+            debugPrint(error.localizedDescription)
+        }
+        return UIImage(named: "Album.Generic")!
     }
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {

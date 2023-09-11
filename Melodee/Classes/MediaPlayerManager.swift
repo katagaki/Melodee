@@ -146,7 +146,7 @@ class MediaPlayerManager: NSObject,
             try audioSession.setActive(true)
             // Set up remote controls
             remoteCommandCenter.playCommand.isEnabled = true
-            remoteCommandCenter.playCommand.addTarget { [unowned self] _ in
+            remoteCommandCenter.playCommand.addTarget { _ in
                 if let audioPlayer = self.audioPlayer,
                    !audioPlayer.isPlaying {
                     self.play()
@@ -155,7 +155,7 @@ class MediaPlayerManager: NSObject,
                 return .commandFailed
             }
             remoteCommandCenter.pauseCommand.isEnabled = true
-            remoteCommandCenter.pauseCommand.addTarget { [unowned self] _ in
+            remoteCommandCenter.pauseCommand.addTarget { _ in
                 if let audioPlayer = self.audioPlayer,
                    audioPlayer.isPlaying {
                     self.pause()
@@ -164,8 +164,13 @@ class MediaPlayerManager: NSObject,
                 return .commandFailed
             }
             remoteCommandCenter.nextTrackCommand.isEnabled = queue.count > 1
-            remoteCommandCenter.nextTrackCommand.addTarget { [unowned self] _ in
+            remoteCommandCenter.nextTrackCommand.addTarget { _ in
                 self.skipToNextTrack()
+                return .success
+            }
+            remoteCommandCenter.changePlaybackPositionCommand.isEnabled = true
+            remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
+                self.seekTo(event.timestamp)
                 return .success
             }
             // Set up now playing info center

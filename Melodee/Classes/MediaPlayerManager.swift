@@ -170,8 +170,11 @@ class MediaPlayerManager: NSObject,
             }
             remoteCommandCenter.changePlaybackPositionCommand.isEnabled = true
             remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
-                self.seekTo(event.timestamp)
-                return .success
+                if let event = event as? MPChangePlaybackPositionCommandEvent {
+                    self.seekTo(event.positionTime)
+                    return .success
+                }
+                return .commandFailed
             }
             // Set up now playing info center
             let albumArt = await albumArt()

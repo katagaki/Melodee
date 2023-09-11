@@ -47,6 +47,7 @@ struct FileBrowserView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
+                        .disabled(!files.contains(where: { $0 is FSFile }))
                     }
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)

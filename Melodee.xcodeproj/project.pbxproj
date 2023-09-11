@@ -7,19 +7,49 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E4A4D64B2AAEF11F0062D12C /* MelodeeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64A2AAEF11F0062D12C /* MelodeeApp.swift */; };
-		E4A4D64D2AAEF11F0062D12C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64C2AAEF11F0062D12C /* ContentView.swift */; };
+		E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84582AAF087300D87A5F /* MarqueeText */; };
+		E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64A2AAEF11F0062D12C /* App.swift */; };
+		E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */; };
 		E4A4D64F2AAEF1200062D12C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D64E2AAEF1200062D12C /* Assets.xcassets */; };
-		E4A4D6532AAEF1200062D12C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D6522AAEF1200062D12C /* Preview Assets.xcassets */; };
+		E4A4D65F2AAEF15B0062D12C /* FilesystemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D65E2AAEF15B0062D12C /* FilesystemObject.swift */; };
+		E4A4D6612AAEF1670062D12C /* FSFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6602AAEF1670062D12C /* FSFile.swift */; };
+		E4A4D6632AAEF16D0062D12C /* FSDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */; };
+		E4A4D6652AAEF1F80062D12C /* FilesystemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6642AAEF1F80062D12C /* FilesystemManager.swift */; };
+		E4A4D6672AAEF2170062D12C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D6662AAEF2170062D12C /* Localizable.xcstrings */; };
+		E4A4D66A2AAEF2BD0062D12C /* ListHintOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6692AAEF2BD0062D12C /* ListHintOverlay.swift */; };
+		E4A4D66C2AAEF2E30062D12C /* FileBrowserNoFilesTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D66B2AAEF2E30062D12C /* FileBrowserNoFilesTip.swift */; };
+		E4A4D66F2AAEF36D0062D12C /* ListFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */; };
+		E4A4D6712AAEF39B0062D12C /* NavigationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6702AAEF39B0062D12C /* NavigationManager.swift */; };
+		E4A4D6742AAEF3B30062D12C /* ViewPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6732AAEF3B30062D12C /* ViewPath.swift */; };
+		E4A4D6762AAEF4040062D12C /* ListFolderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */; };
+		E4A4D6782AAEF58A0062D12C /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D6772AAEF58A0062D12C /* InfoPlist.xcstrings */; };
+		E4A4D67B2AAEFB750062D12C /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D67A2AAEFB750062D12C /* ActionButton.swift */; };
+		E4A4D67D2AAEFD9D0062D12C /* MediaPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */; };
+		E4A4D67F2AAF05F70062D12C /* NowPlayingBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E4A4D6472AAEF11F0062D12C /* Melodee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Melodee.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4A4D64A2AAEF11F0062D12C /* MelodeeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MelodeeApp.swift; sourceTree = "<group>"; };
-		E4A4D64C2AAEF11F0062D12C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E4A4D64A2AAEF11F0062D12C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
 		E4A4D64E2AAEF1200062D12C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E4A4D6502AAEF1200062D12C /* Melodee.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Melodee.entitlements; sourceTree = "<group>"; };
-		E4A4D6522AAEF1200062D12C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E4A4D65E2AAEF15B0062D12C /* FilesystemObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesystemObject.swift; sourceTree = "<group>"; };
+		E4A4D6602AAEF1670062D12C /* FSFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSFile.swift; sourceTree = "<group>"; };
+		E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSDirectory.swift; sourceTree = "<group>"; };
+		E4A4D6642AAEF1F80062D12C /* FilesystemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesystemManager.swift; sourceTree = "<group>"; };
+		E4A4D6662AAEF2170062D12C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		E4A4D6692AAEF2BD0062D12C /* ListHintOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHintOverlay.swift; sourceTree = "<group>"; };
+		E4A4D66B2AAEF2E30062D12C /* FileBrowserNoFilesTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserNoFilesTip.swift; sourceTree = "<group>"; };
+		E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListFileRow.swift; sourceTree = "<group>"; };
+		E4A4D6702AAEF39B0062D12C /* NavigationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationManager.swift; sourceTree = "<group>"; };
+		E4A4D6732AAEF3B30062D12C /* ViewPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPath.swift; sourceTree = "<group>"; };
+		E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListFolderRow.swift; sourceTree = "<group>"; };
+		E4A4D6772AAEF58A0062D12C /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		E4A4D6792AAEF5C80062D12C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E4A4D67A2AAEFB750062D12C /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerManager.swift; sourceTree = "<group>"; };
+		E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,21 +83,76 @@
 		E4A4D6492AAEF11F0062D12C /* Melodee */ = {
 			isa = PBXGroup;
 			children = (
-				E4A4D64A2AAEF11F0062D12C /* MelodeeApp.swift */,
-				E4A4D64C2AAEF11F0062D12C /* ContentView.swift */,
-				E4A4D64E2AAEF1200062D12C /* Assets.xcassets */,
 				E4A4D6502AAEF1200062D12C /* Melodee.entitlements */,
-				E4A4D6512AAEF1200062D12C /* Preview Content */,
+				E4A4D6792AAEF5C80062D12C /* Info.plist */,
+				E4A4D64E2AAEF1200062D12C /* Assets.xcassets */,
+				E4A4D6772AAEF58A0062D12C /* InfoPlist.xcstrings */,
+				E4A4D6662AAEF2170062D12C /* Localizable.xcstrings */,
+				E4A4D6592AAEF1330062D12C /* Views */,
+				E4A4D65A2AAEF13E0062D12C /* Structs */,
+				E4A4D65B2AAEF1440062D12C /* Classes */,
+				E4A4D6722AAEF3AA0062D12C /* Enums */,
+				E4A4D65D2AAEF14D0062D12C /* Protocols */,
 			);
 			path = Melodee;
 			sourceTree = "<group>";
 		};
-		E4A4D6512AAEF1200062D12C /* Preview Content */ = {
+		E4A4D6592AAEF1330062D12C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E4A4D6522AAEF1200062D12C /* Preview Assets.xcassets */,
+				E4A4D64A2AAEF11F0062D12C /* App.swift */,
+				E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */,
+				E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */,
+				E4A4D6682AAEF2B40062D12C /* Shared */,
 			);
-			path = "Preview Content";
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E4A4D65A2AAEF13E0062D12C /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				E4A4D6602AAEF1670062D12C /* FSFile.swift */,
+				E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */,
+				E4A4D66B2AAEF2E30062D12C /* FileBrowserNoFilesTip.swift */,
+			);
+			path = Structs;
+			sourceTree = "<group>";
+		};
+		E4A4D65B2AAEF1440062D12C /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				E4A4D6642AAEF1F80062D12C /* FilesystemManager.swift */,
+				E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */,
+				E4A4D6702AAEF39B0062D12C /* NavigationManager.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		E4A4D65D2AAEF14D0062D12C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				E4A4D65E2AAEF15B0062D12C /* FilesystemObject.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		E4A4D6682AAEF2B40062D12C /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E4A4D6692AAEF2BD0062D12C /* ListHintOverlay.swift */,
+				E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */,
+				E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */,
+				E4A4D67A2AAEFB750062D12C /* ActionButton.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		E4A4D6722AAEF3AA0062D12C /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				E4A4D6732AAEF3B30062D12C /* ViewPath.swift */,
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -79,12 +165,16 @@
 				E4A4D6432AAEF11F0062D12C /* Sources */,
 				E4A4D6442AAEF11F0062D12C /* Frameworks */,
 				E4A4D6452AAEF11F0062D12C /* Resources */,
+				E43C845A2AAF08AF00D87A5F /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Melodee;
+			packageProductDependencies = (
+				E43C84582AAF087300D87A5F /* MarqueeText */,
+			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
 			productType = "com.apple.product-type.application";
@@ -113,6 +203,9 @@
 				Base,
 			);
 			mainGroup = E4A4D63E2AAEF11F0062D12C;
+			packageReferences = (
+				E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */,
+			);
 			productRefGroup = E4A4D6482AAEF11F0062D12C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,20 +220,55 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4A4D6532AAEF1200062D12C /* Preview Assets.xcassets in Resources */,
+				E4A4D6782AAEF58A0062D12C /* InfoPlist.xcstrings in Resources */,
 				E4A4D64F2AAEF1200062D12C /* Assets.xcassets in Resources */,
+				E4A4D6672AAEF2170062D12C /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E43C845A2AAF08AF00D87A5F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E4A4D6432AAEF11F0062D12C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4A4D64D2AAEF11F0062D12C /* ContentView.swift in Sources */,
-				E4A4D64B2AAEF11F0062D12C /* MelodeeApp.swift in Sources */,
+				E4A4D6612AAEF1670062D12C /* FSFile.swift in Sources */,
+				E4A4D6742AAEF3B30062D12C /* ViewPath.swift in Sources */,
+				E4A4D67B2AAEFB750062D12C /* ActionButton.swift in Sources */,
+				E4A4D6632AAEF16D0062D12C /* FSDirectory.swift in Sources */,
+				E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */,
+				E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */,
+				E4A4D66A2AAEF2BD0062D12C /* ListHintOverlay.swift in Sources */,
+				E4A4D6762AAEF4040062D12C /* ListFolderRow.swift in Sources */,
+				E4A4D67F2AAF05F70062D12C /* NowPlayingBar.swift in Sources */,
+				E4A4D6652AAEF1F80062D12C /* FilesystemManager.swift in Sources */,
+				E4A4D67D2AAEFD9D0062D12C /* MediaPlayerManager.swift in Sources */,
+				E4A4D65F2AAEF15B0062D12C /* FilesystemObject.swift in Sources */,
+				E4A4D66F2AAEF36D0062D12C /* ListFileRow.swift in Sources */,
+				E4A4D66C2AAEF2E30062D12C /* FileBrowserNoFilesTip.swift in Sources */,
+				E4A4D6712AAEF39B0062D12C /* NavigationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,11 +397,13 @@
 				CODE_SIGN_ENTITLEMENTS = Melodee/Melodee.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Melodee/Preview Content\"";
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Melodee/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -292,7 +422,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Melodee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -307,11 +438,13 @@
 				CODE_SIGN_ENTITLEMENTS = Melodee/Melodee.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Melodee/Preview Content\"";
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Melodee/Info.plist;
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -330,7 +463,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Melodee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -359,6 +493,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joekndy/MarqueeText";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E43C84582AAF087300D87A5F /* MarqueeText */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */;
+			productName = MarqueeText;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E4A4D63F2AAEF11F0062D12C /* Project object */;
 }

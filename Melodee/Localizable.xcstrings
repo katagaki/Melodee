@@ -1,0 +1,125 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "FileBrowser.Hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This folder does not contain any MP3 files."
+          }
+        }
+      }
+    },
+    "FileBrowser.Tip.NoFiles.Text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "To add files to Melodee, open the Files app, navigate to 'On My iPad', and drop your files in the Melodee folder."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "To add files to Melodee, open the Files app, navigate to 'On My iPhone', and drop your files in the Melodee folder."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "FileBrowser.Tip.NoFiles.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Files to Melodee"
+          }
+        }
+      }
+    },
+    "Shared.DropFilesFileName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drop Your Files Here"
+          }
+        }
+      }
+    },
+    "Shared.NoFilePlaying" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No File Playing"
+          }
+        }
+      }
+    },
+    "Shared.OpenFilesApp" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Files App"
+          }
+        }
+      }
+    },
+    "Shared.Play" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play"
+          }
+        }
+      }
+    },
+    "Shared.Play.Last" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Last"
+          }
+        }
+      }
+    },
+    "Shared.Play.Next" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Next"
+          }
+        }
+      }
+    },
+    "ViewTitle.Files" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Files"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

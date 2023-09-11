@@ -83,6 +83,7 @@ class MediaPlayerManager: NSObject,
         audioPlayer = nil
         if let nextFile = queue.first {
             play(file: nextFile)
+            queue.removeFirst()
         } else {
             isPlaybackActive = false
             isPaused = true

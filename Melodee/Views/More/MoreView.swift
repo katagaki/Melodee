@@ -62,10 +62,8 @@ struct MoreView: View {
             .listStyle(.insetGrouped)
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
-                case .moreAttributions:
-                    LicensesView()
-                default:
-                    Color.clear
+                case .moreAttributions: LicensesView()
+                default: Color.clear
                 }
             })
             .navigationTitle("ViewTitle.More")

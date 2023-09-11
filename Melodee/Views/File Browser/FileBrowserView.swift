@@ -96,6 +96,7 @@ struct FileBrowserView: View {
                         }
                     }
                 }
+                .popoverTip(FileBrowserQueueTip(), arrowEdge: .top)
             }
             .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) {

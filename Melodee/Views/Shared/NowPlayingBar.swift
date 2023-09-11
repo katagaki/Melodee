@@ -14,7 +14,7 @@ struct NowPlayingBar: View {
 
     var body: some View {
         HStack {
-            MarqueeText(text: mediaPlayer.currentlyPlayingFile() ??
+            MarqueeText(text: mediaPlayer.currentlyPlayingFilename() ??
                             NSLocalizedString("Shared.NoFilePlaying", comment: ""),
                         font: UIFont.preferredFont(forTextStyle: .body),
                         leftFade: 16, rightFade: 16, startDelay: 1.5)

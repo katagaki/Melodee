@@ -17,7 +17,7 @@ class MediaPlayerManager: NSObject,
     @Published var isPaused: Bool = true
     @Published var queue: [FSFile] = []
 
-    func currentlyPlayingFile() -> String? {
+    func currentlyPlayingFilename() -> String? {
         if let audioPlayer = audioPlayer,
            let url = audioPlayer.url {
             return url.lastPathComponent
@@ -125,15 +125,18 @@ class MediaPlayerManager: NSObject,
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         debugPrint("AVAudioPlayer finished playing!")
-        queue.removeFirst()
-        if let nextFile = queue.first {
-            debugPrint("Playing next file...")
-            playImmediately(nextFile)
-        } else {
+        if queue.count == 1 {
             debugPrint("Killing AVAudioPlayer instance...")
             audioPlayer = nil
+            queue.removeAll()
             isPlaybackActive = false
             isPaused = true
+        } else {
+            debugPrint("Playing next file...")
+            queue.removeFirst()
+            if let nextFile = queue.first {
+                playImmediately(nextFile)
+            }
         }
     }
 }

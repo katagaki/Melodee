@@ -6,6 +6,7 @@
 //
 
 import MarqueeText
+import MediaPlayer
 import SwiftUI
 
 struct NowPlayingView: View {
@@ -14,6 +15,7 @@ struct NowPlayingView: View {
     @State var currentDuration: TimeInterval = .zero
     @State var totalDuration: TimeInterval = .zero
     @State var isSeekbarSeeking: Bool = false
+    @State var albumArt: Image = Image("Album.Generic")
     let updateTimer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
 
     var body: some View {
@@ -21,7 +23,7 @@ struct NowPlayingView: View {
             List {
                 Section {
                     VStack(alignment: .center, spacing: 16.0) {
-                        Image("Album.Generic")
+                        albumArt
                             .resizable()
                             .scaledToFill()
                             .frame(width: 200.0, height: 200.0)
@@ -69,6 +71,9 @@ struct NowPlayingView: View {
                                     if mediaPlayer.isPaused {
                                         Button {
                                             mediaPlayer.play()
+                                            Task {
+                                                await setAlbumArt()
+                                            }
                                         } label: {
                                             Image("Play")
                                                 .resizable()
@@ -151,6 +156,14 @@ struct NowPlayingView: View {
             .listStyle(.insetGrouped)
             .navigationTitle("ViewTitle.NowPlaying")
         }
+        .task {
+            await setAlbumArt()
+        }
+        .onChange(of: mediaPlayer.queue, { _, _ in
+            Task {
+                await setAlbumArt()
+            }
+        })
         .onReceive(updateTimer, perform: { _ in
             if !isSeekbarSeeking {
                 if let audioPlayer = mediaPlayer.audioPlayer {
@@ -162,5 +175,35 @@ struct NowPlayingView: View {
                 }
             }
         })
+    }
+
+    func setAlbumArt() async {
+        do {
+            if let url = mediaPlayer.audioPlayer?.url {
+                let playerItem = AVPlayerItem(url: url)
+                let metadataList = try await playerItem.asset.load(.metadata)
+                for item in metadataList {
+                    switch item.commonKey {
+                    case .commonKeyArtwork?:
+                        if let data = try await item.load(.dataValue),
+                           let image = UIImage(data: data) {
+                            withAnimation(.default.speed(2)) {
+                                albumArt = Image(uiImage: image)
+                            }
+                        }
+                    default: break
+                    }
+                }
+            } else {
+                withAnimation(.default.speed(2)) {
+                    albumArt = Image("Album.Generic")
+                }
+            }
+        } catch {
+            debugPrint(error.localizedDescription)
+            withAnimation(.default.speed(2)) {
+                albumArt = Image("Album.Generic")
+            }
+        }
     }
 }

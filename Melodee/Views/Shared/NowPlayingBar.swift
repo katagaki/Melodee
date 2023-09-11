@@ -11,6 +11,9 @@ import SwiftUI
 struct NowPlayingBar: View {
 
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @State var currentDuration: Double = 0.0
+    @State var totalDuration: Double = 0.0
+    let updateTimer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
 
     var body: some View {
         HStack {
@@ -57,6 +60,29 @@ struct NowPlayingBar: View {
                                           style: .continuous))
         .compositingGroup()
         .shadow(color: .black.opacity(0.1), radius: 6)
+        .overlay {
+            if let audioPlayer = mediaPlayer.audioPlayer {
+                ZStack(alignment: .bottomLeading) {
+                    Color.clear
+                    ProgressView(value: currentDuration,
+                                 total: totalDuration)
+                    .progressViewStyle(.linear)
+                    .frame(maxWidth: .infinity)
+                }
+            }
+        }
+        .onAppear(perform: {
+            if let audioPlayer = mediaPlayer.audioPlayer {
+                currentDuration = audioPlayer.currentTime
+                totalDuration = audioPlayer.duration
+            }
+        })
+        .onReceive(updateTimer, perform: { _ in
+            if let audioPlayer = mediaPlayer.audioPlayer {
+                currentDuration = audioPlayer.currentTime
+                totalDuration = audioPlayer.duration
+            }
+        })
     }
 
     @ViewBuilder

@@ -19,23 +19,28 @@ struct ListFileRow: View {
                 .font(.body)
                 .lineLimit(1)
                 .truncationMode(.middle)
-            HStack(alignment: .center, spacing: 8.0) {
-                ActionButton(text: "Shared.Play",
-                             icon: "play.fill",
-                             isPrimary: true) {
-                    mediaPlayer.playImmediately(file)
-                }
-                ActionButton(text: "Shared.Play.Next", icon: "text.line.first.and.arrowtriangle.forward") {
-                    withAnimation(.default.speed(2)) {
-                        mediaPlayer.queueNext(file: file)
+                .padding([.leading, .trailing], 20.0)
+            ScrollView(.horizontal) {
+                HStack(alignment: .center, spacing: 8.0) {
+                    ActionButton(text: "Shared.Play",
+                                 icon: "play.fill",
+                                 isPrimary: true) {
+                        mediaPlayer.playImmediately(file)
+                    }
+                    ActionButton(text: "Shared.Play.Next", icon: "text.line.first.and.arrowtriangle.forward") {
+                        withAnimation(.default.speed(2)) {
+                            mediaPlayer.queueNext(file: file)
+                        }
+                    }
+                    ActionButton(text: "Shared.Play.Last", icon: "text.line.last.and.arrowtriangle.forward") {
+                        withAnimation(.default.speed(2)) {
+                            mediaPlayer.queueLast(file: file)
+                        }
                     }
                 }
-                ActionButton(text: "Shared.Play.Last", icon: "text.line.last.and.arrowtriangle.forward") {
-                    withAnimation(.default.speed(2)) {
-                        mediaPlayer.queueLast(file: file)
-                    }
-                }
+                .padding([.leading, .trailing], 20.0)
             }
+            .scrollIndicators(.hidden)
         }
     }
 

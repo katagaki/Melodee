@@ -21,7 +21,6 @@ struct ActionButton: View {
                     Image(systemName: icon)
                     Text(NSLocalizedString(text, comment: ""))
                         .bold()
-                        .lineLimit(1)
                 }
             }
             .buttonStyle(.borderedProminent)
@@ -34,7 +33,6 @@ struct ActionButton: View {
                     Image(systemName: icon)
                     Text(NSLocalizedString(text, comment: ""))
                         .bold()
-                        .lineLimit(1)
                 }
             }
             .buttonStyle(.bordered)

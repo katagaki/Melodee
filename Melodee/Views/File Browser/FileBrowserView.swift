@@ -24,6 +24,7 @@ struct FileBrowserView: View {
                     }
                 } else if let file = file as? FSFile {
                     ListFileRow(file: .constant(file))
+                        .listRowInsets(EdgeInsets(top: 8.0, leading: 0.0, bottom: 8.0, trailing: 0.0))
                 }
             }
             .listStyle(.plain)
@@ -51,29 +52,31 @@ struct FileBrowserView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack {
-                        Button {
-                            let documentsUrl = FileManager.default.urls(for: .documentDirectory,
-                                                                        in: .userDomainMask).first!
-                            if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
-                                if UIApplication.shared.canOpenURL(sharedUrl) {
-                                    UIApplication.shared.open(sharedUrl, options: [:])
+                        if currentDirectory == nil {
+                            Button {
+                                let documentsUrl = FileManager.default.urls(for: .documentDirectory,
+                                                                            in: .userDomainMask).first!
+                                if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
+                                    if UIApplication.shared.canOpenURL(sharedUrl) {
+                                        UIApplication.shared.open(sharedUrl, options: [:])
+                                    }
+                                }
+                            } label: {
+                                HStack(alignment: .center, spacing: 8.0) {
+                                    Image("SystemApps.Files")
+                                        .resizable()
+                                        .frame(width: 30.0, height: 30.0)
+                                        .clipShape(RoundedRectangle(cornerRadius: 6.0))
+                                        .overlay {
+                                            RoundedRectangle(cornerRadius: 6.0)
+                                                .stroke(.black, lineWidth: 1/3)
+                                                .opacity(0.3)
+                                        }
+                                    Text("Shared.OpenFilesApp")
                                 }
                             }
-                        } label: {
-                            HStack(alignment: .center, spacing: 8.0) {
-                                Image("SystemApps.Files")
-                                    .resizable()
-                                    .frame(width: 30.0, height: 30.0)
-                                    .clipShape(RoundedRectangle(cornerRadius: 6.0))
-                                    .overlay {
-                                        RoundedRectangle(cornerRadius: 6.0)
-                                            .stroke(.black, lineWidth: 1/3)
-                                            .opacity(0.3)
-                                    }
-                                Text("Shared.OpenFilesApp")
-                            }
+                            .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
                         }
-                        .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
                     }
                 }
             }

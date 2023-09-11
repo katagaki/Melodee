@@ -96,7 +96,6 @@ struct FileBrowserView: View {
                         }
                     }
                 }
-                .popoverTip(FileBrowserQueueTip(), arrowEdge: .top)
             }
             .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) {
@@ -112,7 +111,7 @@ struct FileBrowserView: View {
             .refreshable {
                 refreshFiles()
             }
-            .background {
+            .overlay {
                 if files.count == 0 {
                     VStack {
                         ListHintOverlay(image: "questionmark.folder",

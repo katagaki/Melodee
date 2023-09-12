@@ -10,7 +10,6 @@ import SwiftUI
 struct FileContextMenu: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
-    @EnvironmentObject var fileManager: FilesystemManager
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
     var file: FSFile
 
@@ -22,7 +21,7 @@ struct FileContextMenu: View {
             Button {
                 mediaPlayer.playImmediately(file)
             } label: {
-                Label("Shared.Play", systemImage: "play.fill")
+                Label("Shared.Play", systemImage: "play")
             }
             Button {
                 withAnimation(.default.speed(2)) {
@@ -51,7 +50,7 @@ struct FileContextMenu: View {
             Button {
                 navigationManager.push(ViewPath.tagEditorSingle(file: file), for: .fileManager)
             } label: {
-                Label("Shared.EditTag.Single", systemImage: "tag.fill")
+                Label("Shared.EditTag.Single", systemImage: "tag")
             }
         }
     }

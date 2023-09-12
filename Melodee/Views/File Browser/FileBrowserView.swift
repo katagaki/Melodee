@@ -17,9 +17,13 @@ struct FileBrowserView: View {
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
 
-    @State var isRenaming: Bool = false
+    @State var isRenamingFile: Bool = false
     @State var fileBeingRenamed: FSFile?
-    @State var newFilename: String = ""
+    @State var newFileName: String = ""
+
+    @State var isRenamingDirectory: Bool = false
+    @State var directoryBeingRenamed: FSDirectory?
+    @State var newDirectoryName: String = ""
 
     @State var isExtractingZIP: Bool = false
     @State var extractionPercentage: Int = 0
@@ -67,6 +71,7 @@ struct FileBrowserView: View {
                 } header: {
                     Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
                         .font(.largeTitle)
+                        .textCase(.none)
                         .bold()
                         .foregroundColor(.primary)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
@@ -76,6 +81,11 @@ struct FileBrowserView: View {
                         if let directory = file as? FSDirectory {
                             NavigationLink(value: ViewPath.fileBrowser(directory: directory)) {
                                 ListFolderRow(name: directory.name)
+                            }
+                            .contextMenu {
+                                FolderContextMenu(directory: directory,
+                                                  isRenaming: $isRenamingDirectory,
+                                                  directoryBeingRenamed: $directoryBeingRenamed)
                             }
                         } else if let file = file as? FSFile {
                             switch file.type {
@@ -110,7 +120,7 @@ struct FileBrowserView: View {
                                 }
                                 .contextMenu(menuItems: {
                                     FileContextMenu(file: file,
-                                                    isRenaming: $isRenaming,
+                                                    isRenaming: $isRenamingFile,
                                                     fileBeingRenamed: $fileBeingRenamed)
                                 })
                             case .image:
@@ -144,7 +154,7 @@ struct FileBrowserView: View {
                                 }
                                 .contextMenu(menuItems: {
                                     FileContextMenu(file: file,
-                                                    isRenaming: $isRenaming,
+                                                    isRenaming: $isRenamingFile,
                                                     fileBeingRenamed: $fileBeingRenamed)
                                 })
                             }
@@ -224,16 +234,28 @@ struct FileBrowserView: View {
                     }
                 }
             }
-            .alert("Alert.RenameFile.Title", isPresented: $isRenaming, actions: {
-                TextField("Shared.NewFilename", text: $newFilename)
+            .alert("Alert.RenameFile.Title", isPresented: $isRenamingFile, actions: {
+                TextField("Shared.NewFileName", text: $newFileName)
                 Button("Shared.Change") {
                     if let fileBeingRenamed = fileBeingRenamed {
-                        fileManager.renameFile(file: fileBeingRenamed, newName: newFilename)
+                        fileManager.renameFile(file: fileBeingRenamed, newName: newFileName)
                         refreshFiles()
                     }
                 }
                 Button("Shared.Cancel", role: .cancel) {
                     fileBeingRenamed = nil
+                }
+            })
+            .alert("Alert.RenameFile.Title", isPresented: $isRenamingDirectory, actions: {
+                TextField("Shared.NewDirectoryName", text: $newDirectoryName)
+                Button("Shared.Change") {
+                    if let directoryBeingRenamed = directoryBeingRenamed {
+                        fileManager.renameDirectory(directory: directoryBeingRenamed, newName: newDirectoryName)
+                        refreshFiles()
+                    }
+                }
+                Button("Shared.Cancel", role: .cancel) {
+                    directoryBeingRenamed = nil
                 }
             })
             .alert("Alert.ExtractingZIP.Error.Title", isPresented: $isErrorAlertPresenting, actions: {
@@ -250,9 +272,16 @@ struct FileBrowserView: View {
         }
         .onChange(of: fileBeingRenamed) { _, newValue in
             if let fileBeingRenamed = newValue {
-                newFilename = fileBeingRenamed.name
+                newFileName = fileBeingRenamed.name
             } else {
-                newFilename = ""
+                newFileName = ""
+            }
+        }
+        .onChange(of: directoryBeingRenamed) { _, newValue in
+            if let directoryBeingRenamed = newValue {
+                newDirectoryName = directoryBeingRenamed.name
+            } else {
+                newDirectoryName = ""
             }
         }
     }

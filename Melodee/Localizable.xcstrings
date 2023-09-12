@@ -473,7 +473,24 @@
         }
       }
     },
-    "Shared.NewFilename" : {
+    "Shared.NewDirectoryName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Folder Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいフォルダー名"
+          }
+        }
+      }
+    },
+    "Shared.NewFileName" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

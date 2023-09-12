@@ -15,7 +15,7 @@ struct NPQueueSection: View {
         Section {
             ForEach($mediaPlayer.queue, id: \.playbackQueueID) { $file in
                 HStack(alignment: .center, spacing: 8.0) {
-                    if file == mediaPlayer.queue.first {
+                    if file.playbackQueueID == mediaPlayer.currentlyPlayingID {
                         Image("Play")
                             .resizable()
                             .scaledToFit()
@@ -27,8 +27,7 @@ struct NPQueueSection: View {
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }
-                .moveDisabled(file == mediaPlayer.queue.first)
-                .deleteDisabled(file == mediaPlayer.queue.first)
+                .deleteDisabled(file.playbackQueueID == mediaPlayer.currentlyPlayingID)
             }
             .onMove { indexSet, offset in
                 mediaPlayer.queue.move(fromOffsets: indexSet, toOffset: offset)

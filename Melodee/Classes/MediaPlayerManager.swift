@@ -21,6 +21,7 @@ class MediaPlayerManager: NSObject,
     @Published var isPlaybackActive: Bool = false
     @Published var isPaused: Bool = true
     @Published var queue: [FSFile] = []
+    @Published var currentlyPlayingID: String = ""
 
     override init() {
         super.init()
@@ -79,8 +80,24 @@ class MediaPlayerManager: NSObject,
         }
     }
 
-    func currentQueueFile() -> FSFile? {
-        return queue.first
+    func currentlyPlayingFile() -> FSFile? {
+        return queue.first(where: { $0.playbackQueueID == currentlyPlayingID })
+    }
+
+    func currentlyPlayingIndex() -> Int {
+        return queue.firstIndex(where: { $0.playbackQueueID == currentlyPlayingID }) ?? 0
+    }
+
+    func canStartPlayback() -> Bool {
+        return !queue.isEmpty
+    }
+
+    func canGoToNextTrack() -> Bool {
+        return currentlyPlayingIndex() < queue.count - 1
+    }
+
+    func canGoToPreviousTrack() -> Bool {
+        return currentlyPlayingIndex() > 0
     }
 
     func playImmediately(_ file: FSFile, addToQueue: Bool = true) {
@@ -90,14 +107,12 @@ class MediaPlayerManager: NSObject,
         }
         // Queue and/or play new file
         if addToQueue {
-            if !queue.isEmpty {
-                queue.remove(at: 0)
-            }
-            queue.insert(file, at: 0)
+            queue.insert(file, at: currentlyPlayingIndex())
             setQueueIDs()
         }
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
+            currentlyPlayingID = file.playbackQueueID
             play()
         } catch {
             debugPrint(error.localizedDescription)
@@ -113,20 +128,19 @@ class MediaPlayerManager: NSObject,
             isPaused = false
             setNowPlaying()
         } else {
-            if let file = queue.first {
-                do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: queue[currentlyPlayingIndex()].path))
+                currentlyPlayingID = queue[currentlyPlayingIndex()].playbackQueueID
                 play()
-                } catch {
-                    debugPrint(error.localizedDescription)
-                    skipToNextTrack()
-                }
+            } catch {
+                debugPrint(error.localizedDescription)
+                skipToNextTrack()
             }
         }
     }
 
     func queueNext(file: FSFile) {
-        queue.insert(file, at: max(0, min(queue.count, 1)))
+        queue.insert(file, at: currentlyPlayingIndex() + 1)
         setQueueIDs()
         setNowPlaying()
     }
@@ -155,9 +169,16 @@ class MediaPlayerManager: NSObject,
     }
 
     func skipToNextTrack() {
-        queue.removeFirst()
-        if let nextFile = queue.first {
-            playImmediately(nextFile, addToQueue: false)
+        if canGoToNextTrack() {
+            playImmediately(queue[currentlyPlayingIndex() + 1], addToQueue: false)
+        } else {
+            setNowPlaying()
+        }
+    }
+
+    func backToPreviousTrack() {
+        if canGoToPreviousTrack() {
+            playImmediately(queue[currentlyPlayingIndex() - 1], addToQueue: false)
         } else {
             setNowPlaying()
         }
@@ -175,14 +196,6 @@ class MediaPlayerManager: NSObject,
             audioPlayer.currentTime = time
             setNowPlaying()
         }
-    }
-
-    func canStartPlayback() -> Bool {
-        return !queue.isEmpty
-    }
-
-    func canGoToNextTrack() -> Bool {
-        return queue.count > 1
     }
 
     func setQueueIDs() {
@@ -264,19 +277,15 @@ class MediaPlayerManager: NSObject,
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         debugPrint("AVAudioPlayer finished playing!")
-        if queue.count == 1 {
+        if currentlyPlayingIndex() == queue.count - 1 {
             debugPrint("Killing AVAudioPlayer instance...")
             audioPlayer = nil
             nowPlayingInfoCenter.nowPlayingInfo = nil
-            queue.removeAll()
             isPlaybackActive = false
             isPaused = true
         } else {
             debugPrint("Playing next file...")
-            queue.removeFirst()
-            if let nextFile = queue.first {
-                playImmediately(nextFile)
-            }
+            playImmediately(queue[currentlyPlayingIndex() + 1])
         }
     }
 }

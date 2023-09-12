@@ -37,18 +37,22 @@ struct NowPlayingBar: View {
             Group {
                 if mediaPlayer.isPaused {
                     Button {
-                        mediaPlayer.play()
+                        withAnimation(.default.speed(2)) {
+                            mediaPlayer.play()
+                        }
                     } label: {
                         buttonImage(imageName: "Play")
                     }
                 } else {
                     Button {
-                        mediaPlayer.pause()
+                        withAnimation(.default.speed(2)) {
+                            mediaPlayer.pause()
+                        }
                     } label: {
                         buttonImage(imageName: "Pause")
                     }
                 }
-                if mediaPlayer.canGoToNextTrack() {
+                if mediaPlayer.isPlaybackActive && mediaPlayer.canGoToNextTrack() {
                     Button {
                         withAnimation(.default.speed(2)) {
                             mediaPlayer.skipToNextTrack()
@@ -70,7 +74,7 @@ struct NowPlayingBar: View {
         .task {
             await setAlbumArt()
         }
-        .onChange(of: mediaPlayer.queue, { _, _ in
+        .onChange(of: mediaPlayer.currentlyPlayingID, { _, _ in
             Task {
                 await setAlbumArt()
             }

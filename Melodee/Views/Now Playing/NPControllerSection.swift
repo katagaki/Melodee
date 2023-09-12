@@ -34,7 +34,7 @@ struct NPControllerSection: View {
                     .shadow(color: .black.opacity(0.1), radius: 10.0)
                     .padding(.bottom)
                     .transition(.slide.animation(.default))
-                MarqueeText(text: mediaPlayer.currentQueueFile()?.name ??
+                MarqueeText(text: mediaPlayer.currentlyPlayingFile()?.name ??
                             NSLocalizedString("Shared.NoFilePlaying", comment: ""),
                             font: UIFont.preferredFont(forTextStyle: .body),
                             leftFade: 16, rightFade: 16, startDelay: 1.5)
@@ -54,9 +54,11 @@ struct NPControllerSection: View {
                     Spacer()
                     Group {
                         Button {
-                            mediaPlayer.backToStartOfTrack()
-                            currentDuration = .zero
-                            totalDuration = .zero
+                            withAnimation(.default.speed(2)) {
+                                mediaPlayer.backToPreviousTrack()
+                                currentDuration = .zero
+                                totalDuration = .zero
+                            }
                         } label: {
                             Image("Back")
                                 .resizable()
@@ -65,7 +67,7 @@ struct NPControllerSection: View {
                                 .padding()
                         }
                         .foregroundStyle(.accent)
-                        .disabled(!mediaPlayer.isPlaybackActive)
+                        .disabled(!(mediaPlayer.isPlaybackActive && mediaPlayer.canGoToPreviousTrack()))
                         Group {
                             if mediaPlayer.isPaused {
                                 Button {
@@ -105,7 +107,7 @@ struct NPControllerSection: View {
                                 .padding()
                         }
                         .foregroundStyle(.accent)
-                        .disabled(!mediaPlayer.canGoToNextTrack())
+                        .disabled(!(mediaPlayer.isPlaybackActive && mediaPlayer.canGoToNextTrack()))
                     }
                     .clipShape(Circle())
                     Spacer()
@@ -120,7 +122,7 @@ struct NPControllerSection: View {
         .task {
             await setAlbumArt()
         }
-        .onChange(of: mediaPlayer.queue, { _, _ in
+        .onChange(of: mediaPlayer.currentlyPlayingID, { _, _ in
             Task {
                 await setAlbumArt()
             }

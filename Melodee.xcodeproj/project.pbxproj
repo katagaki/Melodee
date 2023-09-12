@@ -65,6 +65,7 @@
 		E4D09A4B2AB0CBA1008D115A /* NPControllerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4A2AB0CBA1008D115A /* NPControllerSection.swift */; };
 		E4D09A4D2AB0CC4E008D115A /* NPQueueSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4C2AB0CC4E008D115A /* NPQueueSection.swift */; };
 		E4D09A4F2AB0CFE7008D115A /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4E2AB0CFE7008D115A /* SettingsManager.swift */; };
+		E4D09A502AB0F25C008D115A /* ProperDigit.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */; };
 		E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */; };
 		E4EE91EE2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */; };
 /* End PBXBuildFile section */
@@ -388,6 +389,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4D09A502AB0F25C008D115A /* ProperDigit.plist in Resources */,
 				E4A4D6782AAEF58A0062D12C /* InfoPlist.xcstrings in Resources */,
 				E4A4D64F2AAEF1200062D12C /* Assets.xcassets in Resources */,
 				E4A4D6672AAEF2170062D12C /* Localizable.xcstrings in Resources */,

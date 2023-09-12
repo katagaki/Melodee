@@ -547,13 +547,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit All Tags"
+            "value" : "Edit Track Information for All Files"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "タグを一括編集"
+            "value" : "トラック情報を一括編集"
           }
         }
       }
@@ -563,13 +563,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit Tag"
+            "value" : "Edit Track Information"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "タグを編集"
+            "value" : "トラック情報を編集"
           }
         }
       }
@@ -835,6 +835,12 @@
             "state" : "translated",
             "value" : "Yes"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "はい"
+          }
         }
       }
     },
@@ -1063,13 +1069,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tag Data"
+            "value" : "Track Information"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "タグ情報"
+            "value" : "トラック情報"
           }
         }
       }
@@ -1079,13 +1085,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You can use various tokens to make use of existing information (such as the MP3 file's filename) to edit your tags.\nScroll down to see the tokens you can use."
+            "value" : "You can use various tokens to make use of existing information (such as the MP3 file's filename) to edit track information.\nScroll down to see the tokens you can use."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "変換トークンを利用すると、ファイル名など既存の情報を利用し、より早くタグの情報を埋め込むことができます。\n下にスクロールすると、利用できるトークンがご覧になれます。"
+            "value" : "変換トークンを利用すると、ファイル名など既存の情報を利用し、より速くトラック情報を記入することができます。\n下にスクロールすると、利用できるトークンがご覧になれます。"
           }
         }
       }

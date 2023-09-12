@@ -202,7 +202,7 @@ struct TagEditorView: View {
                 tagBuilder = tagBuilder.recordingYear(frame: ID3FrameWithIntegerContent(value: value))
             }
             // Build track frame
-            if let frame = id3Frame(tagData.track, returns: ID3FramePartOfTotal.self) {
+            if let frame = id3Frame(tagData.track, returns: ID3FramePartOfTotal.self, referencing: file) {
                 tagBuilder = tagBuilder.trackPosition(frame: frame)
             } else if let tag = tag, let value = ID3TagContentReader(id3Tag: tag).trackPosition() {
                 tagBuilder = tagBuilder.trackPosition(frame: id3Frame(value.position, total: value.total))
@@ -284,6 +284,8 @@ struct TagEditorView: View {
         case is ID3FramePartOfTotal.Type:
             if value != "", let int = Int(value) {
                 return ID3FramePartOfTotal(part: int, total: nil) as? T
+            } else if value != "", let file = file, let int = Int(replaceTokens(value, file: file)) {
+                return ID3FramePartOfTotal(part: int, total: nil) as? T
             }
         case is ID3FrameGenre.Type:
             if value != "" {
@@ -339,8 +341,8 @@ struct TagEditorView: View {
         }
         var trackNumber = ""
         if let properDigits = Bundle.main.plist(named: "ProperDigit"),
-           let trackNumberFullWidth = getTrackNumber(file.name) {
-            trackNumberFullWidth.forEach { character in
+           let trackNumberDigits = getTrackNumber(file.name) {
+            trackNumberDigits.forEach { character in
                 if let digit = properDigits[String(character)] {
                     trackNumber += digit
                 } else if character.isNumber {
@@ -367,7 +369,7 @@ struct TagEditorView: View {
     func getTrackNumber(_ fileName: String) -> String? {
         if let trackNumberRegex = try? NSRegularExpression(pattern:
     """
-    【?([１２３４５６７８９０]*)?([⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑])?([①②③④⑤⑥⑦⑧⑨⑩])?([1-9]*)】?(.*)
+    【?([１２３４５６７８９０]*)([⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑]*)([①②③④⑤⑥⑦⑧⑨⑩]*)([0-9]*)】?(.*)
     """) {
             let stringRange = NSRange(fileName.startIndex..<fileName.endIndex, in: fileName)
             for match in trackNumberRegex.matches(in: fileName, options: [], range: stringRange) {

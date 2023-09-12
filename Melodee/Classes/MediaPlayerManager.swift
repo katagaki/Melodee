@@ -242,6 +242,7 @@ class MediaPlayerManager: NSObject,
         if queue.count == 1 {
             debugPrint("Killing AVAudioPlayer instance...")
             audioPlayer = nil
+            nowPlayingInfoCenter.nowPlayingInfo = nil
             queue.removeAll()
             isPlaybackActive = false
             isPaused = true

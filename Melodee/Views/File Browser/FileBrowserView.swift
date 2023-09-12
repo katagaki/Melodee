@@ -70,7 +70,7 @@ struct FileBrowserView: View {
                 refreshFiles()
             }
             .overlay {
-                if files.count == 0 {
+                if files.count == 0 && state.isInitialLoadCompleted {
                     VStack {
                         ListHintOverlay(image: "questionmark.folder",
                                         text: "FileBrowser.Hint")
@@ -165,6 +165,7 @@ struct FileBrowserView: View {
                 .sorted(by: { lhs, rhs in
                     return lhs is FSDirectory && rhs is FSFile
                 })
+            state.isInitialLoadCompleted = true
         }
     }
 

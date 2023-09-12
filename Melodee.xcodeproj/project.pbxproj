@@ -237,9 +237,9 @@
 		E4A4D65A2AAEF13E0062D12C /* Structs */ = {
 			isa = PBXGroup;
 			children = (
-				E4D09A462AB0B575008D115A /* FBState.swift */,
 				E4A4D6602AAEF1670062D12C /* FSFile.swift */,
 				E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */,
+				E4D09A462AB0B575008D115A /* FBState.swift */,
 				E4A4D66B2AAEF2E30062D12C /* FBNoFilesTip.swift */,
 				E43C84732AAF901900D87A5F /* QueueTip.swift */,
 				E43C84902AB00FD100D87A5F /* AvailableTokensTip.swift */,

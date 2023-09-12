@@ -8,6 +8,9 @@
 import Foundation
 
 struct FBState {
+    // State handling for display
+    var isInitialLoadCompleted: Bool = false
+
     // State handling for file rename
     var isRenamingFile: Bool = false
     var fileBeingRenamed: FSFile?

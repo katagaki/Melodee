@@ -13,6 +13,7 @@ class MediaPlayerManager: NSObject,
                           ObservableObject,
                           AVAudioPlayerDelegate {
 
+    let notificationCenter = NotificationCenter.default
     let audioSession = AVAudioSession.sharedInstance()
     let remoteCommandCenter = MPRemoteCommandCenter.shared()
     let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
@@ -59,6 +60,11 @@ class MediaPlayerManager: NSObject,
                 }
                 return .commandFailed
             }
+            // Set up interruption notification observer
+            notificationCenter.addObserver(self,
+                                           selector: #selector(handleInterruption),
+                                           name: AVAudioSession.interruptionNotification,
+                                           object: AVAudioSession.sharedInstance())
         } catch {
             debugPrint(error.localizedDescription)
         }
@@ -213,6 +219,25 @@ class MediaPlayerManager: NSObject,
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.duration
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.rate
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
+
+    @objc func handleInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+                return
+        }
+        switch type {
+        case .began:
+            isPaused = true
+        case .ended:
+            guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+            if options.contains(.shouldResume) {
+                isPaused = false
+            }
+        default: ()
+        }
     }
 
     func albumArt() async -> UIImage {

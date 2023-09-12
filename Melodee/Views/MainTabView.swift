@@ -13,6 +13,7 @@ struct MainTabView: View {
 
     @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var settings: SettingsManager
 
     var body: some View {
         TabView(selection: $tabManager.selectedTab) {
@@ -25,10 +26,12 @@ struct MainTabView: View {
                 .overlay {
                     ZStack(alignment: .bottom) {
                         Color.clear
-                        NowPlayingBar()
-                            .onTapGesture {
-                                tabManager.selectedTab = .nowPlaying
-                            }
+                        if settings.showNowPlayingBar {
+                            NowPlayingBar()
+                                .onTapGesture {
+                                    tabManager.selectedTab = .nowPlaying
+                                }
+                        }
                     }
                 }
             NowPlayingView()

@@ -15,6 +15,7 @@ struct MelodeeApp: App {
     @StateObject var navigationManager = NavigationManager()
     @StateObject var fileManager = FilesystemManager()
     @StateObject var mediaPlayer = MediaPlayerManager()
+    @StateObject var settings = SettingsManager()
 
     var body: some Scene {
         WindowGroup {
@@ -23,6 +24,7 @@ struct MelodeeApp: App {
                 .environmentObject(navigationManager)
                 .environmentObject(fileManager)
                 .environmentObject(mediaPlayer)
+                .environmentObject(settings)
         }
     }
 }

@@ -13,6 +13,7 @@ struct FileBrowserView: View {
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var fileManager: FilesystemManager
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @EnvironmentObject var settings: SettingsManager
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
@@ -50,8 +51,10 @@ struct FileBrowserView: View {
             }
             .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) {
-                Color.clear
-                    .frame(height: 56.0)
+                if settings.showNowPlayingBar {
+                    Color.clear
+                        .frame(height: 56.0)
+                }
             }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {

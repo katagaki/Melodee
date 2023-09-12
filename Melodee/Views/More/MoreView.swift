@@ -10,10 +10,21 @@ import SwiftUI
 struct MoreView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var settings: SettingsManager
 
     var body: some View {
         NavigationStack(path: $navigationManager.moreTabPath) {
             List {
+                Section {
+                    Toggle(isOn: $settings.showNowPlayingBar, label: {
+                        ListRow(image: "ListIcon.NowPlayingBar",
+                                title: "More.General.ShowNowPlayingBar",
+                                includeSpacer: true)
+                    })
+                } header: {
+                    ListSectionHeader(text: "More.General")
+                        .font(.body)
+                }
                 Section {
                     Link(destination: URL(string: "https://x.com/katagaki_")!) {
                         HStack {
@@ -65,6 +76,9 @@ struct MoreView: View {
                 case .moreAttributions: LicensesView()
                 default: Color.clear
                 }
+            })
+            .onChange(of: settings.showNowPlayingBar, { _, newValue in
+                settings.setShowNowPlayingBar(newValue)
             })
             .navigationTitle("ViewTitle.More")
         }

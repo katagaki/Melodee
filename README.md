@@ -1,3 +1,3 @@
 # Melodee
 
-A basic MP3 player built for iOS.
+A basic audio file player built for iOS.

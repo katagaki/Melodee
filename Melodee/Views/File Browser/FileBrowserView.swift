@@ -31,7 +31,7 @@ struct FileBrowserView: View {
                             ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
                                 mediaPlayer.stop()
                                 for file in files {
-                                    if let file = file as? FSFile {
+                                    if let file = file as? FSFile, file.type == .audio {
                                         mediaPlayer.queueLast(file: file)
                                     }
                                 }
@@ -41,7 +41,7 @@ struct FileBrowserView: View {
                                 mediaPlayer.stop()
                                 var filesReordered: [FSFile] = []
                                 for file in files {
-                                    if let file = file as? FSFile {
+                                    if let file = file as? FSFile, file.type == .audio {
                                         filesReordered.append(file)
                                     }
                                 }

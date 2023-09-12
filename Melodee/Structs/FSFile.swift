@@ -11,7 +11,9 @@ import SwiftUI
 struct FSFile: FilesystemObject {
 
     var name: String
+    var `extension`: String
     var path: String
+    var type: FileType
     var playbackQueueID: String = ""
 
     func hash(into hasher: inout Hasher) {

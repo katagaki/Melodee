@@ -53,7 +53,14 @@ class FilesystemManager: ObservableObject {
                                 switch fileExtension {
                                 case "mp3", "m4a", "wav", "alac":
                                     return FSFile(name: url.lastPathComponent,
-                                                  path: url.path)
+                                                  extension: url.pathExtension.lowercased(),
+                                                  path: url.path,
+                                                  type: .audio)
+                                case "zip":
+                                    return FSFile(name: url.lastPathComponent,
+                                                  extension: url.pathExtension.lowercased(),
+                                                  path: url.path,
+                                                  type: .zip)
                                 default: break
                                 }
                             }
@@ -65,6 +72,18 @@ class FilesystemManager: ObservableObject {
             debugPrint(error.localizedDescription)
         }
         return []
+    }
+
+    func createDirectory(at directoryPath: String) {
+        if !directoryOrFileExists(at: directoryPath) {
+            do {
+                try FileManager.default.createDirectory(atPath: directoryPath,
+                                                        withIntermediateDirectories: true,
+                                                        attributes: nil)
+            } catch {
+                debugPrint("Error occurred while creating directory: \(error.localizedDescription)")
+            }
+        }
     }
 
     func directoryOrFileExists(at directoryPath: String) -> Bool {

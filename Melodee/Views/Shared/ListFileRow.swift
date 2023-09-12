@@ -15,7 +15,7 @@ struct ListFileRow: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 16.0) {
-            Image("AudioFile")
+            file.type.icon()
                 .resizable()
                 .scaledToFit()
                 .frame(width: 28.0, height: 28.0)

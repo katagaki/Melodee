@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TipKit
+import ZIPFoundation
 
 struct FileBrowserView: View {
 
@@ -15,6 +16,13 @@ struct FileBrowserView: View {
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
+
+    @State var extractionProgress: Progress?
+    @State var isExtractingZIP: Bool = false
+    @State var extractionPercentage: Int = 0
+    @State var isExtractionCancelling: Bool = false
+    @State var isErrorAlertPresenting: Bool = false
+    @State var errorText: String = ""
 
     var body: some View {
         NavigationStack(path: $navigationManager.filesTabPath) {
@@ -67,33 +75,74 @@ struct FileBrowserView: View {
                                 ListFolderRow(name: directory.name)
                             }
                         } else if let file = file as? FSFile {
-                            Button {
-                                mediaPlayer.playImmediately(file)
-                            } label: {
+                            switch file.type {
+                            case .audio:
+                                Button {
+                                    mediaPlayer.playImmediately(file)
+                                } label: {
+                                    ListFileRow(file: .constant(file))
+                                        .tint(.primary)
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                    Button {
+                                        withAnimation(.default.speed(2)) {
+                                            mediaPlayer.queueNext(file: file)
+                                        }
+                                    } label: {
+                                        Label("Shared.Play.Next",
+                                              systemImage: "text.line.first.and.arrowtriangle.forward")
+                                    }
+                                    .tint(.purple)
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button {
+                                        withAnimation(.default.speed(2)) {
+                                            mediaPlayer.queueLast(file: file)
+                                        }
+                                    } label: {
+                                        Label("Shared.Play.Last",
+                                              systemImage: "text.line.last.and.arrowtriangle.forward")
+                                    }
+                                    .tint(.orange)
+                                }
+                                .contextMenu(menuItems: {
+                                    FileContextMenu(file: file)
+                                })
+                            case .image:
                                 ListFileRow(file: .constant(file))
-                                    .tint(.primary)
-                            }
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            case .zip:
                                 Button {
-                                    withAnimation(.default.speed(2)) {
-                                        mediaPlayer.queueNext(file: file)
-                                    }
+                                    extractFiles(file: file)
                                 } label: {
-                                    Label("Shared.Play.Next", systemImage: "text.line.first.and.arrowtriangle.forward")
+                                    ListFileRow(file: .constant(file))
+                                        .tint(.primary)
                                 }
-                                .tint(.purple)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button {
-                                    withAnimation(.default.speed(2)) {
-                                        mediaPlayer.queueLast(file: file)
-                                    }
-                                } label: {
-                                    Label("Shared.Play.Last", systemImage: "text.line.last.and.arrowtriangle.forward")
-                                }
-                                .tint(.orange)
                             }
                         }
+                    }
+                }
+                if folderContainsEditableMP3s() {
+                    Section {
+                        HStack(alignment: .center, spacing: 8.0) {
+                            Group {
+                                ActionButton(text: "Shared.EditTag.All", icon: "Tag") {
+                                    var validFiles: [FSFile] = []
+                                    for file in files {
+                                        if let file = file as? FSFile, file.extension == "mp3" {
+                                            validFiles.append(file)
+                                        }
+                                    }
+                                    navigationManager.push(ViewPath.tagEditorMultiple(files: validFiles),
+                                                           for: .fileManager)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .disabled(!files.contains(where: { $0 is FSFile }))
+                        }
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
+                        .buttonStyle(.plain)
+                        .frame(maxWidth: .infinity)
                     }
                 }
             }
@@ -105,6 +154,8 @@ struct FileBrowserView: View {
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
+                case .tagEditorSingle(let file): TagEditorView(files: [file])
+                case .tagEditorMultiple(let files): TagEditorView(files: files)
                 default: Color.clear
                 }
             })
@@ -119,37 +170,36 @@ struct FileBrowserView: View {
                     }
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    HStack {
-                        if currentDirectory == nil {
-                            Button {
-                                let documentsUrl = FileManager.default.urls(for: .documentDirectory,
-                                                                            in: .userDomainMask).first!
-                                if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
-                                    if UIApplication.shared.canOpenURL(sharedUrl) {
-                                        UIApplication.shared.open(sharedUrl, options: [:])
-                                    }
-                                }
-                            } label: {
-                                HStack(alignment: .center, spacing: 8.0) {
-                                    Image("SystemApps.Files")
-                                        .resizable()
-                                        .frame(width: 30.0, height: 30.0)
-                                        .clipShape(RoundedRectangle(cornerRadius: 6.0))
-                                        .overlay {
-                                            RoundedRectangle(cornerRadius: 6.0)
-                                                .stroke(.black, lineWidth: 1/3)
-                                                .opacity(0.3)
-                                        }
-                                    Text("Shared.OpenFilesApp")
-                                }
-                            }
-                            .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
+            .overlay {
+                if isExtractingZIP {
+                    ProgressAlert(title: "Alert.ExtractingZIP.Title",
+                                  message: "Alert.ExtractingZIP.Text",
+                                  percentage: $extractionPercentage) {
+                        withAnimation(.easeOut.speed(2)) {
+                            isExtractionCancelling = true
+                            extractionProgress?.cancel()
+                            extractionPercentage = 0
+                            isExtractingZIP = false
                         }
                     }
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack {
+                        if currentDirectory == nil {
+                            OpenFilesAppButton()
+                                .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
+                        }
+                    }
+                }
+            }
+            .alert(Text("Alert.ExtractingZIP.Error.Title"), isPresented: $isErrorAlertPresenting, actions: {
+                Button("Shared.OK", role: .cancel) { }
+            },
+                   message: {
+                Text(verbatim: errorText)
+            })
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -168,6 +218,68 @@ struct FileBrowserView: View {
                     return lhs is FSDirectory && rhs is FSFile
                 })
         }
+    }
+
+    func extractFiles(file: FSFile, encoding: String.Encoding = .shiftJIS) {
+        withAnimation(.easeOut.speed(2)) {
+            isExtractingZIP = true
+        }
+        let destinationURL = URL(filePath: file.path).deletingPathExtension()
+        let destinationDirectory = destinationURL.path().removingPercentEncoding ?? destinationURL.path()
+        debugPrint("Attempting to create directory \(destinationDirectory)...")
+        fileManager.createDirectory(at: destinationDirectory)
+        debugPrint("Attempting to extract ZIP to \(destinationDirectory)...")
+        extractionProgress = Progress()
+        DispatchQueue.global(qos: .background).async {
+            let observation = extractionProgress?.observe(\.fractionCompleted) { progress, _ in
+                DispatchQueue.main.async {
+                    extractionPercentage = Int(progress.fractionCompleted * 100)
+                }
+            }
+            do {
+                try FileManager().unzipItem(at: URL(filePath: file.path),
+                                            to: URL(filePath: destinationDirectory),
+                                            skipCRC32: true,
+                                            progress: extractionProgress,
+                                            preferredEncoding: encoding)
+                DispatchQueue.main.async {
+                    withAnimation(.easeOut.speed(2)) {
+                        isExtractingZIP = false
+                    }
+                    refreshFiles()
+                }
+            } catch {
+                if !isExtractionCancelling {
+                    debugPrint("Error occurred while extracting ZIP: \(error.localizedDescription)")
+                    if encoding == .shiftJIS {
+                        debugPrint("Attempting extraction with UTF-8...")
+                        extractFiles(file: file, encoding: .utf8)
+                    } else {
+                        DispatchQueue.main.async {
+                            errorText = error.localizedDescription
+                            withAnimation(.easeOut.speed(2)) {
+                                isExtractingZIP = false
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                isErrorAlertPresenting = true
+                            }
+                        }
+                    }
+                } else {
+                    isExtractionCancelling = false
+                }
+            }
+            observation?.invalidate()
+        }
+    }
+
+    func folderContainsEditableMP3s() -> Bool {
+        for file in files {
+            if let file = file as? FSFile, file.extension == "mp3" {
+                return true
+            }
+        }
+        return false
     }
 
 }

@@ -53,7 +53,7 @@ struct FileBrowserView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        .disabled(!files.contains(where: { $0 is FSFile }))
+                        .disabled(!folderContainsPlayableAudio())
                     }
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
@@ -236,6 +236,15 @@ struct FileBrowserView: View {
                     return lhs is FSDirectory && rhs is FSFile
                 })
         }
+    }
+
+    func folderContainsPlayableAudio() -> Bool {
+        for file in files {
+            if let file = file as? FSFile, file.type == .audio {
+                return true
+            }
+        }
+        return false
     }
 
     func folderContainsEditableMP3s() -> Bool {

@@ -51,7 +51,7 @@ class MediaPlayerManager: NSObject,
                 return .success
             }
             remoteCommandCenter.previousTrackCommand.addTarget { _ in
-                self.backToStartOfTrack()
+                self.backToPreviousTrack()
                 return .success
             }
             remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
@@ -106,13 +106,18 @@ class MediaPlayerManager: NSObject,
             audioPlayer.stop()
         }
         // Queue and/or play new file
+        let currentlyPlayingIndex = currentlyPlayingIndex()
         if addToQueue {
-            queue.insert(file, at: currentlyPlayingIndex())
+            queue.insert(file, at: currentlyPlayingIndex)
             setQueueIDs()
         }
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
-            currentlyPlayingID = file.playbackQueueID
+            if file.playbackQueueID == "" {
+                currentlyPlayingID = queue[currentlyPlayingIndex].playbackQueueID
+            } else {
+                currentlyPlayingID = file.playbackQueueID
+            }
             play()
         } catch {
             debugPrint(error.localizedDescription)
@@ -163,6 +168,7 @@ class MediaPlayerManager: NSObject,
             audioPlayer.stop()
             queue.removeAll()
             self.audioPlayer = nil
+            currentlyPlayingID = ""
             isPlaybackActive = false
             isPaused = false
         }
@@ -180,13 +186,6 @@ class MediaPlayerManager: NSObject,
         if canGoToPreviousTrack() {
             playImmediately(queue[currentlyPlayingIndex() - 1], addToQueue: false)
         } else {
-            setNowPlaying()
-        }
-    }
-
-    func backToStartOfTrack() {
-        if let audioPlayer = audioPlayer {
-            audioPlayer.currentTime = 0.0
             setNowPlaying()
         }
     }

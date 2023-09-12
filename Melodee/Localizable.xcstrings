@@ -376,6 +376,23 @@
         }
       }
     },
+    "NowPlaying.ClearQueue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Queue"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生キューをクリア"
+          }
+        }
+      }
+    },
     "NowPlaying.Tip.Queue.Text" : {
       "localizations" : {
         "en" : {

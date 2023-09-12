@@ -16,7 +16,7 @@ struct NPControllerSection: View {
     @State var totalDuration: TimeInterval = .zero
     @State var isSeekbarSeeking: Bool = false
 
-    let updateTimer = Timer.publish(every: 1, on: .current, in: .common).autoconnect()
+    let updateTimer = Timer.publish(every: 0.5, on: .current, in: .common).autoconnect()
 
     var body: some View {
         Section {

@@ -232,7 +232,9 @@ struct FileBrowserView: View {
                         refreshFiles()
                     }
                 }
-                Button("Shared.Cancel", role: .cancel) { }
+                Button("Shared.Cancel", role: .cancel) {
+                    fileBeingRenamed = nil
+                }
             })
             .alert("Alert.ExtractingZIP.Error.Title", isPresented: $isErrorAlertPresenting, actions: {
                 Button("Shared.OK", role: .cancel) { }

@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/12.
 //
 
+import AVFoundation
 import Foundation
 import ID3TagEditor
 
@@ -14,7 +15,7 @@ struct TagTyped {
     var title, artist, album, albumArtist, genre, composer: String?
     var year, track, discNumber: Int?
 
-    init(reader tagContentReader: ID3TagContentReader) {
+    init(_ file: FSFile, reader tagContentReader: ID3TagContentReader) async {
         title = tagContentReader.title() ?? ""
         artist = tagContentReader.artist() ?? ""
         album = tagContentReader.album() ?? ""
@@ -35,11 +36,13 @@ struct TagTyped {
             albumArt = albumArtFromTag.picture
         } else if let albumArtFromTag = tagContentReader.attachedPictures().first {
             albumArt = albumArtFromTag.picture
+        } else {
+            albumArt = await albumArtUsingAVPlayer(file: file)
         }
     }
 
     // swiftlint:disable cyclomatic_complexity
-    mutating func merge(with tagContentReader: ID3TagContentReader) {
+    mutating func merge(with file: FSFile, reader tagContentReader: ID3TagContentReader) async {
         if title != tagContentReader.title() ?? "" {
             title = nil
         }
@@ -80,6 +83,14 @@ struct TagTyped {
             if albumArt != albumArtFromTag.picture {
                 albumArt = nil
             }
+        } else if let albumArtFromTag = tagContentReader.attachedPictures().first {
+            if albumArt != albumArtFromTag.picture {
+                albumArt = nil
+            }
+        } else if let albumArtFromTag = await albumArtUsingAVPlayer(file: file) {
+            if albumArt != albumArtFromTag {
+                albumArt = nil
+            }
         } else {
             if albumArt != nil {
                 albumArt = nil
@@ -87,4 +98,24 @@ struct TagTyped {
         }
     }
     // swiftlint:enable cyclomatic_complexity
+
+    func albumArtUsingAVPlayer(file: FSFile) async -> Data? {
+        do {
+            let playerItem = AVPlayerItem(url: URL(filePath: file.path))
+            let metadataList = try await playerItem.asset.load(.metadata)
+            for item in metadataList {
+                switch item.commonKey {
+                case .commonKeyArtwork?:
+                    if let data = try await item.load(.dataValue) {
+                        return data
+                    }
+                default: break
+                }
+            }
+        } catch {
+            debugPrint(error.localizedDescription)
+        }
+        return nil
+    }
+
 }

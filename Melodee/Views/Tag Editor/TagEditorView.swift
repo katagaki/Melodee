@@ -58,7 +58,7 @@ struct TagEditorView: View {
                             Task {
                                 changeSaveState(to: .saving)
                                 await saveAllTagData()
-                                readAllTagData()
+                                await readAllTagData()
                                 changeSaveState(to: .saved)
                             }
                         }
@@ -100,8 +100,8 @@ struct TagEditorView: View {
                 .bold()
             }
         }
-        .onAppear {
-            readAllTagData()
+        .task {
+            await readAllTagData()
         }
         .onChange(of: selectedAlbumArt) { _, _ in
             Task {
@@ -123,7 +123,7 @@ struct TagEditorView: View {
         }
     }
 
-    func readAllTagData() {
+    func readAllTagData() async {
         debugPrint("Attempting to read tag data for \(files.count) files...")
         // Check for common tag data betwen all files
         var tagCombined: TagTyped?
@@ -135,9 +135,9 @@ struct TagEditorView: View {
                     tags.updateValue(tag, forKey: file)
                     let tagContentReader = ID3TagContentReader(id3Tag: tag)
                     if tagCombined == nil {
-                        tagCombined = TagTyped(reader: tagContentReader)
+                        tagCombined = await TagTyped(file, reader: tagContentReader)
                     } else {
-                        tagCombined!.merge(with: tagContentReader)
+                        await tagCombined!.merge(with: file, reader: tagContentReader)
                     }
                 }
             } catch {
@@ -332,28 +332,15 @@ struct TagEditorView: View {
             .replacingOccurrences(of: ".mp3",
                                   with: "")
             .components(separatedBy: " - ")
-        if componentsSplitByDash.count >= 1 {
+        let tokens: [String: String] = [
+            "filename": file.name,
+            "splitFront": componentsSplitByDash[0],
+            "splitBack": componentsSplitByDash.count >= 2 ? componentsSplitByDash[1] : ""
+        ]
+        for (key, value) in tokens {
             processedString = processedString
-                .replacingOccurrences(of: "%SPLITFRONT%",
-                                      with: componentsSplitByDash[0])
-        } else {
-            processedString = processedString
-                .replacingOccurrences(of: "%SPLITFRONT%",
-                                      with: "")
+                .replacingOccurrences(of: "%\(key)%", with: value, options: .caseInsensitive)
         }
-        if componentsSplitByDash.count >= 2 {
-            processedString = processedString
-                .replacingOccurrences(of: "%SPLITBACK%",
-                                      with: componentsSplitByDash[1])
-        } else {
-            processedString = processedString
-                .replacingOccurrences(of: "%SPLITBACK%",
-                                      with: "")
-        }
-        processedString =  processedString
-            .replacingOccurrences(of: "%filename%",
-                                  with: file.name.replacingOccurrences(of: ".mp3", with: ""),
-                                  options: .caseInsensitive)
         return processedString
     }
 

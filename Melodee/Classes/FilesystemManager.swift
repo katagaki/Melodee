@@ -55,12 +55,12 @@ class FilesystemManager: ObservableObject {
                                 let fileExtension = url.pathExtension.lowercased()
                                 switch fileExtension {
                                 case "mp3", "m4a", "wav", "alac":
-                                    return FSFile(name: url.lastPathComponent,
+                                    return FSFile(name: url.deletingPathExtension().lastPathComponent,
                                                   extension: url.pathExtension.lowercased(),
                                                   path: url.path,
                                                   type: .audio)
                                 case "zip":
-                                    return FSFile(name: url.lastPathComponent,
+                                    return FSFile(name: url.deletingPathExtension().lastPathComponent,
                                                   extension: url.pathExtension.lowercased(),
                                                   path: url.path,
                                                   type: .zip)

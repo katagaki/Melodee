@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ListFileRow: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
-
     @Binding var file: FSFile
 
     var body: some View {

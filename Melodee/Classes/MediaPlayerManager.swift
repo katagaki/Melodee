@@ -78,42 +78,44 @@ class MediaPlayerManager: NSObject,
     }
 
     func playImmediately(_ file: FSFile, addToQueue: Bool = true) {
+        // Stop audio if it's playing
+        if let audioPlayer = audioPlayer {
+            audioPlayer.stop()
+        }
+        // Queue and/or play new file
+        if addToQueue {
+            if !queue.isEmpty {
+                queue.remove(at: 0)
+            }
+            queue.insert(file, at: 0)
+            setQueueIDs()
+        }
         do {
-            // Stop audio if it's playing
-            if let audioPlayer = audioPlayer {
-                audioPlayer.stop()
-            }
-            // Queue and/or play new file
-            if addToQueue {
-                if !queue.isEmpty {
-                    queue.remove(at: 0)
-                }
-                queue.insert(file, at: 0)
-                setQueueIDs()
-            }
             audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
             play()
         } catch {
             debugPrint(error.localizedDescription)
+            skipToNextTrack()
         }
     }
 
     func play() {
-        do {
-            if let audioPlayer = audioPlayer {
-                audioPlayer.delegate = self
-                audioPlayer.play()
-                isPlaybackActive = true
-                isPaused = false
-                setNowPlaying()
-            } else {
-                if let file = queue.first {
-                    audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
-                    play()
+        if let audioPlayer = audioPlayer {
+            audioPlayer.delegate = self
+            audioPlayer.play()
+            isPlaybackActive = true
+            isPaused = false
+            setNowPlaying()
+        } else {
+            if let file = queue.first {
+                do {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
+                play()
+                } catch {
+                    debugPrint(error.localizedDescription)
+                    skipToNextTrack()
                 }
             }
-        } catch {
-            debugPrint(error.localizedDescription)
         }
     }
 

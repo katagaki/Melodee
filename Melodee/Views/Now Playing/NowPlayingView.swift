@@ -25,8 +25,8 @@ struct NowPlayingView: View {
                     VStack(alignment: .center, spacing: 16.0) {
                         albumArt
                             .resizable()
-                            .scaledToFill()
-                            .frame(width: 200.0, height: 200.0)
+                            .scaledToFit()
+                            .frame(height: 200.0)
                             .clipShape(RoundedRectangle(cornerRadius: 16.0))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16.0)
@@ -35,6 +35,7 @@ struct NowPlayingView: View {
                             )
                             .shadow(color: .black.opacity(0.1), radius: 10.0)
                             .padding(.bottom)
+                            .transition(.slide.animation(.default))
                         MarqueeText(text: mediaPlayer.currentQueueFile()?.name ??
                                     NSLocalizedString("Shared.NoFilePlaying", comment: ""),
                                     font: UIFont.preferredFont(forTextStyle: .body),

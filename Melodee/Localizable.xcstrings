@@ -943,6 +943,74 @@
         }
       }
     },
+    "TagEditor.Tokens.DashBack.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Represents the text in the file name after the '-' (dash) symbol.\nFor example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Never Gonna Give You Up\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名にある「-」の後ろのテキストに変換します。\n例えば、「さユり - 花の塔.mp3」の場合、「花の塔」になります。"
+          }
+        }
+      }
+    },
+    "TagEditor.Tokens.DashFront.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Represents the text in the file name before the '-' (dash) symbol.\nFor example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Rick Astley\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名にある「-」の前のテキストに変換します。\n例えば、「さユり - 花の塔.mp3」の場合、「さユり」になります。"
+          }
+        }
+      }
+    },
+    "TagEditor.Tokens.DotBack.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Represents the text in the file name after the '.' (period) symbol.\nFor example, \"1. Never Gonna Give You Up.mp3\" will result in \"Never Gonna Give You Up\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名にある「.」の後ろのテキストに変換します。\n例えば、「1. 花の塔.mp3」の場合、「花の塔」になります。"
+          }
+        }
+      }
+    },
+    "TagEditor.Tokens.DotFront.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Represents the text in the file name before the '.' (period) symbol.\nFor example, \"1. Never Gonna Give You Up.mp3\" will result in \"1\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名にある「.」の前のテキストに変換します。\n例えば、「1. 花の塔.mp3」の場合、「1」になります。"
+          }
+        }
+      }
+    },
     "TagEditor.Tokens.Filename.Description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -973,40 +1041,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "内包しているフォルダーの名前に変換します。"
-          }
-        }
-      }
-    },
-    "TagEditor.Tokens.SplitBack.Description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Represents the text in the file name after the '-' (dash) symbol. For example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Never Gonna Give You Up\"."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ファイル名にある「-」の後ろのテキストに変換します。例えば、「さユり - 花の塔.mp3」の場合、「花の塔」になります。"
-          }
-        }
-      }
-    },
-    "TagEditor.Tokens.SplitFront.Description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Represents the text in the file name before the '-' (dash) symbol. For example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Rick Astley\"."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ファイル名にある「-」の前のテキストに変換します。例えば、「さユり - 花の塔.mp3」の場合、「さユり」になります。"
           }
         }
       }

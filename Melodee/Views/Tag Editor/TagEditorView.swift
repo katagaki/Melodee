@@ -39,8 +39,10 @@ struct TagEditorView: View {
             Section {
                 AvailableTokenRow(tokenName: "FILENAME", tokenDescription: "TagEditor.Tokens.Filename.Description")
                 AvailableTokenRow(tokenName: "FOLDERNAME", tokenDescription: "TagEditor.Tokens.FolderName.Description")
-                AvailableTokenRow(tokenName: "SPLITFRONT", tokenDescription: "TagEditor.Tokens.SplitFront.Description")
-                AvailableTokenRow(tokenName: "SPLITBACK", tokenDescription: "TagEditor.Tokens.SplitBack.Description")
+                AvailableTokenRow(tokenName: "DASHFRONT", tokenDescription: "TagEditor.Tokens.DashFront.Description")
+                AvailableTokenRow(tokenName: "DASHBACK", tokenDescription: "TagEditor.Tokens.DashBack.Description")
+                AvailableTokenRow(tokenName: "DOTFRONT", tokenDescription: "TagEditor.Tokens.DotFront.Description")
+                AvailableTokenRow(tokenName: "DOTBACK", tokenDescription: "TagEditor.Tokens.DotBack.Description")
             } header: {
                 VStack(alignment: .leading, spacing: 2.0) {
                     ListSectionHeader(text: "TagEditor.Tokens.Title")
@@ -328,22 +330,25 @@ struct TagEditorView: View {
     }
 
     func replaceTokens(_ original: String, file: FSFile) -> String {
-        var processedString = original
-        let componentsSplitByDash = file.name
-            .replacingOccurrences(of: ".mp3",
-                                  with: "")
-            .components(separatedBy: " - ")
+        var newString = original
+        let componentsDash = file.name.components(separatedBy: "-").map { string in
+            string.trimmingCharacters(in: .whitespaces)
+        }
+        let componentsDot = file.name.components(separatedBy: ".").map { string in
+            string.trimmingCharacters(in: .whitespaces)
+        }
         let tokens: [String: String] = [
             "fileName": file.name,
             "folderName": URL(filePath: file.path).deletingLastPathComponent().lastPathComponent,
-            "splitFront": componentsSplitByDash[0],
-            "splitBack": componentsSplitByDash.count >= 2 ? componentsSplitByDash[1] : ""
+            "dashFront": componentsDash[0],
+            "dashBack": componentsDash.count >= 2 ? componentsDash[1] : "",
+            "dotFront": componentsDot[0],
+            "dotBack": componentsDot.count >= 2 ? componentsDot[1] : ""
         ]
         for (key, value) in tokens {
-            processedString = processedString
-                .replacingOccurrences(of: "%\(key)%", with: value, options: .caseInsensitive)
+            newString = newString.replacingOccurrences(of: "%\(key)%", with: value, options: .caseInsensitive)
         }
-        return processedString
+        return newString
     }
 
     func changeSaveState(to newState: SaveState) {

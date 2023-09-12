@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TipKit
-import ZIPFoundation
 
 struct FileBrowserView: View {
 
@@ -17,7 +16,6 @@ struct FileBrowserView: View {
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
 
-    @State var extractionProgress: Progress?
     @State var isExtractingZIP: Bool = false
     @State var extractionPercentage: Int = 0
     @State var isExtractionCancelling: Bool = false
@@ -112,7 +110,27 @@ struct FileBrowserView: View {
                                 ListFileRow(file: .constant(file))
                             case .zip:
                                 Button {
-                                    extractFiles(file: file)
+                                    withAnimation(.easeOut.speed(2)) {
+                                        isExtractingZIP = true
+                                    }
+                                    fileManager.extractFiles(file: file) {
+                                        extractionPercentage =
+                                            Int((fileManager.extractionProgress?.fractionCompleted ?? 0) * 100)
+                                    } onError: { error in
+                                        withAnimation(.easeOut.speed(2)) {
+                                            isExtractingZIP = false
+                                            errorText = error
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                            isErrorAlertPresenting = true
+                                        }
+                                    } onCompletion: {
+                                        withAnimation(.easeOut.speed(2)) {
+                                            isExtractingZIP = false
+                                        }
+                                        refreshFiles()
+                                    }
+
                                 } label: {
                                     ListFileRow(file: .constant(file))
                                         .tint(.primary)
@@ -177,7 +195,7 @@ struct FileBrowserView: View {
                                   percentage: $extractionPercentage) {
                         withAnimation(.easeOut.speed(2)) {
                             isExtractionCancelling = true
-                            extractionProgress?.cancel()
+                            fileManager.extractionProgress?.cancel()
                             extractionPercentage = 0
                             isExtractingZIP = false
                         }
@@ -217,59 +235,6 @@ struct FileBrowserView: View {
                 .sorted(by: { lhs, rhs in
                     return lhs is FSDirectory && rhs is FSFile
                 })
-        }
-    }
-
-    func extractFiles(file: FSFile, encoding: String.Encoding = .shiftJIS) {
-        withAnimation(.easeOut.speed(2)) {
-            isExtractingZIP = true
-        }
-        let destinationURL = URL(filePath: file.path).deletingPathExtension()
-        let destinationDirectory = destinationURL.path().removingPercentEncoding ?? destinationURL.path()
-        debugPrint("Attempting to create directory \(destinationDirectory)...")
-        fileManager.createDirectory(at: destinationDirectory)
-        debugPrint("Attempting to extract ZIP to \(destinationDirectory)...")
-        extractionProgress = Progress()
-        DispatchQueue.global(qos: .background).async {
-            let observation = extractionProgress?.observe(\.fractionCompleted) { progress, _ in
-                DispatchQueue.main.async {
-                    extractionPercentage = Int(progress.fractionCompleted * 100)
-                }
-            }
-            do {
-                try FileManager().unzipItem(at: URL(filePath: file.path),
-                                            to: URL(filePath: destinationDirectory),
-                                            skipCRC32: true,
-                                            progress: extractionProgress,
-                                            preferredEncoding: encoding)
-                DispatchQueue.main.async {
-                    withAnimation(.easeOut.speed(2)) {
-                        isExtractingZIP = false
-                    }
-                    refreshFiles()
-                }
-            } catch {
-                if !isExtractionCancelling {
-                    debugPrint("Error occurred while extracting ZIP: \(error.localizedDescription)")
-                    if encoding == .shiftJIS {
-                        debugPrint("Attempting extraction with UTF-8...")
-                        extractFiles(file: file, encoding: .utf8)
-                    } else {
-                        DispatchQueue.main.async {
-                            errorText = error.localizedDescription
-                            withAnimation(.easeOut.speed(2)) {
-                                isExtractingZIP = false
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                isErrorAlertPresenting = true
-                            }
-                        }
-                    }
-                } else {
-                    isExtractionCancelling = false
-                }
-            }
-            observation?.invalidate()
         }
     }
 

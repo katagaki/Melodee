@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class FilesystemManager: ObservableObject {
 
@@ -13,6 +14,7 @@ class FilesystemManager: ObservableObject {
     var documentsDirectory: String?
 
     @Published var files: [any FilesystemObject] = []
+    @Published var extractionProgress: Progress?
 
     init() {
         do {
@@ -88,5 +90,54 @@ class FilesystemManager: ObservableObject {
 
     func directoryOrFileExists(at directoryPath: String) -> Bool {
         return FileManager.default.fileExists(atPath: directoryPath)
+    }
+
+    func extractFiles(file: FSFile,
+                      encoding: String.Encoding = .shiftJIS,
+                      onProgressUpdate: @escaping () -> Void,
+                      onError: @escaping (String) -> Void,
+                      onCompletion: @escaping () -> Void) {
+        let destinationURL = URL(filePath: file.path).deletingPathExtension()
+        let destinationDirectory = destinationURL.path().removingPercentEncoding ?? destinationURL.path()
+        debugPrint("Attempting to create directory \(destinationDirectory)...")
+        createDirectory(at: destinationDirectory)
+        debugPrint("Attempting to extract ZIP to \(destinationDirectory)...")
+        extractionProgress = Progress()
+        DispatchQueue.global(qos: .background).async {
+            let observation = self.extractionProgress?.observe(\.fractionCompleted) { _, _ in
+                DispatchQueue.main.async {
+                    onProgressUpdate()
+                }
+            }
+            do {
+                try FileManager().unzipItem(at: URL(filePath: file.path),
+                                            to: URL(filePath: destinationDirectory),
+                                            skipCRC32: true,
+                                            progress: self.extractionProgress,
+                                            preferredEncoding: encoding)
+                DispatchQueue.main.async {
+                    onCompletion()
+                }
+            } catch {
+                if !(self.extractionProgress?.isCancelled ?? false) {
+                    debugPrint("Error occurred while extracting ZIP: \(error.localizedDescription)")
+                    if encoding == .shiftJIS {
+                        debugPrint("Attempting extraction with UTF-8...")
+                        self.extractFiles(file: file,
+                                          encoding: .utf8,
+                                          onProgressUpdate: onProgressUpdate,
+                                          onError: onError,
+                                          onCompletion: onCompletion)
+                    } else {
+                        DispatchQueue.main.async {
+                            onError(error.localizedDescription)
+                        }
+                    }
+                } else {
+                    debugPrint("ZIP extraction cancelled!")
+                }
+            }
+            observation?.invalidate()
+        }
     }
 }

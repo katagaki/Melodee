@@ -216,7 +216,7 @@ class MediaPlayerManager: NSObject,
         remoteCommandCenter.playCommand.isEnabled = canStartPlayback()
         remoteCommandCenter.pauseCommand.isEnabled = audioPlayer.isPlaying
         remoteCommandCenter.nextTrackCommand.isEnabled = canGoToNextTrack()
-        remoteCommandCenter.previousTrackCommand.isEnabled = audioPlayer.isPlaying
+        remoteCommandCenter.previousTrackCommand.isEnabled = canGoToPreviousTrack()
         remoteCommandCenter.changePlaybackPositionCommand.isEnabled = audioPlayer.isPlaying
         // Set now playing info
         let albumArt = await albumArt()

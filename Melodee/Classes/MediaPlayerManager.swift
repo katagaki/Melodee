@@ -169,6 +169,7 @@ class MediaPlayerManager: NSObject,
             queue.removeAll()
             self.audioPlayer = nil
             currentlyPlayingID = ""
+            nowPlayingInfoCenter.nowPlayingInfo = nil
             isPlaybackActive = false
             isPaused = false
         }

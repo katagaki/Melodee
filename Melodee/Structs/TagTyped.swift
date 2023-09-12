@@ -41,7 +41,7 @@ struct TagTyped {
         }
     }
 
-    // swiftlint:disable cyclomatic_complexity
+    // swiftlint:disable cyclomatic_complexity function_body_length
     mutating func merge(with file: FSFile, reader tagContentReader: ID3TagContentReader) async {
         if title != tagContentReader.title() ?? "" {
             title = nil
@@ -97,7 +97,7 @@ struct TagTyped {
             }
         }
     }
-    // swiftlint:enable cyclomatic_complexity
+    // swiftlint:enable cyclomatic_complexity function_body_length
 
     func albumArtUsingAVPlayer(file: FSFile) async -> Data? {
         do {
@@ -117,5 +117,4 @@ struct TagTyped {
         }
         return nil
     }
-
 }

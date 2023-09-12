@@ -94,7 +94,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ファイル名を変更"
+            "value" : "名称変更"
           }
         }
       }
@@ -956,6 +956,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "拡張子なしのファイル名に変換します。"
+          }
+        }
+      }
+    },
+    "TagEditor.Tokens.FolderName.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Represents the name of the containing folder."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内包しているフォルダーの名前に変換します。"
           }
         }
       }

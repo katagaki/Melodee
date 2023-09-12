@@ -38,6 +38,7 @@ struct TagEditorView: View {
             }
             Section {
                 AvailableTokenRow(tokenName: "FILENAME", tokenDescription: "TagEditor.Tokens.Filename.Description")
+                AvailableTokenRow(tokenName: "FOLDERNAME", tokenDescription: "TagEditor.Tokens.FolderName.Description")
                 AvailableTokenRow(tokenName: "SPLITFRONT", tokenDescription: "TagEditor.Tokens.SplitFront.Description")
                 AvailableTokenRow(tokenName: "SPLITBACK", tokenDescription: "TagEditor.Tokens.SplitBack.Description")
             } header: {
@@ -333,7 +334,8 @@ struct TagEditorView: View {
                                   with: "")
             .components(separatedBy: " - ")
         let tokens: [String: String] = [
-            "filename": file.name,
+            "fileName": file.name,
+            "folderName": URL(filePath: file.path).deletingLastPathComponent().lastPathComponent,
             "splitFront": componentsSplitByDash[0],
             "splitBack": componentsSplitByDash.count >= 2 ? componentsSplitByDash[1] : ""
         ]

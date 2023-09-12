@@ -1062,6 +1062,40 @@
         }
       }
     },
+    "TagEditor.Tokens.TrackNumber" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Track Number in File Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名にあるトラック番号"
+          }
+        }
+      }
+    },
+    "TagEditor.Tokens.TrackNumber.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Represents the track number at the beginning of the file name.\nFor example, \"1. Never Gonna Give You Up.mp3\" will result in \"1\"."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名の最前にあるトラック番号に変換します。\n例えば、「【１】花の塔.mp3」の場合、「1」になります。"
+          }
+        }
+      }
+    },
     "ViewTitle.Attributions" : {
       "localizations" : {
         "en" : {

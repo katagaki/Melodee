@@ -55,6 +55,8 @@
 		E4A4D67B2AAEFB750062D12C /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D67A2AAEFB750062D12C /* ActionButton.swift */; };
 		E4A4D67D2AAEFD9D0062D12C /* MediaPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */; };
 		E4A4D67F2AAF05F70062D12C /* NowPlayingBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */; };
+		E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */; };
+		E4EE91EE2AB09E8E004AC3D2 /* AvailableTokensSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91ED2AB09E8E004AC3D2 /* AvailableTokensSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -106,6 +108,9 @@
 		E4A4D67A2AAEFB750062D12C /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayerManager.swift; sourceTree = "<group>"; };
 		E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingBar.swift; sourceTree = "<group>"; };
+		E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProperDigit.plist; sourceTree = "<group>"; };
+		E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		E4EE91ED2AB09E8E004AC3D2 /* AvailableTokensSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableTokensSection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +160,7 @@
 				E43C847E2AB00EF300D87A5F /* TagEditorView.swift */,
 				E43C84882AB00F8200D87A5F /* FileHeaderSection.swift */,
 				E43C848A2AB00F8D00D87A5F /* TagDataSection.swift */,
+				E4EE91ED2AB09E8E004AC3D2 /* AvailableTokensSection.swift */,
 				E43C848E2AB00FB600D87A5F /* AvailableTokenRow.swift */,
 			);
 			path = "Tag Editor";
@@ -189,6 +195,7 @@
 				E4A4D65B2AAEF1440062D12C /* Classes */,
 				E4A4D6722AAEF3AA0062D12C /* Enums */,
 				E4A4D65D2AAEF14D0062D12C /* Protocols */,
+				E4EE91E82AB09985004AC3D2 /* Utilities */,
 			);
 			path = Melodee;
 			sourceTree = "<group>";
@@ -270,6 +277,15 @@
 				E43C84802AB00F0800D87A5F /* FocusedField.swift */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		E4EE91E82AB09985004AC3D2 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */,
+				E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -381,6 +397,7 @@
 				E43C84952AB0100900D87A5F /* ListInputRow.swift in Sources */,
 				E43C84692AAF396000D87A5F /* LicensesView.swift in Sources */,
 				E4A4D6612AAEF1670062D12C /* FSFile.swift in Sources */,
+				E4EE91EE2AB09E8E004AC3D2 /* AvailableTokensSection.swift in Sources */,
 				E43C84622AAF391200D87A5F /* MoreView.swift in Sources */,
 				E43C848F2AB00FB600D87A5F /* AvailableTokenRow.swift in Sources */,
 				E4A4D6742AAEF3B30062D12C /* ViewPath.swift in Sources */,
@@ -403,6 +420,7 @@
 				E4A4D66A2AAEF2BD0062D12C /* ListHintOverlay.swift in Sources */,
 				E43C84852AB00F4100D87A5F /* TagTyped.swift in Sources */,
 				E4A4D6762AAEF4040062D12C /* ListFolderRow.swift in Sources */,
+				E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */,
 				E4A4D67F2AAF05F70062D12C /* NowPlayingBar.swift in Sources */,
 				E43C84672AAF393600D87A5F /* ListSectionHeader.swift in Sources */,
 				E43C84832AB00F1A00D87A5F /* Tag.swift in Sources */,

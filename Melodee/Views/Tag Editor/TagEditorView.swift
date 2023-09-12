@@ -36,19 +36,7 @@ struct TagEditorView: View {
                 TagDataSection(tagData: $tagData, focusedField: $focusedField,
                                placeholder: NSLocalizedString("BatchEdit.Keep", comment: ""))
             }
-            Section {
-                AvailableTokenRow(tokenName: "FILENAME", tokenDescription: "TagEditor.Tokens.Filename.Description")
-                AvailableTokenRow(tokenName: "FOLDERNAME", tokenDescription: "TagEditor.Tokens.FolderName.Description")
-                AvailableTokenRow(tokenName: "DASHFRONT", tokenDescription: "TagEditor.Tokens.DashFront.Description")
-                AvailableTokenRow(tokenName: "DASHBACK", tokenDescription: "TagEditor.Tokens.DashBack.Description")
-                AvailableTokenRow(tokenName: "DOTFRONT", tokenDescription: "TagEditor.Tokens.DotFront.Description")
-                AvailableTokenRow(tokenName: "DOTBACK", tokenDescription: "TagEditor.Tokens.DotBack.Description")
-            } header: {
-                VStack(alignment: .leading, spacing: 2.0) {
-                    ListSectionHeader(text: "TagEditor.Tokens.Title")
-                        .font(.body)
-                }
-            }
+            AvailableTokensSection()
         }
         .disabled(saveState == .saving)
         .navigationTitle("")
@@ -96,6 +84,13 @@ struct TagEditorView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
+                if focusedField == .trackNumber {
+                    Button("TagEditor.Tokens.TrackNumber") {
+                        tagData.track = "%TRACKNUMBER%"
+                    }
+                    .buttonStyle(.bordered)
+                    .clipShape(RoundedRectangle(cornerRadius: 99))
+                }
                 Spacer()
                 Button("Shared.Done") {
                     focusedField = nil
@@ -267,6 +262,7 @@ struct TagEditorView: View {
         }
     }
 
+    // swiftlint:disable cyclomatic_complexity
     func id3Frame<T>(_ value: String,
                      returns type: T.Type,
                      referencing file: FSFile? = nil) -> T? {
@@ -282,6 +278,8 @@ struct TagEditorView: View {
         case is ID3FrameWithIntegerContent.Type:
             if value != "", let int = Int(value) {
                 return ID3FrameWithIntegerContent(value: int) as? T
+            } else if value != "", let file = file, let int = Int(replaceTokens(value, file: file)) {
+                return ID3FrameWithIntegerContent(value: int) as? T
             }
         case is ID3FramePartOfTotal.Type:
             if value != "", let int = Int(value) {
@@ -295,6 +293,7 @@ struct TagEditorView: View {
         }
         return nil
     }
+    // swiftlint:enable cyclomatic_complexity
 
     func id3Frame(_ value: String,
                   referencing file: FSFile?) -> ID3FrameWithStringContent {
@@ -331,24 +330,60 @@ struct TagEditorView: View {
 
     func replaceTokens(_ original: String, file: FSFile) -> String {
         var newString = original
+        // Prepare tokens
         let componentsDash = file.name.components(separatedBy: "-").map { string in
             string.trimmingCharacters(in: .whitespaces)
         }
         let componentsDot = file.name.components(separatedBy: ".").map { string in
             string.trimmingCharacters(in: .whitespaces)
         }
+        var trackNumber = ""
+        if let properDigits = Bundle.main.plist(named: "ProperDigit"),
+           let trackNumberFullWidth = getTrackNumber(file.name) {
+            trackNumberFullWidth.forEach { character in
+                if let digit = properDigits[String(character)] {
+                    trackNumber += digit
+                } else if character.isNumber {
+                    trackNumber += String(character)
+                }
+            }
+        }
+        // Replace tokens
         let tokens: [String: String] = [
             "fileName": file.name,
             "folderName": URL(filePath: file.path).deletingLastPathComponent().lastPathComponent,
             "dashFront": componentsDash[0],
             "dashBack": componentsDash.count >= 2 ? componentsDash[1] : "",
             "dotFront": componentsDot[0],
-            "dotBack": componentsDot.count >= 2 ? componentsDot[1] : ""
+            "dotBack": componentsDot.count >= 2 ? componentsDot[1] : "",
+            "trackNumber": trackNumber
         ]
         for (key, value) in tokens {
             newString = newString.replacingOccurrences(of: "%\(key)%", with: value, options: .caseInsensitive)
         }
         return newString
+    }
+
+    func getTrackNumber(_ fileName: String) -> String? {
+        if let trackNumberRegex = try? NSRegularExpression(pattern:
+    """
+    【?([１２３４５６７８９０]*)?([⒈⒉⒊⒋⒌⒍⒎⒏⒐⒑])?([①②③④⑤⑥⑦⑧⑨⑩])?([1-9]*)】?(.*)
+    """) {
+            let stringRange = NSRange(fileName.startIndex..<fileName.endIndex, in: fileName)
+            for match in trackNumberRegex.matches(in: fileName, options: [], range: stringRange) {
+                for rangeIndex in 0..<match.numberOfRanges {
+                    let matchRange = match.range(at: rangeIndex)
+                    if matchRange == stringRange { continue }
+                    if let substringRange = Range(matchRange, in: fileName) {
+                        let capture = String(fileName[substringRange])
+                        if capture != "" {
+                            return capture
+                        }
+                    }
+                }
+            }
+        }
+        return nil
     }
 
     func changeSaveState(to newState: SaveState) {

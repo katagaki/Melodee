@@ -66,7 +66,9 @@ struct TagDataSection: View {
             tagData.year = String(tagData.year.prefix(4))
         }
         .onReceive(Just(tagData.track)) { _ in
-            tagData.track = tagData.track.filter({ $0.isNumber })
+            if tagData.track != "%TRACKNUMBER%" {
+                tagData.track = tagData.track.filter({ $0.isNumber })
+            }
         }
         .onReceive(Just(tagData.genre)) { _ in
             tagData.genre = tagData.genre.filter({ $0.isLetter || $0.isWhitespace })

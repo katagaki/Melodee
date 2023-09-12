@@ -31,6 +31,40 @@
         }
       }
     },
+    "Alert.DeleteFile.Text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete '%1'?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「%1」を削除してよろしいですか？"
+          }
+        }
+      }
+    },
+    "Alert.DeleteFile.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete File"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを削除"
+          }
+        }
+      }
+    },
     "Alert.ExtractingZIP.Error.Title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -137,13 +171,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This folder does not contain any audio files."
+            "value" : "This folder does not contain any supported files."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このフォルダーに音声ファイルはありません。"
+            "value" : "このフォルダーに対応できるファイルはありません。"
           }
         }
       }
@@ -458,6 +492,22 @@
         }
       }
     },
+    "Shared.Delete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "削除"
+          }
+        }
+      }
+    },
     "Shared.Done" : {
       "localizations" : {
         "en" : {
@@ -571,6 +621,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいファイル名"
+          }
+        }
+      }
+    },
+    "Shared.No" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いいえ"
           }
         }
       }
@@ -756,6 +823,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "シャッフル"
+          }
+        }
+      }
+    },
+    "Shared.Yes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
           }
         }
       }

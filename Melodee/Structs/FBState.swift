@@ -21,6 +21,10 @@ struct FBState {
     var directoryBeingRenamed: FSDirectory?
     var newDirectoryName: String = ""
 
+    // State handling for deletion
+    var isDeletingFileOrDirectory: Bool = false
+    var fileOrDirectoryBeingDeleted: (any FilesystemObject)?
+
     // State handling for ZIP extraction
     var isExtractingZIP: Bool = false
     var extractionPercentage: Int = 0

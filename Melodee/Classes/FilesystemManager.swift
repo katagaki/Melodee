@@ -93,7 +93,7 @@ class FilesystemManager: ObservableObject {
         return FileManager.default.fileExists(atPath: directoryPath)
     }
 
-    func renameFile(file: FSFile, newName: String) {
+    func rename(file: FSFile, newName: String) {
         do {
             let url = URL(filePath: file.path)
             try manager
@@ -105,7 +105,7 @@ class FilesystemManager: ObservableObject {
         }
     }
 
-    func renameDirectory(directory: FSDirectory, newName: String) {
+    func rename(directory: FSDirectory, newName: String) {
         do {
             let url = URL(filePath: directory.path)
             try manager
@@ -163,6 +163,14 @@ class FilesystemManager: ObservableObject {
                 }
             }
             observation?.invalidate()
+        }
+    }
+
+    func delete(_ file: any FilesystemObject) {
+        do {
+            try manager.removeItem(atPath: file.path)
+        } catch {
+            debugPrint("Error occurred while deleting file: \(error.localizedDescription)")
         }
     }
 }

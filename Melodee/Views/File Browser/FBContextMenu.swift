@@ -50,19 +50,19 @@ struct FBContextMenu: View {
                 }
                 Divider()
             }
-            Button {
-                state.fileBeingRenamed = file
-                state.isRenamingFile = true
-            } label: {
-                Label("Shared.Rename", systemImage: "pencil")
-            }
             if file.extension == "mp3" {
-                Divider()
                 Button {
                     navigationManager.push(ViewPath.tagEditorSingle(file: file), for: .fileManager)
                 } label: {
                     Label("Shared.EditTag.Single", systemImage: "tag")
                 }
+                Divider()
+            }
+            Button {
+                state.fileBeingRenamed = file
+                state.isRenamingFile = true
+            } label: {
+                Label("Shared.Rename", systemImage: "pencil")
             }
         } else if let directory = file as? FSDirectory {
             Button {
@@ -71,6 +71,12 @@ struct FBContextMenu: View {
             } label: {
                 Label("Shared.Rename", systemImage: "pencil")
             }
+        }
+        Button(role: .destructive) {
+            state.fileOrDirectoryBeingDeleted = file
+            state.isDeletingFileOrDirectory = true
+        } label: {
+            Label("Shared.Delete", systemImage: "trash")
         }
     }
 }

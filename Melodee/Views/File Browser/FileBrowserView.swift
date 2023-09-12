@@ -103,7 +103,7 @@ struct FileBrowserView: View {
                 TextField("Shared.NewFileName", text: $state.newFileName)
                 Button("Shared.Change") {
                     if let fileBeingRenamed = state.fileBeingRenamed {
-                        fileManager.renameFile(file: fileBeingRenamed, newName: state.newFileName)
+                        fileManager.rename(file: fileBeingRenamed, newName: state.newFileName)
                         refreshFiles()
                     }
                 }
@@ -116,7 +116,7 @@ struct FileBrowserView: View {
                 TextField("Shared.NewDirectoryName", text: $state.newDirectoryName)
                 Button("Shared.Change") {
                     if let directoryBeingRenamed = state.directoryBeingRenamed {
-                        fileManager.renameDirectory(directory: directoryBeingRenamed,
+                        fileManager.rename(directory: directoryBeingRenamed,
                                                     newName: state.newDirectoryName)
                         refreshFiles()
                     }
@@ -128,9 +128,22 @@ struct FileBrowserView: View {
             })
             .alert("Alert.ExtractingZIP.Error.Title", isPresented: $state.isErrorAlertPresenting, actions: {
                 Button("Shared.OK", role: .cancel) { }
-            },
-                   message: {
+            }, message: {
                 Text(verbatim: state.errorText)
+            })
+            .alert("Alert.DeleteFile.Title", isPresented: $state.isDeletingFileOrDirectory, actions: {
+                Button("Shared.Yes", role: .destructive) {
+                    if let fileOrDirectoryBeingDeleted = state.fileOrDirectoryBeingDeleted {
+                        fileManager.delete(fileOrDirectoryBeingDeleted)
+                        refreshFiles()
+                    }
+                }
+                Button("Shared.No", role: .cancel) {
+                    state.fileOrDirectoryBeingDeleted = nil
+                }
+            }, message: {
+                Text(NSLocalizedString("Alert.DeleteFile.Text", comment: "")
+                    .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
             })
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)

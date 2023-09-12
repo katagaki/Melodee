@@ -206,38 +206,6 @@
         }
       }
     },
-    "FileBrowser.Tip.Queue.Text" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To queue files for playback, swipe either left or right on a file. Swiping left will play the file after all other files in the queue, and swiping right will play the file immediately after the currently playing file."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生キューにファイルを追加するには、ファイルに左か右にスワイプしてください。\n左にスワイプすると、そのファイルが再生キューの最後のファイルの後に再生されます。\n右にスワイプすると、そのファイルが再生中のファイルの後に再生されます。"
-          }
-        }
-      }
-    },
-    "FileBrowser.Tip.Queue.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Queue Files for Playback"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生キューを使用する方法"
-          }
-        }
-      }
-    },
     "More.Attribution" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -374,6 +342,38 @@
         }
       }
     },
+    "NowPlaying.Tip.Queue.Text" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To queue files for playback, swipe either left or right on a file. Swiping left will play the file after all other files in the queue, and swiping right will play the file immediately after the currently playing file."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生キューにファイルを追加するには、ファイルに左か右にスワイプしてください。\n左にスワイプすると、そのファイルが再生キューの最後のファイルの後に再生されます。\n右にスワイプすると、そのファイルが再生中のファイルの後に再生されます。"
+          }
+        }
+      }
+    },
+    "NowPlaying.Tip.Queue.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue Files for Playback"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生キューを使用する方法"
+          }
+        }
+      }
+    },
     "Shared.Cancel" : {
       "localizations" : {
         "en" : {
@@ -469,6 +469,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "タグを編集"
+          }
+        }
+      }
+    },
+    "Shared.Extract" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extract"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解凍"
           }
         }
       }

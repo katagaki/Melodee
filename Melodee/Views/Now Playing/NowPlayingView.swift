@@ -147,7 +147,7 @@ struct NowPlayingView: View {
                     HStack(alignment: .center, spacing: 8.0) {
                         ListSectionHeader(text: "Shared.Queue")
                             .font(.body)
-                            .popoverTip(FileBrowserQueueTip(), arrowEdge: .bottom)
+                            .popoverTip(QueueTip(), arrowEdge: .bottom)
                         Spacer()
                         EditButton()
                             .bold()

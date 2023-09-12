@@ -1,5 +1,5 @@
 //
-//  FileBrowserNoFilesTip.swift
+//  FBNoFilesTip.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/11.
@@ -8,7 +8,7 @@
 import Foundation
 import TipKit
 
-struct FileBrowserNoFilesTip: Tip {
+struct FBNoFilesTip: Tip {
     var title: Text {
         Text("FileBrowser.Tip.NoFiles.Title")
     }

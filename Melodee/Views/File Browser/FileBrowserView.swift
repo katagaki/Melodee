@@ -8,7 +8,6 @@
 import SwiftUI
 import TipKit
 
-// swiftlint:disable type_body_length
 struct FileBrowserView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
@@ -16,174 +15,42 @@ struct FileBrowserView: View {
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
-
-    @State var isRenamingFile: Bool = false
-    @State var fileBeingRenamed: FSFile?
-    @State var newFileName: String = ""
-
-    @State var isRenamingDirectory: Bool = false
-    @State var directoryBeingRenamed: FSDirectory?
-    @State var newDirectoryName: String = ""
-
-    @State var isExtractingZIP: Bool = false
-    @State var extractionPercentage: Int = 0
-    @State var isExtractionCancelling: Bool = false
-    @State var isErrorAlertPresenting: Bool = false
-    @State var errorText: String = ""
+    @State var state = FBState()
 
     var body: some View {
         NavigationStack(path: $navigationManager.filesTabPath) {
             List {
-                Section {
-                    HStack(alignment: .center, spacing: 8.0) {
-                        Group {
-                            ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
-                                mediaPlayer.stop()
-                                for file in files {
-                                    if let file = file as? FSFile, file.type == .audio {
-                                        mediaPlayer.queueLast(file: file)
-                                    }
-                                }
-                                mediaPlayer.play()
-                            }
-                            ActionButton(text: "Shared.Shuffle", icon: "Shuffle") {
-                                mediaPlayer.stop()
-                                var filesReordered: [FSFile] = []
-                                for file in files {
-                                    if let file = file as? FSFile, file.type == .audio {
-                                        filesReordered.append(file)
-                                    }
-                                }
-                                filesReordered = filesReordered.shuffled()
-                                for file in filesReordered {
-                                    mediaPlayer.queueLast(file: file)
-                                }
-                                mediaPlayer.play()
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .disabled(!folderContainsPlayableAudio())
-                    }
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
-                    .buttonStyle(.plain)
-                    .frame(maxWidth: .infinity)
-                } header: {
-                    Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
-                        .font(.largeTitle)
-                        .textCase(.none)
-                        .bold()
-                        .foregroundColor(.primary)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
-                }
+                FBPlaybackSection(currentDirectory: $currentDirectory,
+                                     files: $files)
                 Section {
                     ForEach($files, id: \.path) { $file in
-                        if let directory = file as? FSDirectory {
-                            NavigationLink(value: ViewPath.fileBrowser(directory: directory)) {
-                                ListFolderRow(name: directory.name)
+                        Group {
+                            if let directory = file as? FSDirectory {
+                                FBDirectoryRow(directory: directory)
+                            } else if let file = file as? FSFile {
+                                switch file.type {
+                                case .audio:
+                                    FBAudioFileRow(file: file)
+                                case .image:
+                                    FBImageFileRow(file: file)
+                                case .zip:
+                                    FBZipFileRow(file: file) {
+                                        extractZIP(file: file)
+                                    }
+                                }
                             }
-                            .contextMenu {
-                                FolderContextMenu(directory: directory,
-                                                  isRenaming: $isRenamingDirectory,
-                                                  directoryBeingRenamed: $directoryBeingRenamed)
-                            }
-                        } else if let file = file as? FSFile {
-                            switch file.type {
-                            case .audio:
-                                Button {
-                                    mediaPlayer.playImmediately(file)
-                                } label: {
-                                    ListFileRow(file: .constant(file))
-                                        .tint(.primary)
+                        }
+                        .contextMenu {
+                            FBContextMenu(state: $state, file: file) {
+                                if let file = file as? FSFile {
+                                    extractZIP(file: file)
                                 }
-                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                    Button {
-                                        withAnimation(.default.speed(2)) {
-                                            mediaPlayer.queueNext(file: file)
-                                        }
-                                    } label: {
-                                        Label("Shared.Play.Next",
-                                              systemImage: "text.line.first.and.arrowtriangle.forward")
-                                    }
-                                    .tint(.purple)
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button {
-                                        withAnimation(.default.speed(2)) {
-                                            mediaPlayer.queueLast(file: file)
-                                        }
-                                    } label: {
-                                        Label("Shared.Play.Last",
-                                              systemImage: "text.line.last.and.arrowtriangle.forward")
-                                    }
-                                    .tint(.orange)
-                                }
-                                .contextMenu(menuItems: {
-                                    FileContextMenu(file: file,
-                                                    isRenaming: $isRenamingFile,
-                                                    fileBeingRenamed: $fileBeingRenamed)
-                                })
-                            case .image:
-                                ListFileRow(file: .constant(file))
-                            case .zip:
-                                Button {
-                                    withAnimation(.easeOut.speed(2)) {
-                                        isExtractingZIP = true
-                                    }
-                                    fileManager.extractFiles(file: file) {
-                                        extractionPercentage =
-                                            Int((fileManager.extractionProgress?.fractionCompleted ?? 0) * 100)
-                                    } onError: { error in
-                                        withAnimation(.easeOut.speed(2)) {
-                                            isExtractingZIP = false
-                                            errorText = error
-                                        }
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                            isErrorAlertPresenting = true
-                                        }
-                                    } onCompletion: {
-                                        withAnimation(.easeOut.speed(2)) {
-                                            isExtractingZIP = false
-                                        }
-                                        refreshFiles()
-                                    }
-
-                                } label: {
-                                    ListFileRow(file: .constant(file))
-                                        .tint(.primary)
-                                }
-                                .contextMenu(menuItems: {
-                                    FileContextMenu(file: file,
-                                                    isRenaming: $isRenamingFile,
-                                                    fileBeingRenamed: $fileBeingRenamed)
-                                })
                             }
                         }
                     }
                 }
                 if folderContainsEditableMP3s() {
-                    Section {
-                        HStack(alignment: .center, spacing: 8.0) {
-                            Group {
-                                ActionButton(text: "Shared.EditTag.All", icon: "Tag") {
-                                    var validFiles: [FSFile] = []
-                                    for file in files {
-                                        if let file = file as? FSFile, file.extension == "mp3" {
-                                            validFiles.append(file)
-                                        }
-                                    }
-                                    navigationManager.push(ViewPath.tagEditorMultiple(files: validFiles),
-                                                           for: .fileManager)
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                            .disabled(!files.contains(where: { $0 is FSFile }))
-                        }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
-                        .buttonStyle(.plain)
-                        .frame(maxWidth: .infinity)
-                    }
+                    FBTagSection(files: $files)
                 }
             }
             .listStyle(.insetGrouped)
@@ -211,15 +78,15 @@ struct FileBrowserView: View {
                 }
             }
             .overlay {
-                if isExtractingZIP {
+                if state.isExtractingZIP {
                     ProgressAlert(title: "Alert.ExtractingZIP.Title",
                                   message: "Alert.ExtractingZIP.Text",
-                                  percentage: $extractionPercentage) {
+                                  percentage: $state.extractionPercentage) {
                         withAnimation(.easeOut.speed(2)) {
-                            isExtractionCancelling = true
+                            state.isExtractionCancelling = true
                             fileManager.extractionProgress?.cancel()
-                            extractionPercentage = 0
-                            isExtractingZIP = false
+                            state.extractionPercentage = 0
+                            state.isExtractingZIP = false
                         }
                     }
                 }
@@ -229,40 +96,43 @@ struct FileBrowserView: View {
                     HStack {
                         if currentDirectory == nil {
                             OpenFilesAppButton()
-                                .popoverTip(FileBrowserNoFilesTip(), arrowEdge: .top)
+                                .popoverTip(FBNoFilesTip(), arrowEdge: .top)
                         }
                     }
                 }
             }
-            .alert("Alert.RenameFile.Title", isPresented: $isRenamingFile, actions: {
-                TextField("Shared.NewFileName", text: $newFileName)
+            .alert("Alert.RenameFile.Title", isPresented: $state.isRenamingFile, actions: {
+                TextField("Shared.NewFileName", text: $state.newFileName)
                 Button("Shared.Change") {
-                    if let fileBeingRenamed = fileBeingRenamed {
-                        fileManager.renameFile(file: fileBeingRenamed, newName: newFileName)
+                    if let fileBeingRenamed = state.fileBeingRenamed {
+                        fileManager.renameFile(file: fileBeingRenamed, newName: state.newFileName)
                         refreshFiles()
                     }
                 }
+                .disabled(state.newFileName == "")
                 Button("Shared.Cancel", role: .cancel) {
-                    fileBeingRenamed = nil
+                    state.fileBeingRenamed = nil
                 }
             })
-            .alert("Alert.RenameFile.Title", isPresented: $isRenamingDirectory, actions: {
-                TextField("Shared.NewDirectoryName", text: $newDirectoryName)
+            .alert("Alert.RenameFile.Title", isPresented: $state.isRenamingDirectory, actions: {
+                TextField("Shared.NewDirectoryName", text: $state.newDirectoryName)
                 Button("Shared.Change") {
-                    if let directoryBeingRenamed = directoryBeingRenamed {
-                        fileManager.renameDirectory(directory: directoryBeingRenamed, newName: newDirectoryName)
+                    if let directoryBeingRenamed = state.directoryBeingRenamed {
+                        fileManager.renameDirectory(directory: directoryBeingRenamed,
+                                                    newName: state.newDirectoryName)
                         refreshFiles()
                     }
                 }
+                .disabled(state.newDirectoryName == "")
                 Button("Shared.Cancel", role: .cancel) {
-                    directoryBeingRenamed = nil
+                    state.directoryBeingRenamed = nil
                 }
             })
-            .alert("Alert.ExtractingZIP.Error.Title", isPresented: $isErrorAlertPresenting, actions: {
+            .alert("Alert.ExtractingZIP.Error.Title", isPresented: $state.isErrorAlertPresenting, actions: {
                 Button("Shared.OK", role: .cancel) { }
             },
                    message: {
-                Text(verbatim: errorText)
+                Text(verbatim: state.errorText)
             })
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
@@ -270,18 +140,18 @@ struct FileBrowserView: View {
         .onAppear {
             refreshFiles()
         }
-        .onChange(of: fileBeingRenamed) { _, newValue in
+        .onChange(of: state.fileBeingRenamed) { _, newValue in
             if let fileBeingRenamed = newValue {
-                newFileName = fileBeingRenamed.name
+                state.newFileName = fileBeingRenamed.name
             } else {
-                newFileName = ""
+                state.newFileName = ""
             }
         }
-        .onChange(of: directoryBeingRenamed) { _, newValue in
+        .onChange(of: state.directoryBeingRenamed) { _, newValue in
             if let directoryBeingRenamed = newValue {
-                newDirectoryName = directoryBeingRenamed.name
+                state.newDirectoryName = directoryBeingRenamed.name
             } else {
-                newDirectoryName = ""
+                state.newDirectoryName = ""
             }
         }
     }
@@ -295,6 +165,29 @@ struct FileBrowserView: View {
                 .sorted(by: { lhs, rhs in
                     return lhs is FSDirectory && rhs is FSFile
                 })
+        }
+    }
+
+    func extractZIP(file: FSFile) {
+        withAnimation(.easeOut.speed(2)) {
+            state.isExtractingZIP = true
+        }
+        fileManager.extractFiles(file: file) {
+            state.extractionPercentage =
+                Int((fileManager.extractionProgress?.fractionCompleted ?? 0) * 100)
+        } onError: { error in
+            withAnimation(.easeOut.speed(2)) {
+                state.isExtractingZIP = false
+                state.errorText = error
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                state.isErrorAlertPresenting = true
+            }
+        } onCompletion: {
+            withAnimation(.easeOut.speed(2)) {
+                state.isExtractingZIP = false
+            }
+            refreshFiles()
         }
     }
 
@@ -317,4 +210,3 @@ struct FileBrowserView: View {
     }
 
 }
-// swiftlint:enable type_body_length

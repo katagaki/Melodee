@@ -93,6 +93,18 @@ class FilesystemManager: ObservableObject {
         return FileManager.default.fileExists(atPath: directoryPath)
     }
 
+    func renameFile(file: FSFile, newName: String) {
+        do {
+            let url = URL(filePath: file.path)
+            try manager
+                .moveItem(atPath: file.path,
+                          toPath: "\(url.deletingLastPathComponent().path(percentEncoded: false))" +
+                          "\(newName).\(file.extension)")
+        } catch {
+            debugPrint("Error occurred while renaming file: \(error.localizedDescription)")
+        }
+    }
+
     func extractFiles(file: FSFile,
                       encoding: String.Encoding = .shiftJIS,
                       onProgressUpdate: @escaping () -> Void,

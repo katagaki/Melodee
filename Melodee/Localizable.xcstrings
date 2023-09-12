@@ -34,6 +34,12 @@
     "Alert.ExtractingZIP.Error.Title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error Occurred While Extracting Archive"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -45,6 +51,12 @@
     "Alert.ExtractingZIP.Text" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% completed"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -56,10 +68,33 @@
     "Alert.ExtractingZIP.Title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extracting..."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "解凍中…"
+          }
+        }
+      }
+    },
+    "Alert.RenameFile.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename File"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル名を変更"
           }
         }
       }
@@ -355,6 +390,23 @@
         }
       }
     },
+    "Shared.Change" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "変更"
+          }
+        }
+      }
+    },
     "Shared.Done" : {
       "localizations" : {
         "en" : {
@@ -417,6 +469,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "タグを編集"
+          }
+        }
+      }
+    },
+    "Shared.NewFilename" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New File Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいファイル名"
           }
         }
       }
@@ -551,6 +620,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生キュー"
+          }
+        }
+      }
+    },
+    "Shared.Rename" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称変更"
           }
         }
       }
@@ -863,7 +949,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Represents the filename without its extension."
+            "value" : "Represents the file name without its extension."
           }
         },
         "ja" : {
@@ -880,7 +966,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Represents the text in the filename after the '-' (dash) symbol. For example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Never Gonna Give You Up\"."
+            "value" : "Represents the text in the file name after the '-' (dash) symbol. For example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Never Gonna Give You Up\"."
           }
         },
         "ja" : {
@@ -897,7 +983,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Represents the text in the filename before the '-' (dash) symbol. For example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Rick Astley\"."
+            "value" : "Represents the text in the file name before the '-' (dash) symbol. For example, \"Rick Astley - Never Gonna Give You Up.mp3\" will result in \"Rick Astley\"."
           }
         },
         "ja" : {

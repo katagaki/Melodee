@@ -1,5 +1,5 @@
 //
-//  AvailableTokenRow.swift
+//  TEAvailableTokenRow.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/12.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AvailableTokenRow: View {
+struct TEAvailableTokenRow: View {
 
     var tokenName: String
     var tokenDescription: String

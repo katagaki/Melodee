@@ -11,9 +11,22 @@ import SwiftUI
 struct NowPlayingBar: View {
 
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @State var albumArt: Image = Image("Album.Generic")
 
     var body: some View {
-        HStack {
+        HStack(alignment: .center, spacing: 8.0) {
+            albumArt
+                .resizable()
+                .scaledToFit()
+                .frame(height: 40.0)
+                .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8.0)
+                        .stroke(.primary, lineWidth: 1/3)
+                        .opacity(0.3)
+                )
+                .shadow(color: .black.opacity(0.1), radius: 10.0)
+                .transition(.slide.animation(.default))
             MarqueeText(text: mediaPlayer.currentlyPlayingFilename() ??
                             NSLocalizedString("Shared.NoFilePlaying", comment: ""),
                         font: UIFont.preferredFont(forTextStyle: .body),
@@ -47,13 +60,28 @@ struct NowPlayingBar: View {
             }
             .disabled(!mediaPlayer.canStartPlayback())
         }
-        .padding()
+        .padding(.all, 8.0)
         .frame(maxWidth: .infinity, minHeight: 56.0, maxHeight: 56.0)
         .background(.regularMaterial)
         .overlay(Rectangle().frame(width: nil,
                                     height: 1/3,
                                     alignment: .top).foregroundColor(.primary.opacity(0.3)),
                  alignment: .top)
+        .task {
+            await setAlbumArt()
+        }
+        .onChange(of: mediaPlayer.queue, { _, _ in
+            Task {
+                await setAlbumArt()
+            }
+        })
+    }
+
+    func setAlbumArt() async {
+        let albumArtUIImage = await mediaPlayer.albumArt()
+        withAnimation(.default.speed(2)) {
+            albumArt = Image(uiImage: albumArtUIImage)
+        }
     }
 
     @ViewBuilder

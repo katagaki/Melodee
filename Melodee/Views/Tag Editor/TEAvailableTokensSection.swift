@@ -1,5 +1,5 @@
 //
-//  AvailableTokensSection.swift
+//  TEAvailableTokensSection.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/12.
@@ -7,22 +7,22 @@
 
 import SwiftUI
 
-struct AvailableTokensSection: View {
+struct TEAvailableTokensSection: View {
     var body: some View {
         Section {
-            AvailableTokenRow(tokenName: "FILENAME",
+            TEAvailableTokenRow(tokenName: "FILENAME",
                               tokenDescription: "TagEditor.Tokens.Filename.Description")
-            AvailableTokenRow(tokenName: "FOLDERNAME",
+            TEAvailableTokenRow(tokenName: "FOLDERNAME",
                               tokenDescription: "TagEditor.Tokens.FolderName.Description")
-            AvailableTokenRow(tokenName: "DASHFRONT",
+            TEAvailableTokenRow(tokenName: "DASHFRONT",
                               tokenDescription: "TagEditor.Tokens.DashFront.Description")
-            AvailableTokenRow(tokenName: "DASHBACK",
+            TEAvailableTokenRow(tokenName: "DASHBACK",
                               tokenDescription: "TagEditor.Tokens.DashBack.Description")
-            AvailableTokenRow(tokenName: "DOTFRONT",
+            TEAvailableTokenRow(tokenName: "DOTFRONT",
                               tokenDescription: "TagEditor.Tokens.DotFront.Description")
-            AvailableTokenRow(tokenName: "DOTBACK",
+            TEAvailableTokenRow(tokenName: "DOTBACK",
                               tokenDescription: "TagEditor.Tokens.DotBack.Description")
-            AvailableTokenRow(tokenName: "TRACKNUMBER",
+            TEAvailableTokenRow(tokenName: "TRACKNUMBER",
                               tokenDescription: "TagEditor.Tokens.TrackNumber.Description")
         } header: {
             VStack(alignment: .leading, spacing: 2.0) {

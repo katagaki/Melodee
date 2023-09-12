@@ -29,14 +29,9 @@ struct FileBrowserView: View {
                                 FBDirectoryRow(directory: directory)
                             } else if let file = file as? FSFile {
                                 switch file.type {
-                                case .audio:
-                                    FBAudioFileRow(file: file)
-                                case .image:
-                                    FBImageFileRow(file: file)
-                                case .zip:
-                                    FBZipFileRow(file: file) {
-                                        extractZIP(file: file)
-                                    }
+                                case .audio: FBAudioFileRow(file: file)
+                                case .image: FBImageFileRow(file: file)
+                                case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
                                 }
                             }
                         }
@@ -56,7 +51,7 @@ struct FileBrowserView: View {
             .listStyle(.insetGrouped)
             .safeAreaInset(edge: .bottom) {
                 Color.clear
-                    .frame(height: 72.0)
+                    .frame(height: 56.0)
             }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {

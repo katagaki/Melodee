@@ -1,5 +1,5 @@
 //
-//  TagDataSection.swift
+//  TETagDataSection.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/12.
@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-struct TagDataSection: View {
+struct TETagDataSection: View {
 
     @Binding var tagData: Tag
     var focusedField: FocusState<FocusedField?>.Binding?
@@ -55,7 +55,7 @@ struct TagDataSection: View {
             if #available(iOS 17.0, *) {
                 ListSectionHeader(text: "TagEditor.TagData")
                     .font(.body)
-                    .popoverTip(AvailableTokensTip(), arrowEdge: .bottom)
+                    .popoverTip(TETokensTip(), arrowEdge: .bottom)
             } else {
                 ListSectionHeader(text: "TagEditor.TagData")
                     .font(.body)

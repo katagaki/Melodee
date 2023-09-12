@@ -1,5 +1,5 @@
 //
-//  AvailableTokensTip.swift
+//  NPQueueTip.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/12.
@@ -8,14 +8,14 @@
 import Foundation
 import TipKit
 
-struct AvailableTokensTip: Tip {
+struct NPQueueTip: Tip {
     var title: Text {
-        Text("TagEditor.Tip.Tokens.Title")
+        Text("NowPlaying.Tip.Queue.Title")
     }
     var message: Text? {
-        Text("TagEditor.Tip.Tokens.Text")
+        Text("NowPlaying.Tip.Queue.Text")
     }
     var image: Image? {
-        Image(systemName: "info.circle.fill")
+        Image(systemName: "text.line.last.and.arrowtriangle.forward")
     }
 }

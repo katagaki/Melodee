@@ -24,19 +24,19 @@ struct TagEditorView: View {
     var body: some View {
         List {
             if files.count == 1 {
-                FileHeaderSection(filename: files[0].name,
+                TEFileHeaderSection(filename: files[0].name,
                                   albumArt: $tagData.albumArt,
                                   selectedAlbumArt: $selectedAlbumArt)
-                TagDataSection(tagData: $tagData, focusedField: $focusedField)
-                    .popoverTip(AvailableTokensTip(), arrowEdge: .top)
+                TETagDataSection(tagData: $tagData, focusedField: $focusedField)
+                    .popoverTip(TETokensTip(), arrowEdge: .top)
             } else {
-                FileHeaderSection(filename: NSLocalizedString("BatchEdit.MultipleFiles", comment: ""),
+                TEFileHeaderSection(filename: NSLocalizedString("BatchEdit.MultipleFiles", comment: ""),
                                   albumArt: $tagData.albumArt,
                                   selectedAlbumArt: $selectedAlbumArt)
-                TagDataSection(tagData: $tagData, focusedField: $focusedField,
+                TETagDataSection(tagData: $tagData, focusedField: $focusedField,
                                placeholder: NSLocalizedString("BatchEdit.Keep", comment: ""))
             }
-            AvailableTokensSection()
+            TEAvailableTokensSection()
         }
         .disabled(saveState == .saving)
         .navigationTitle("")

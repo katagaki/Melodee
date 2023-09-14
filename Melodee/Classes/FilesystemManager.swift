@@ -61,8 +61,11 @@ class FilesystemManager: ObservableObject {
                                 case "mp3", "m4a", "wav", "alac":
                                     file.type = .audio
                                     return file
-                                case "png", "jpg", "jpeg":
+                                case "png", "jpg", "jpeg", "tif", "tiff":
                                     file.type = .image
+                                    return file
+                                case "txt":
+                                    file.type = .text
                                     return file
                                 case "pdf":
                                     file.type = .pdf

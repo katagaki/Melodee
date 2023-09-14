@@ -32,6 +32,7 @@ struct FileBrowserView: View {
                                 switch file.type {
                                 case .audio: FBAudioFileRow(file: file)
                                 case .image: FBImageFileRow(file: file)
+                                case .text: FBTextFileRow(file: file)
                                 case .pdf: FBPdfFileRow(file: file)
                                 case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
                                 default: ListFileRow(file: .constant(file))
@@ -62,6 +63,7 @@ struct FileBrowserView: View {
                 switch viewPath {
                 case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
                 case .imageViewer(let file): ImageViewerView(file: file)
+                case .textViewer(let file): TextViewerView(file: file)
                 case .pdfViewer(let file): PDFViewerView(file: file)
                 case .tagEditorSingle(let file): TagEditorView(files: [file])
                 case .tagEditorMultiple(let files): TagEditorView(files: files)
@@ -172,14 +174,21 @@ struct FileBrowserView: View {
     }
 
     func refreshFiles() {
+        let filesStaged = fileManager.files(in: currentDirectory?.path ?? "")
+            .sorted(by: { lhs, rhs in
+                lhs.name < rhs.name
+            })
+        var filesCombined: [any FilesystemObject] = filesStaged.filter({ $0 is FSDirectory })
+        let filesOnly: [any FilesystemObject] = filesStaged.filter({ $0 is FSFile })
+            .sorted { lhs, rhs in
+                if let lhs = lhs as? FSFile, let rhs = rhs as? FSFile {
+                    return lhs.type.rawValue < rhs.type.rawValue
+                }
+                return false
+            }
+        filesCombined.append(contentsOf: filesOnly)
         withAnimation {
-            files = fileManager.files(in: currentDirectory?.path ?? "")
-                .sorted(by: { lhs, rhs in
-                    lhs.name < rhs.name
-                })
-                .sorted(by: { lhs, rhs in
-                    return lhs is FSDirectory && rhs is FSFile
-                })
+            self.files = filesCombined
             state.isInitialLoadCompleted = true
         }
     }

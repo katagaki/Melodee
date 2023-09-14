@@ -13,6 +13,7 @@ import TipKit
 // swiftlint:disable type_body_length
 struct TagEditorView: View {
 
+    @EnvironmentObject var settings: SettingsManager
     let id3TagEditor = ID3TagEditor()
     @State var files: [FSFile]
     @State var tags: [FSFile: ID3Tag] = [:]
@@ -79,7 +80,8 @@ struct TagEditorView: View {
                 .frame(minHeight: 56.0)
                 .padding([.leading, .trailing], 16.0)
                 Color.clear
-                    .frame(height: 72.0)
+                    .frame(height: settings.showNowPlayingBar ? 56.0 : 0.0)
+                    .padding(.top)
             }
         }
         .toolbar {
@@ -152,7 +154,7 @@ struct TagEditorView: View {
         _ = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
             for file in files {
                 group.addTask {
-                    return saveTagData(to: file)
+                    return await saveTagData(to: file)
                 }
             }
 

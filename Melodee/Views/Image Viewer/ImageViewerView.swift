@@ -10,50 +10,61 @@ import VisionKit
 
 struct ImageViewerView: View {
 
+    @EnvironmentObject var settings: SettingsManager
     @State var file: FSFile
     @State var image: UIImage?
-    @State var previousZoomLevel = 1.0
-    @State var currentZoomLevel = 1.0
+    @State var sizeToFit: Bool = false
 
     var body: some View {
-        GeometryReader { metrics in
-            Group {
-                if let image = image {
-                    ScrollView([.horizontal, .vertical], showsIndicators: false) {
+        Group {
+            if let image = image {
+                Group {
+                    if sizeToFit {
                         Image(uiImage: image)
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .gesture(
-                                MagnifyGesture()
-                                    .onChanged { value in
-                                        currentZoomLevel = max(1.0, previousZoomLevel + value.magnification - 1)
-                                    }
-                                    .onEnded { _ in
-                                        previousZoomLevel = currentZoomLevel
-                                    }
-                            )
-                            .accessibilityZoomAction { action in
-                                if action.direction == .zoomIn {
-                                    currentZoomLevel += 1
-                                } else {
-                                    currentZoomLevel -= 1
-                                }
-                            }
-                            .frame(width: metrics.size.width * currentZoomLevel)
-                            .frame(maxHeight: .infinity)
-                    }
-                } else {
-                    ZStack(alignment: .center) {
-                        HintOverlay(image: "exclamationmark.triangle", text: "ImageViewer.Erorr.NotSupported")
-                            .padding()
-                        Color.clear
+                            .scaledToFit()
+                    } else {
+                        ScrollView([.vertical, .horizontal], showsIndicators: false) {
+                            Image(uiImage: image)
+                        }
+                        .ignoresSafeArea(edges: [.leading, .trailing])
                     }
                 }
+                .transition(AnyTransition.opacity.animation(.default))
+            } else {
+                ZStack(alignment: .center) {
+                    HintOverlay(image: "exclamationmark.triangle", text: "ImageViewer.Erorr.NotSupported")
+                        .padding()
+                    Color.clear
+                }
             }
-            .navigationTitle(file.name)
-            .onAppear {
-                image = UIImage(contentsOfFile: file.path)
+        }
+        .navigationTitle(file.name)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if let image = image {
+                    Button {
+                        sizeToFit.toggle()
+                    } label: {
+                        if sizeToFit {
+                            Image(systemName: "arrow.up.right.and.arrow.down.left.square.fill")
+                        } else {
+                            Image(systemName: "arrow.up.right.and.arrow.down.left.square")
+                        }
+                    }
+                } else {
+                    Color.clear
+                }
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if settings.showNowPlayingBar {
+                Color.clear
+                    .frame(height: 48.0)
+            }
+        }
+        .onAppear {
+            image = UIImage(contentsOfFile: file.path)
         }
     }
 }

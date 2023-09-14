@@ -10,11 +10,18 @@ import SwiftUI
 
 struct PDFViewerView: View {
 
+    @EnvironmentObject var settings: SettingsManager
     @State var file: FSFile
 
     var body: some View {
         PDFKitView(file: file)
             .navigationTitle(file.name)
+            .safeAreaInset(edge: .bottom) {
+                if settings.showNowPlayingBar {
+                    Color.clear
+                        .frame(height: 48.0)
+                }
+            }
     }
 }
 

@@ -14,19 +14,26 @@ struct NPQueueSection: View {
     var body: some View {
         Section {
             ForEach($mediaPlayer.queue, id: \.playbackQueueID) { $file in
-                HStack(alignment: .center, spacing: 8.0) {
-                    if file.playbackQueueID == mediaPlayer.currentlyPlayingID {
-                        Image("Play")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 18.0, height: 18.0)
-                            .foregroundStyle(.accent)
+                Button {
+                    mediaPlayer.playImmediately(file, addToQueue: false)
+                } label: {
+                    HStack(alignment: .center, spacing: 8.0) {
+                        if file.playbackQueueID == mediaPlayer.currentlyPlayingID {
+                            Image("Play")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 18.0, height: 18.0)
+                                .foregroundStyle(.accent)
+                        }
+                        Text(file.name)
+                            .font(.body)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                        Spacer()
                     }
-                    Text(file.name)
-                        .font(.body)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .deleteDisabled(file.playbackQueueID == mediaPlayer.currentlyPlayingID)
             }
             .onMove { indexSet, offset in

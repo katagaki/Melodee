@@ -21,7 +21,9 @@ struct NowPlayingView: View {
                         HStack(alignment: .center, spacing: 8.0) {
                             Group {
                                 ActionButton(text: "NowPlaying.ClearQueue", icon: "Clear") {
-                                    mediaPlayer.stop()
+                                    withAnimation(.default.speed(2)) {
+                                        mediaPlayer.stop()
+                                    }
                                 }
                                 .tint(.red)
                             }

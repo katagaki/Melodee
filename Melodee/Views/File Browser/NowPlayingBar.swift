@@ -14,7 +14,7 @@ struct NowPlayingBar: View {
     @State var albumArt: Image = Image("Album.Generic")
 
     var body: some View {
-        HStack(alignment: .center, spacing: 8.0) {
+        HStack(alignment: .center, spacing: 16.0) {
             albumArt
                 .resizable()
                 .scaledToFit()
@@ -32,9 +32,8 @@ struct NowPlayingBar: View {
                         font: UIFont.preferredFont(forTextStyle: .body),
                         leftFade: 16, rightFade: 16, startDelay: 1.5)
             .frame(maxWidth: .infinity)
-            Spacer()
-            Divider()
-            Group {
+            HStack(alignment: .center, spacing: 8.0) {
+                Divider()
                 if mediaPlayer.isPaused {
                     Button {
                         withAnimation(.default.speed(2)) {

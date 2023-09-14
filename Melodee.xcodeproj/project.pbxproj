@@ -171,6 +171,7 @@
 				E4D09A3E2AB0B229008D115A /* FBPlaybackSection.swift */,
 				E4D09A3C2AB0B1D1008D115A /* FBTagSection.swift */,
 				E43C84982AB0179200D87A5F /* FBContextMenu.swift */,
+				E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */,
 				E43C849A2AB0180400D87A5F /* OpenFilesAppButton.swift */,
 			);
 			path = "File Browser";
@@ -297,7 +298,6 @@
 		E4A4D6682AAEF2B40062D12C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */,
 				E43C84662AAF393600D87A5F /* ListSectionHeader.swift */,
 				E43C84632AAF392C00D87A5F /* ListRow.swift */,
 				E43C84962AB0104900D87A5F /* ListDetailRow.swift */,

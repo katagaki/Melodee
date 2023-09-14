@@ -10,6 +10,7 @@ import Foundation
 enum ViewPath: Hashable {
     case fileBrowser(directory: FSDirectory)
     case imageViewer(file: FSFile)
+    case pdfViewer(file: FSFile)
     case tagEditorSingle(file: FSFile)
     case tagEditorMultiple(files: [FSFile])
     case moreAttributions

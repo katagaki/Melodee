@@ -20,6 +20,7 @@ enum FileType: String, Codable {
         switch self {
         case .audio: return Image("File.Audio")
         case .image: return Image("File.Image")
+        case .pdf: return Image("File.PDF")
         case .zip: return Image("File.Archive")
         default: return Image("File.Generic")
         }

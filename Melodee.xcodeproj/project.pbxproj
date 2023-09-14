@@ -67,6 +67,8 @@
 		E4D09A4F2AB0CFE7008D115A /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4E2AB0CFE7008D115A /* SettingsManager.swift */; };
 		E4D09A502AB0F25C008D115A /* ProperDigit.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */; };
 		E4DB2A522AB3445600C5810D /* ImageViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A512AB3445600C5810D /* ImageViewerView.swift */; };
+		E4DB2A552AB350F500C5810D /* PDFViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A542AB350F500C5810D /* PDFViewerView.swift */; };
+		E4DB2A572AB351CB00C5810D /* FBPdfFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A562AB351CB00C5810D /* FBPdfFileRow.swift */; };
 		E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */; };
 		E4EE91EE2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */; };
 /* End PBXBuildFile section */
@@ -131,6 +133,8 @@
 		E4D09A4C2AB0CC4E008D115A /* NPQueueSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPQueueSection.swift; sourceTree = "<group>"; };
 		E4D09A4E2AB0CFE7008D115A /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		E4DB2A512AB3445600C5810D /* ImageViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewerView.swift; sourceTree = "<group>"; };
+		E4DB2A542AB350F500C5810D /* PDFViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewerView.swift; sourceTree = "<group>"; };
+		E4DB2A562AB351CB00C5810D /* FBPdfFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPdfFileRow.swift; sourceTree = "<group>"; };
 		E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProperDigit.plist; sourceTree = "<group>"; };
 		E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEAvailableTokensSection.swift; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 				E4D09A402AB0B2E9008D115A /* FBDirectoryRow.swift */,
 				E4D09A422AB0B34C008D115A /* FBAudioFileRow.swift */,
 				E4D09A482AB0BABA008D115A /* FBImageFileRow.swift */,
+				E4DB2A562AB351CB00C5810D /* FBPdfFileRow.swift */,
 				E4D09A442AB0B404008D115A /* FBZipFileRow.swift */,
 				E4D09A3E2AB0B229008D115A /* FBPlaybackSection.swift */,
 				E4D09A3C2AB0B1D1008D115A /* FBTagSection.swift */,
@@ -238,6 +243,7 @@
 				E43C845C2AAF38B600D87A5F /* MainTabView.swift */,
 				E43C845B2AAF38AA00D87A5F /* File Browser */,
 				E4DB2A502AB3443100C5810D /* Image Viewer */,
+				E4DB2A532AB350E900C5810D /* PDF Viewer */,
 				E43C847D2AB00EE800D87A5F /* Tag Editor */,
 				E43C846E2AAF3ED500D87A5F /* Now Playing */,
 				E43C84602AAF390700D87A5F /* More */,
@@ -319,6 +325,14 @@
 				E4DB2A512AB3445600C5810D /* ImageViewerView.swift */,
 			);
 			path = "Image Viewer";
+			sourceTree = "<group>";
+		};
+		E4DB2A532AB350E900C5810D /* PDF Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				E4DB2A542AB350F500C5810D /* PDFViewerView.swift */,
+			);
+			path = "PDF Viewer";
 			sourceTree = "<group>";
 		};
 		E4EE91E82AB09985004AC3D2 /* Utilities */ = {
@@ -453,6 +467,7 @@
 				E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */,
 				E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */,
 				E43C846B2AAF39C700D87A5F /* License.swift in Sources */,
+				E4DB2A572AB351CB00C5810D /* FBPdfFileRow.swift in Sources */,
 				E43C84912AB00FD100D87A5F /* TETokensTip.swift in Sources */,
 				E43C84722AAF708500D87A5F /* MusicProgressSlider.swift in Sources */,
 				E4D09A412AB0B2E9008D115A /* FBDirectoryRow.swift in Sources */,
@@ -489,6 +504,7 @@
 				E4A4D66C2AAEF2E30062D12C /* FBNoFilesTip.swift in Sources */,
 				E43C846D2AAF39EA00D87A5F /* TabManager.swift in Sources */,
 				E43C84932AB00FF200D87A5F /* LargeButtonLabel.swift in Sources */,
+				E4DB2A552AB350F500C5810D /* PDFViewerView.swift in Sources */,
 				E4A4D6712AAEF39B0062D12C /* NavigationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

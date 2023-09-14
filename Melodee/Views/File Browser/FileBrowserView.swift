@@ -32,6 +32,7 @@ struct FileBrowserView: View {
                                 switch file.type {
                                 case .audio: FBAudioFileRow(file: file)
                                 case .image: FBImageFileRow(file: file)
+                                case .pdf: FBPdfFileRow(file: file)
                                 case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
                                 default: ListFileRow(file: .constant(file))
                                 }
@@ -61,6 +62,7 @@ struct FileBrowserView: View {
                 switch viewPath {
                 case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
                 case .imageViewer(let file): ImageViewerView(file: file)
+                case .pdfViewer(let file): PDFViewerView(file: file)
                 case .tagEditorSingle(let file): TagEditorView(files: [file])
                 case .tagEditorMultiple(let files): TagEditorView(files: files)
                 default: Color.clear

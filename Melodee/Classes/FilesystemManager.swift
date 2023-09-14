@@ -64,6 +64,9 @@ class FilesystemManager: ObservableObject {
                                 case "png", "jpg", "jpeg":
                                     file.type = .image
                                     return file
+                                case "pdf":
+                                    file.type = .pdf
+                                    return file
                                 case "zip":
                                     file.type = .zip
                                     return file

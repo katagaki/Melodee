@@ -34,6 +34,23 @@
           }
         }
       }
+    },
+    "NSPhotoLibraryAddUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melodee can save photos in the Files tab to the Photos app."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "「ファイル」タブにある画像を「写真」アプリに保存します。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

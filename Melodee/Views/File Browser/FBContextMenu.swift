@@ -40,7 +40,13 @@ struct FBContextMenu: View {
                 }
                 Divider()
             } else if file.type == .image {
-                // TODO: Save to Photos button
+                if let image = UIImage(contentsOfFile: file.path) {
+                    Button {
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    } label: {
+                        Label("Shared.SaveToPhotos", systemImage: "square.and.arrow.down")
+                    }
+                }
                 Divider()
             } else if file.type == .zip {
                 Button {

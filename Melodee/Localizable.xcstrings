@@ -827,6 +827,23 @@
         }
       }
     },
+    "Shared.SaveToPhotos" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save to Photos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「写真」アプリに保存"
+          }
+        }
+      }
+    },
     "Shared.Shuffle" : {
       "extractionState" : "manual",
       "localizations" : {

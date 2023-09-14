@@ -1,5 +1,5 @@
 //
-//  ListHintOverlay.swift
+//  HintOverlay.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/11.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ListHintOverlay: View {
+struct HintOverlay: View {
     var image: String
     var text: String
 

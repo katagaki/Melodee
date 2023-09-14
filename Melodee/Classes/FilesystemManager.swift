@@ -53,17 +53,20 @@ class FilesystemManager: ObservableObject {
                                                    files: files(in: url.path(percentEncoded: true)))
                             } else {
                                 let fileExtension = url.pathExtension.lowercased()
+                                var file = FSFile(name: url.deletingPathExtension().lastPathComponent,
+                                                  extension: url.pathExtension.lowercased(),
+                                                  path: url.path,
+                                                  type: .notSet)
                                 switch fileExtension {
                                 case "mp3", "m4a", "wav", "alac":
-                                    return FSFile(name: url.deletingPathExtension().lastPathComponent,
-                                                  extension: url.pathExtension.lowercased(),
-                                                  path: url.path,
-                                                  type: .audio)
+                                    file.type = .audio
+                                    return file
+                                case "png", "jpg", "jpeg":
+                                    file.type = .image
+                                    return file
                                 case "zip":
-                                    return FSFile(name: url.deletingPathExtension().lastPathComponent,
-                                                  extension: url.pathExtension.lowercased(),
-                                                  path: url.path,
-                                                  type: .zip)
+                                    file.type = .zip
+                                    return file
                                 default: break
                                 }
                             }

@@ -33,6 +33,7 @@ struct FileBrowserView: View {
                                 case .audio: FBAudioFileRow(file: file)
                                 case .image: FBImageFileRow(file: file)
                                 case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
+                                default: ListFileRow(file: .constant(file))
                                 }
                             }
                         }
@@ -59,6 +60,7 @@ struct FileBrowserView: View {
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
+                case .imageViewer(let file): ImageViewerView(file: file)
                 case .tagEditorSingle(let file): TagEditorView(files: [file])
                 case .tagEditorMultiple(let files): TagEditorView(files: files)
                 default: Color.clear
@@ -70,7 +72,7 @@ struct FileBrowserView: View {
             .overlay {
                 if files.count == 0 && state.isInitialLoadCompleted {
                     VStack {
-                        ListHintOverlay(image: "questionmark.folder",
+                        HintOverlay(image: "questionmark.folder",
                                         text: "FileBrowser.Hint")
                     }
                 }

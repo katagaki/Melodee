@@ -240,6 +240,23 @@
         }
       }
     },
+    "ImageViewer.Erorr.NotSupported" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This image file is not supported."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像ファイルを開ませんでした。"
+          }
+        }
+      }
+    },
     "More.Attribution" : {
       "extractionState" : "manual",
       "localizations" : {

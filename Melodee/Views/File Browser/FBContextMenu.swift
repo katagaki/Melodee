@@ -18,8 +18,7 @@ struct FBContextMenu: View {
 
     var body: some View {
         if let file = file as? FSFile {
-            switch file.type {
-            case .audio:
+            if file.type == .audio {
                 Button {
                     mediaPlayer.playImmediately(file)
                 } label: {
@@ -40,9 +39,10 @@ struct FBContextMenu: View {
                     Label("Shared.Play.Last", systemImage: "text.line.last.and.arrowtriangle.forward")
                 }
                 Divider()
-            case .image:
+            } else if file.type == .image {
+                // TODO: Save to Photos button
                 Divider()
-            case .zip:
+            } else if file.type == .zip {
                 Button {
                     extractZIPAction()
                 } label: {

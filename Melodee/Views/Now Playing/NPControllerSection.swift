@@ -15,6 +15,7 @@ struct NPControllerSection: View {
     @State var currentDuration: TimeInterval = .zero
     @State var totalDuration: TimeInterval = .zero
     @State var isSeekbarSeeking: Bool = false
+    @State var previousQueueID: String = ""
 
     let updateTimer = Timer.publish(every: 0.5, on: .current, in: .common).autoconnect()
 
@@ -120,11 +121,15 @@ struct NPControllerSection: View {
             ListSectionHeader(text: "")
         }
         .task {
-            await setAlbumArt()
+            if previousQueueID != mediaPlayer.currentlyPlayingID {
+                await setAlbumArt()
+                previousQueueID = mediaPlayer.currentlyPlayingID
+            }
         }
         .onChange(of: mediaPlayer.currentlyPlayingID, { _, _ in
             Task {
                 await setAlbumArt()
+                previousQueueID = mediaPlayer.currentlyPlayingID
             }
         })
         .onReceive(updateTimer, perform: { _ in

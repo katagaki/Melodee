@@ -71,6 +71,7 @@
 		E4DB2A572AB351CB00C5810D /* FBPdfFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A562AB351CB00C5810D /* FBPdfFileRow.swift */; };
 		E4DB2A5A2AB3533000C5810D /* TextViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A592AB3533000C5810D /* TextViewerView.swift */; };
 		E4DB2A5C2AB353E900C5810D /* FBTextFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A5B2AB353E900C5810D /* FBTextFileRow.swift */; };
+		E4DB2A5E2AB3F34500C5810D /* ID3Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */; };
 		E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */; };
 		E4EE91EE2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */; };
 /* End PBXBuildFile section */
@@ -139,6 +140,7 @@
 		E4DB2A562AB351CB00C5810D /* FBPdfFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPdfFileRow.swift; sourceTree = "<group>"; };
 		E4DB2A592AB3533000C5810D /* TextViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewerView.swift; sourceTree = "<group>"; };
 		E4DB2A5B2AB353E900C5810D /* FBTextFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBTextFileRow.swift; sourceTree = "<group>"; };
+		E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ID3Tag.swift; sourceTree = "<group>"; };
 		E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProperDigit.plist; sourceTree = "<group>"; };
 		E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEAvailableTokensSection.swift; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 			children = (
 				E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */,
 				E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */,
+				E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -498,6 +501,7 @@
 				E4D09A3F2AB0B229008D115A /* FBPlaybackSection.swift in Sources */,
 				E43C849B2AB0180400D87A5F /* OpenFilesAppButton.swift in Sources */,
 				E43C84812AB00F0800D87A5F /* FocusedField.swift in Sources */,
+				E4DB2A5E2AB3F34500C5810D /* ID3Tag.swift in Sources */,
 				E4A4D66A2AAEF2BD0062D12C /* HintOverlay.swift in Sources */,
 				E4D09A4B2AB0CBA1008D115A /* NPControllerSection.swift in Sources */,
 				E43C84852AB00F4100D87A5F /* TagTyped.swift in Sources */,

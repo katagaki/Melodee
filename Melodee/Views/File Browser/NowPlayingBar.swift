@@ -12,6 +12,7 @@ struct NowPlayingBar: View {
 
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
     @State var albumArt: Image = Image("Album.Generic")
+    @State var previousQueueID: String = ""
 
     var body: some View {
         HStack(alignment: .center, spacing: 16.0) {
@@ -71,11 +72,15 @@ struct NowPlayingBar: View {
                                     alignment: .top).foregroundColor(.primary.opacity(0.3)),
                  alignment: .top)
         .task {
-            await setAlbumArt()
+            if previousQueueID != mediaPlayer.currentlyPlayingID {
+                await setAlbumArt()
+                previousQueueID = mediaPlayer.currentlyPlayingID
+            }
         }
         .onChange(of: mediaPlayer.currentlyPlayingID, { _, _ in
             Task {
                 await setAlbumArt()
+                previousQueueID = mediaPlayer.currentlyPlayingID
             }
         })
     }

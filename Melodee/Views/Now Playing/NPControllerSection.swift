@@ -47,8 +47,8 @@ struct NPControllerSection: View {
                 }
                 MusicProgressSlider(value: $currentDuration,
                                     inRange: .zero...totalDuration,
-                                    activeFillColor: .accentColor,
-                                    fillColor: .accentColor,
+                                    activeFillColor: .primary,
+                                    fillColor: .primary.opacity(0.5),
                                     emptyColor: .secondary.opacity(0.5),
                                     height: 24) { isEditing in
                                         isSeekbarSeeking = isEditing
@@ -79,9 +79,6 @@ struct NPControllerSection: View {
                             if mediaPlayer.isPaused {
                                 Button {
                                     mediaPlayer.play()
-                                    Task {
-                                        await setAlbumArt()
-                                    }
                                 } label: {
                                     Image("Play")
                                         .resizable()

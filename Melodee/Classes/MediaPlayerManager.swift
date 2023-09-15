@@ -170,7 +170,7 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
 
     func queueNext(file: FSFile) {
-        queue.insert(file, at: currentlyPlayingIndex() + 1)
+        queue.insert(file, at: min(queue.count, currentlyPlayingIndex() + 1))
         setQueueIDs()
         setNowPlaying()
     }

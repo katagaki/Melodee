@@ -27,7 +27,7 @@ struct ImageViewerView: View {
     var body: some View {
         GeometryReader { metrics in
             Group {
-                if let image = image {
+                if image != nil {
                     ZoomableImageView(imagePath: file.path)
                 } else {
                     ZStack(alignment: .center) {

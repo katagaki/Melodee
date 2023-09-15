@@ -17,7 +17,9 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $tabManager.selectedTab) {
-            FileBrowserView()
+            NavigationStack(path: $navigationManager.filesTabPath) {
+                FileBrowserView()
+            }
                 .tabItem {
                     Label("TabTitle.Files", image: "Tab.FileBrowser")
                 }

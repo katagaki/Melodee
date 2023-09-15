@@ -827,6 +827,40 @@
         }
       }
     },
+    "Shared.Play.Folder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Contents"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生"
+          }
+        }
+      }
+    },
+    "Shared.Play.Folder.Recursive" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Contents Recursively"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再帰的に再生"
+          }
+        }
+      }
+    },
     "Shared.Play.Last" : {
       "extractionState" : "manual",
       "localizations" : {

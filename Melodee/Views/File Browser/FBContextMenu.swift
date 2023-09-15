@@ -18,6 +18,8 @@ struct FBContextMenu: View {
 
     var body: some View {
         if let file = file as? FSFile {
+            // Context menu items for files
+            // File type specific actions
             if file.type == .audio {
                 Button {
                     mediaPlayer.playImmediately(file)
@@ -56,6 +58,7 @@ struct FBContextMenu: View {
                 }
                 Divider()
             }
+            // Tag Editor menu items
             if file.extension == "mp3" {
                 Button {
                     navigationManager.push(ViewPath.tagEditorSingle(file: file), for: .fileManager)
@@ -64,6 +67,7 @@ struct FBContextMenu: View {
                 }
                 Divider()
             }
+            // Default item for all files
             Button {
                 state.fileBeingRenamed = file
                 state.isRenamingFile = true
@@ -71,6 +75,28 @@ struct FBContextMenu: View {
                 Label("Shared.Rename", systemImage: "pencil")
             }
         } else if let directory = file as? FSDirectory {
+            // Context menu items for directories
+            if isDirectoryEligibleForQueue(directory) {
+                Button {
+                    mediaPlayer.stop()
+                    addToQueue(directory: directory)
+                    mediaPlayer.play()
+                } label: {
+                    Label("Shared.Play.Folder", systemImage: "play")
+                }
+            }
+            if isDirectoryEligibleForQueueRecursively(directory) {
+                Button {
+                    mediaPlayer.stop()
+                    addToQueue(directory: directory, recursively: true)
+                    mediaPlayer.play()
+                } label: {
+                    Label("Shared.Play.Folder.Recursive", systemImage: "play")
+                }
+            }
+            if isDirectoryEligibleForQueue(directory) || isDirectoryEligibleForQueueRecursively(directory) {
+                Divider()
+            }
             Button {
                 state.directoryBeingRenamed = directory
                 state.isRenamingDirectory = true
@@ -83,6 +109,55 @@ struct FBContextMenu: View {
             state.isDeletingFileOrDirectory = true
         } label: {
             Label("Shared.Delete", systemImage: "trash")
+        }
+    }
+
+    func isDirectoryEligibleForQueue(_ directory: FSDirectory) -> Bool {
+        let files = fileManager.files(in: directory.path).filter({ $0 is FSFile })
+        return files.contains(where: { file in
+            if let file = file as? FSFile {
+                return file.type == .audio
+            }
+            return false
+        })
+    }
+
+    func isDirectoryEligibleForQueueRecursively(_ directory: FSDirectory) -> Bool {
+        let files = fileManager.files(in: directory.path).filter({ $0 is FSDirectory })
+        for file in files {
+            if let directory = file as? FSDirectory {
+                let filesInDirectory = fileManager.files(in: directory.path)
+                if filesInDirectory.contains(where: { file in
+                    if let file = file as? FSFile {
+                        return file.type == .audio
+                    }
+                    return false
+                }) {
+                    return true
+                } else {
+                    return isDirectoryEligibleForQueueRecursively(directory)
+                }
+            }
+        }
+        return false
+
+    }
+
+    func addToQueue(directory: FSDirectory, recursively isRecursiveAdd: Bool = false) {
+        let contents = fileManager.files(in: directory.path).sorted { lhs, rhs in
+            lhs.name < rhs.name
+        }
+        for content in contents {
+            if let file = content as? FSFile, file.type == .audio {
+                mediaPlayer.queueLast(file: file)
+            }
+        }
+        if isRecursiveAdd {
+            for content in contents {
+                if let directory = content as? FSDirectory {
+                    addToQueue(directory: directory, recursively: isRecursiveAdd)
+                }
+            }
         }
     }
 }

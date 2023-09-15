@@ -72,6 +72,10 @@
 		E4DB2A5A2AB3533000C5810D /* TextViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A592AB3533000C5810D /* TextViewerView.swift */; };
 		E4DB2A5C2AB353E900C5810D /* FBTextFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A5B2AB353E900C5810D /* FBTextFileRow.swift */; };
 		E4DB2A5E2AB3F34500C5810D /* ID3Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */; };
+		E4DB2A602AB3FF5400C5810D /* ZoomableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A5F2AB3FF5400C5810D /* ZoomableImageView.swift */; };
+		E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A622AB3FFA800C5810D /* Zoomy */; };
+		E4DB2A652AB4029100C5810D /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A642AB4029100C5810D /* UIView.swift */; };
+		E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A672AB4032900C5810D /* VariableBlurView */; };
 		E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */; };
 		E4EE91EE2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */; };
 /* End PBXBuildFile section */
@@ -141,6 +145,8 @@
 		E4DB2A592AB3533000C5810D /* TextViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewerView.swift; sourceTree = "<group>"; };
 		E4DB2A5B2AB353E900C5810D /* FBTextFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBTextFileRow.swift; sourceTree = "<group>"; };
 		E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ID3Tag.swift; sourceTree = "<group>"; };
+		E4DB2A5F2AB3FF5400C5810D /* ZoomableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableImageView.swift; sourceTree = "<group>"; };
+		E4DB2A642AB4029100C5810D /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ProperDigit.plist; sourceTree = "<group>"; };
 		E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEAvailableTokensSection.swift; sourceTree = "<group>"; };
@@ -154,6 +160,8 @@
 				E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */,
 				E43C84772AB0099F00D87A5F /* ID3TagEditor in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
+				E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */,
+				E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +339,7 @@
 			isa = PBXGroup;
 			children = (
 				E4DB2A512AB3445600C5810D /* ImageViewerView.swift */,
+				E4DB2A5F2AB3FF5400C5810D /* ZoomableImageView.swift */,
 			);
 			path = "Image Viewer";
 			sourceTree = "<group>";
@@ -357,6 +366,7 @@
 				E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */,
 				E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */,
 				E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */,
+				E4DB2A642AB4029100C5810D /* UIView.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -382,6 +392,8 @@
 				E43C84582AAF087300D87A5F /* MarqueeText */,
 				E43C84762AB0099F00D87A5F /* ID3TagEditor */,
 				E43C84792AB009B300D87A5F /* ZIPFoundation */,
+				E4DB2A622AB3FFA800C5810D /* Zoomy */,
+				E4DB2A672AB4032900C5810D /* VariableBlurView */,
 			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
@@ -416,6 +428,8 @@
 				E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */,
 				E43C84752AB0099F00D87A5F /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
 				E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */,
+				E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */,
 			);
 			productRefGroup = E4A4D6482AAEF11F0062D12C /* Products */;
 			projectDirPath = "";
@@ -512,7 +526,9 @@
 				E43C84832AB00F1A00D87A5F /* Tag.swift in Sources */,
 				E4A4D6652AAEF1F80062D12C /* FilesystemManager.swift in Sources */,
 				E4A4D67D2AAEFD9D0062D12C /* MediaPlayerManager.swift in Sources */,
+				E4DB2A602AB3FF5400C5810D /* ZoomableImageView.swift in Sources */,
 				E4D09A472AB0B576008D115A /* FBState.swift in Sources */,
+				E4DB2A652AB4029100C5810D /* UIView.swift in Sources */,
 				E4A4D65F2AAEF15B0062D12C /* FilesystemObject.swift in Sources */,
 				E43C84702AAF3EE100D87A5F /* NowPlayingView.swift in Sources */,
 				E4D09A4F2AB0CFE7008D115A /* SettingsManager.swift in Sources */,
@@ -778,6 +794,22 @@
 				minimumVersion = 0.9.16;
 			};
 		};
+		E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lvnkmn/Zoomy";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 4.2.0;
+			};
+		};
+		E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aheze/VariableBlurView";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -795,6 +827,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
+		};
+		E4DB2A622AB3FFA800C5810D /* Zoomy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */;
+			productName = Zoomy;
+		};
+		E4DB2A672AB4032900C5810D /* VariableBlurView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */;
+			productName = VariableBlurView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

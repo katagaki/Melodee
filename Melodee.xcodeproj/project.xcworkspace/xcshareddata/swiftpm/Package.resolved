@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "injectableloggers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CuratoOpenSource/InjectableLoggers",
+      "state" : {
+        "revision" : "932bb5c96f79ba76a37fe0cb7df5b9163501daee",
+        "version" : "2.1.3"
+      }
+    },
+    {
       "identity" : "marqueetext",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/joekndy/MarqueeText",
@@ -19,12 +28,30 @@
       }
     },
     {
+      "identity" : "variableblurview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aheze/VariableBlurView",
+      "state" : {
+        "revision" : "5646a3e7fe418c587db7e55e5b24138a628dc72d",
+        "version" : "1.0.2"
+      }
+    },
+    {
       "identity" : "zipfoundation",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
         "revision" : "43ec568034b3731101dbf7670765d671c30f54f3",
         "version" : "0.9.16"
+      }
+    },
+    {
+      "identity" : "zoomy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lvnkmn/Zoomy",
+      "state" : {
+        "revision" : "f2e0724c41bd016b03481e203a10e307ee023c36",
+        "version" : "4.2.0"
       }
     }
   ],

@@ -6,65 +6,78 @@
 //
 
 import SwiftUI
+import VariableBlurView
 import VisionKit
 
 struct ImageViewerView: View {
 
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var settings: SettingsManager
     @State var file: FSFile
     @State var image: UIImage?
-    @State var sizeToFit: Bool = false
+    let gradient = LinearGradient(
+            gradient: Gradient(stops: [
+                .init(color: .black, location: 0.8),
+                .init(color: .clear, location: 1.0)
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
 
     var body: some View {
-        Group {
-            if let image = image {
-                Group {
-                    if sizeToFit {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                    } else {
-                        ScrollView([.vertical, .horizontal], showsIndicators: false) {
-                            Image(uiImage: image)
-                        }
-                        .ignoresSafeArea(edges: [.leading, .trailing])
-                    }
-                }
-                .transition(AnyTransition.opacity.animation(.default))
-            } else {
-                ZStack(alignment: .center) {
-                    HintOverlay(image: "exclamationmark.triangle", text: "ImageViewer.Erorr.NotSupported")
-                        .padding()
-                    Color.clear
-                }
-            }
-        }
-        .navigationTitle(file.name)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+        GeometryReader { metrics in
+            Group {
                 if let image = image {
-                    Button {
-                        sizeToFit.toggle()
-                    } label: {
-                        if sizeToFit {
-                            Image(systemName: "arrow.up.right.and.arrow.down.left.square.fill")
+                    ZoomableImageView(imagePath: file.path)
+                } else {
+                    ZStack(alignment: .center) {
+                        HintOverlay(image: "exclamationmark.triangle", text: "ImageViewer.Erorr.NotSupported")
+                            .padding()
+                        Color.clear
+                    }
+                }
+            }
+            .navigationTitle(file.name)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text(file.name)
+                        .truncationMode(.middle)
+                        .bold()
+                        .padding([.leading, .trailing], 8.0)
+                        .padding([.top, .bottom], 4.0)
+                        .background {
+                            Color(uiColor: UIColor.systemBackground)
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 99))
+                }
+            }
+            .overlay {
+                ZStack(alignment: .top) {
+                    Group {
+                        if colorScheme == .dark {
+                            VariableBlurView()
+                                .mask(gradient)
+                                .allowsHitTesting(false)
                         } else {
-                            Image(systemName: "arrow.up.right.and.arrow.down.left.square")
+                            VariableBlurView()
+                                .mask(gradient)
+                                .allowsHitTesting(false)
                         }
                     }
-                } else {
+                    .frame(height: metrics.safeAreaInsets.top + 16.0)
+                    .ignoresSafeArea(edges: .top)
                     Color.clear
                 }
             }
-        }
-        .safeAreaInset(edge: .bottom) {
-            if settings.showNowPlayingBar {
-                Color.clear
-                    .frame(height: 48.0)
+            .safeAreaInset(edge: .bottom) {
+                if settings.showNowPlayingBar {
+                    Color.clear
+                        .frame(height: 48.0)
+                }
             }
-        }
-        .onAppear {
-            image = UIImage(contentsOfFile: file.path)
+            .onAppear {
+                image = UIImage(contentsOfFile: file.path)
+            }
         }
     }
 }

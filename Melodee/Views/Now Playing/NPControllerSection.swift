@@ -117,6 +117,11 @@ struct NPControllerSection: View {
                 .buttonStyle(.plain)
             }
             .padding([.top, .bottom])
+            .background {
+                albumArt
+                    .blur(radius: 64.0)
+                    .opacity(0.3)
+            }
         } header: {
             ListSectionHeader(text: "")
         }

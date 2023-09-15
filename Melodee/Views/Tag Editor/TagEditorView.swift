@@ -45,20 +45,6 @@ struct TagEditorView: View {
         .disabled(saveState == .saving)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
-        .overlay {
-            if !isInitialLoadCompleted {
-                ProgressAlert(title: "Alert.ReadingTags.Title",
-                              message: "Alert.ReadingTags.Text",
-                              percentage: $initialLoadPercentage)
-            }
-        }
-        .overlay {
-            if saveState == .saving {
-                ProgressAlert(title: "Alert.SavingTags.Title",
-                              message: "Alert.SavingTags.Text",
-                              percentage: $savePercentage)
-            }
-        }
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .center, spacing: 0.0) {
                 Button {
@@ -99,6 +85,20 @@ struct TagEditorView: View {
                 Color.clear
                     .frame(height: settings.showNowPlayingBar ? 56.0 : 0.0)
                     .padding(.top)
+            }
+        }
+        .overlay {
+            if !isInitialLoadCompleted {
+                ProgressAlert(title: "Alert.ReadingTags.Title",
+                              message: "Alert.ReadingTags.Text",
+                              percentage: $initialLoadPercentage)
+            }
+        }
+        .overlay {
+            if saveState == .saving {
+                ProgressAlert(title: "Alert.SavingTags.Title",
+                              message: "Alert.SavingTags.Text",
+                              percentage: $savePercentage)
             }
         }
         .toolbar {

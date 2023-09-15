@@ -34,8 +34,8 @@ struct ZoomableImageView: UIViewControllerRepresentable {
             Task {
                 do {
                     let interaction = ImageAnalysisInteraction()
-                    let analysis = try await ZoomableImageView.analyzer.analyze(uiImage, 
-                                                                                configuration: ZoomableImageView.configuration)
+                    let analysis = try await ZoomableImageView.analyzer
+                        .analyze(uiImage, configuration: ZoomableImageView.configuration)
                     imageView.addInteraction(interaction)
                     interaction.analysis = analysis
                     interaction.preferredInteractionTypes = .automatic

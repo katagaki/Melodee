@@ -9,7 +9,9 @@ import SwiftUI
 
 struct NowPlayingView: View {
 
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @EnvironmentObject var settings: SettingsManager
     @State var isClearQueueButtonConfirming: Bool = false
 
     var body: some View {
@@ -45,6 +47,24 @@ struct NowPlayingView: View {
             }
             .listStyle(.insetGrouped)
             .navigationTitle("ViewTitle.NowPlaying")
+            .navigationBarTitleDisplayMode(settings.showNowPlayingTab ? .large : .inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if !settings.showNowPlayingTab {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.primary)
+                                .symbolRenderingMode(.hierarchical)
+                                .font(.title2)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        Color.clear
+                    }
+                }
+            }
         }
     }
 }

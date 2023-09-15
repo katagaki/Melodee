@@ -21,6 +21,11 @@ struct MoreView: View {
                                 title: "More.General.ShowNowPlayingBar",
                                 includeSpacer: true)
                     })
+                    Toggle(isOn: $settings.showNowPlayingTab, label: {
+                        ListRow(image: "ListIcon.NowPlayingTab",
+                                title: "More.General.ShowNowPlayingTab",
+                                includeSpacer: true)
+                    })
                 } header: {
                     ListSectionHeader(text: "More.General")
                         .font(.body)
@@ -79,6 +84,9 @@ struct MoreView: View {
             })
             .onChange(of: settings.showNowPlayingBar, { _, newValue in
                 settings.setShowNowPlayingBar(newValue)
+            })
+            .onChange(of: settings.showNowPlayingTab, { _, newValue in
+                settings.setShowNowPlayingTab(newValue)
             })
             .navigationTitle("ViewTitle.More")
         }

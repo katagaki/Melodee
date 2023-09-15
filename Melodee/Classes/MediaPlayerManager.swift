@@ -7,6 +7,7 @@
 
 import AVFAudio
 import Foundation
+import ID3TagEditor
 import MediaPlayer
 
 class MediaPlayerManager: NSObject,
@@ -71,10 +72,23 @@ class MediaPlayerManager: NSObject,
         }
     }
 
-    func currentlyPlayingFilename() -> String? {
-        if let audioPlayer = audioPlayer,
-           let url = audioPlayer.url {
-            return url.lastPathComponent
+    func currentlyPlayingTitle() -> String? {
+        if audioPlayer != nil, let file = currentlyPlayingFile() {
+            if file.extension == "mp3" {
+                do {
+                    if let tag = try ID3TagEditor().read(from: file.path) {
+                        let contentReader = ID3TagContentReader(id3Tag: tag)
+                        return contentReader.title() ?? file.name
+                    } else {
+                        return file.name
+                    }
+                } catch {
+                    debugPrint(error.localizedDescription)
+                    return file.name
+                }
+            } else {
+                return file.name
+            }
         } else {
             return nil
         }
@@ -222,7 +236,7 @@ class MediaPlayerManager: NSObject,
         // Set now playing info
         let albumArt = await albumArt()
         var nowPlayingInfo = [String: Any]()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingFilename() ?? ""
+        nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingTitle() ?? ""
         nowPlayingInfo[MPMediaItemPropertyArtist] = Bundle.main
             .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
         nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in

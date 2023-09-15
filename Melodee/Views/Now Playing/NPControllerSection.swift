@@ -35,7 +35,7 @@ struct NPControllerSection: View {
                     .shadow(color: .black.opacity(0.1), radius: 10.0)
                     .padding(.bottom)
                     .transition(.slide.animation(.default))
-                MarqueeText(text: mediaPlayer.currentlyPlayingFile()?.name ??
+                MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
                             NSLocalizedString("Shared.NoFilePlaying", comment: ""),
                             font: UIFont.preferredFont(forTextStyle: .body),
                             leftFade: 16, rightFade: 16, startDelay: 1.5)

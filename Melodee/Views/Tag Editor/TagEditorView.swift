@@ -19,6 +19,7 @@ struct TagEditorView: View {
     @State var tagData = Tag()
     @State var selectedAlbumArt: PhotosPickerItem?
     @State var saveState: SaveState = .notSaved
+    @State var isInitialLoadCompleted: Bool = false
     @FocusState var focusedField: FocusedField?
 
     var body: some View {
@@ -100,7 +101,10 @@ struct TagEditorView: View {
             }
         }
         .task {
-            await readAllTagData()
+            if !isInitialLoadCompleted {
+                await readAllTagData()
+                isInitialLoadCompleted = true
+            }
         }
         .onChange(of: selectedAlbumArt) { _, _ in
             Task {

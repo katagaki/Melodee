@@ -10,6 +10,7 @@ import SwiftUI
 struct NowPlayingView: View {
 
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @State var isClearQueueButtonConfirming: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -20,9 +21,14 @@ struct NowPlayingView: View {
                     Section {
                         HStack(alignment: .center, spacing: 8.0) {
                             Group {
-                                ActionButton(text: "NowPlaying.ClearQueue", icon: "Clear") {
+                                ActionButton(text: isClearQueueButtonConfirming ?
+                                             "Shared.AreYouSure" : "NowPlaying.ClearQueue",
+                                             icon: "Clear") {
                                     withAnimation(.default.speed(2)) {
-                                        mediaPlayer.stop()
+                                        if isClearQueueButtonConfirming {
+                                            mediaPlayer.stop()
+                                        }
+                                        isClearQueueButtonConfirming.toggle()
                                     }
                                 }
                                 .tint(.red)

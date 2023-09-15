@@ -544,6 +544,23 @@
         }
       }
     },
+    "Shared.AreYouSure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are You Sure?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "よろしいですか？"
+          }
+        }
+      }
+    },
     "Shared.Cancel" : {
       "localizations" : {
         "en" : {

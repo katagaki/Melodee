@@ -10,9 +10,8 @@ import Foundation
 import ID3TagEditor
 import MediaPlayer
 
-class MediaPlayerManager: NSObject,
-                          ObservableObject,
-                          AVAudioPlayerDelegate {
+// swiftlint:disable type_body_length
+class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     let notificationCenter = NotificationCenter.default
     let audioSession = AVAudioSession.sharedInstance()
@@ -32,16 +31,14 @@ class MediaPlayerManager: NSObject,
             try audioSession.setActive(true)
             // Set up remote controls
             remoteCommandCenter.playCommand.addTarget { _ in
-                if let audioPlayer = self.audioPlayer,
-                   !audioPlayer.isPlaying {
+                if let audioPlayer = self.audioPlayer, !audioPlayer.isPlaying {
                     self.play()
                     return .success
                 }
                 return .commandFailed
             }
             remoteCommandCenter.pauseCommand.addTarget { _ in
-                if let audioPlayer = self.audioPlayer,
-                   audioPlayer.isPlaying {
+                if let audioPlayer = self.audioPlayer, audioPlayer.isPlaying {
                     self.pause()
                     return .success
                 }
@@ -317,3 +314,4 @@ class MediaPlayerManager: NSObject,
         }
     }
 }
+// swiftlint:enable type_body_length

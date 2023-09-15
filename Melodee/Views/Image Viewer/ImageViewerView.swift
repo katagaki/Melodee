@@ -7,7 +7,6 @@
 
 import SwiftUI
 import VariableBlurView
-import VisionKit
 
 struct ImageViewerView: View {
 
@@ -81,5 +80,3 @@ struct ImageViewerView: View {
         }
     }
 }
-
-// TODO: Implement Live Text

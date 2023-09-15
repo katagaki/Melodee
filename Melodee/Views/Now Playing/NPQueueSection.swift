@@ -47,10 +47,12 @@ struct NPQueueSection: View {
                 ListSectionHeader(text: "Shared.Queue")
                     .font(.body)
                     .popoverTip(NPQueueTip(), arrowEdge: .bottom)
-                Spacer()
-                EditButton()
-                    .bold()
-                    .textCase(.none)
+                if !mediaPlayer.queue.isEmpty {
+                    Spacer()
+                    EditButton()
+                        .bold()
+                        .textCase(.none)
+                }
             }
         }
     }

@@ -104,11 +104,9 @@ class FilesystemManager: ObservableObject {
 
     func rename(file: FSFile, newName: String) {
         do {
-            let url = URL(filePath: file.path)
             try manager
                 .moveItem(atPath: file.path,
-                          toPath: "\(url.deletingLastPathComponent().path(percentEncoded: false))" +
-                          "\(newName).\(file.extension)")
+                          toPath: "\(file.containingFolderPath())\(newName).\(file.extension)")
         } catch {
             debugPrint("Error occurred while renaming file: \(error.localizedDescription)")
         }
@@ -116,11 +114,9 @@ class FilesystemManager: ObservableObject {
 
     func rename(directory: FSDirectory, newName: String) {
         do {
-            let url = URL(filePath: directory.path)
             try manager
                 .moveItem(atPath: directory.path,
-                          toPath: "\(url.deletingLastPathComponent().path(percentEncoded: false))" +
-                          "\(newName)/")
+                          toPath: "\(directory.containingFolderPath())\(newName)/")
         } catch {
             debugPrint("Error occurred while renaming directory: \(error.localizedDescription)")
         }

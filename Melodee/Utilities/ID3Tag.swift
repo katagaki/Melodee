@@ -197,7 +197,7 @@ extension ID3Tag {
         // Replace tokens
         let tokens: [String: String] = [
             "fileName": file.name,
-            "folderName": URL(filePath: file.path).deletingLastPathComponent().lastPathComponent,
+            "folderName": file.containingFolderName(),
             "dashFront": componentsDash[0],
             "dashBack": componentsDash.count >= 2 ? componentsDash[1] : "",
             "dotFront": componentsDot[0],

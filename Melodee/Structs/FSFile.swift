@@ -20,4 +20,13 @@ struct FSFile: FilesystemObject {
         hasher.combine(path)
     }
 
+    func containingFolderPath() -> String {
+        let url = URL(filePath: path)
+        return url.deletingLastPathComponent().path(percentEncoded: false)
+    }
+
+    func containingFolderName() -> String {
+        let url = URL(filePath: containingFolderPath())
+        return url.lastPathComponent
+    }
 }

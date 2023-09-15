@@ -13,7 +13,6 @@ struct TEFileHeaderSection: View {
     @State var filename: String
     @Binding var albumArt: Data?
     @Binding var selectedAlbumArt: PhotosPickerItem?
-    @State var showsPhotosPicker: Bool = true
 
     var body: some View {
         Section {
@@ -41,16 +40,14 @@ struct TEFileHeaderSection: View {
                         .bold()
                         .textCase(.none)
                         .foregroundStyle(.primary)
-                    if showsPhotosPicker {
-                        PhotosPicker(selection: $selectedAlbumArt,
-                                     matching: .images,
-                                     photoLibrary: .shared()) {
-                            Text("TagEditor.SelectAlbumArt")
-                                .bold()
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 99))
-                        .buttonStyle(.borderedProminent)
+                    PhotosPicker(selection: $selectedAlbumArt,
+                                 matching: .images,
+                                 photoLibrary: .shared()) {
+                        Text("TagEditor.SelectAlbumArt")
+                            .bold()
                     }
+                    .clipShape(RoundedRectangle(cornerRadius: 99))
+                    .buttonStyle(.borderedProminent)
                 }
             }
             .listRowBackground(Color.clear)

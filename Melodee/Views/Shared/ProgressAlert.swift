@@ -13,7 +13,7 @@ struct ProgressAlert: View {
     @State var title: String
     @State var message: String
     @Binding var percentage: Int
-    @State var onCancel: () -> Void
+    @State var onCancel: (() -> Void)?
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -23,23 +23,25 @@ struct ProgressAlert: View {
                 VStack(alignment: .center, spacing: 10.0) {
                     Text(NSLocalizedString(title, comment: ""))
                         .bold()
-                    ProgressView(value: Float(percentage), total: 100.0)
+                    ProgressView(value: min(Float(percentage), 100.0), total: 100.0)
                         .progressViewStyle(.linear)
                     Text(NSLocalizedString(message, comment: "")
                         .replacingOccurrences(of: "%1", with: String(percentage)))
                     .font(.subheadline)
                 }
                 .padding()
-                Divider()
-                Button {
-                    onCancel()
-                } label: {
-                    Text("Shared.Cancel")
-                        .bold()
-                        .frame(maxWidth: .infinity)
+                if let onCancel = onCancel {
+                    Divider()
+                    Button {
+                        onCancel()
+                    } label: {
+                        Text("Shared.Cancel")
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderless)
+                    .padding([.top, .bottom], 12.0)
                 }
-                .buttonStyle(.borderless)
-                .padding([.top, .bottom], 12.0)
             }
             .background(.thickMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 16.0))

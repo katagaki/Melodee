@@ -12,6 +12,7 @@ import TipKit
 
 struct TagEditorView: View {
 
+    @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var settings: SettingsManager
     let id3TagEditor = ID3TagEditor()
     @State var files: [FSFile]
@@ -19,7 +20,9 @@ struct TagEditorView: View {
     @State var tagData = Tag()
     @State var selectedAlbumArt: PhotosPickerItem?
     @State var saveState: SaveState = .notSaved
+    @State var savePercentage: Int = 0
     @State var isInitialLoadCompleted: Bool = false
+    @State var initialLoadPercentage: Int = 0
     @FocusState var focusedField: FocusedField?
 
     var body: some View {
@@ -42,6 +45,20 @@ struct TagEditorView: View {
         .disabled(saveState == .saving)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .overlay {
+            if !isInitialLoadCompleted {
+                ProgressAlert(title: "Alert.ReadingTags.Title",
+                              message: "Alert.ReadingTags.Text",
+                              percentage: $initialLoadPercentage)
+            }
+        }
+        .overlay {
+            if saveState == .saving {
+                ProgressAlert(title: "Alert.SavingTags.Title",
+                              message: "Alert.SavingTags.Text",
+                              percentage: $savePercentage)
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .center, spacing: 0.0) {
                 Button {
@@ -130,6 +147,7 @@ struct TagEditorView: View {
         debugPrint("Attempting to read tag data for \(files.count) files...")
         // Check for common tag data betwen all files
         var tagCombined: TagTyped?
+        initialLoadPercentage = 0
         for file in files {
             debugPrint("Attempting to read tag data for file \(file.name)...")
             do {
@@ -146,6 +164,7 @@ struct TagEditorView: View {
             } catch {
                 debugPrint("Error occurred while reading tags: \n\(error.localizedDescription)")
             }
+            initialLoadPercentage += 100 / files.count
         }
         // Load data into view
         if let tagCombined = tagCombined {
@@ -154,15 +173,18 @@ struct TagEditorView: View {
     }
 
     func saveAllTagData() async {
+        savePercentage = 0
         _ = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
             for (file, tag) in tags {
                 group.addTask {
                     return await tag.saveTagData(to: file, tagData: tagData)
                 }
             }
-
             var saveStates: [Bool] = []
             for await result in group {
+                DispatchQueue.main.async {
+                    savePercentage += 100 / tags.count
+                }
                 saveStates.append(result)
             }
             return saveStates

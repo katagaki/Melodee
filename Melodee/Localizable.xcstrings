@@ -116,6 +116,40 @@
         }
       }
     },
+    "Alert.ReadingTags.Text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% read"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1%"
+          }
+        }
+      }
+    },
+    "Alert.ReadingTags.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading Track Information"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "トラック情報を読み込み中"
+          }
+        }
+      }
+    },
     "Alert.RenameFile.Title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -129,6 +163,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名称変更"
+          }
+        }
+      }
+    },
+    "Alert.SavingTags.Text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% saved"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1%"
+          }
+        }
+      }
+    },
+    "Alert.SavingTags.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saving Track Information"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "トラック情報を保存中"
           }
         }
       }

@@ -155,7 +155,7 @@ struct FileBrowserView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
-            if !isInitialLoadCompleted {
+            if !state.isInitialLoadCompleted {
                 refreshFiles()
             }
         }

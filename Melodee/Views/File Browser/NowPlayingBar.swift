@@ -27,7 +27,7 @@ struct NowPlayingBar: View {
                 )
                 .shadow(color: .black.opacity(0.1), radius: 10.0)
                 .transition(.slide.animation(.default))
-            MarqueeText(text: mediaPlayer.currentlyPlayingFilename() ??
+            MarqueeText(text: mediaPlayer.currentlyPlayingFile()?.name ??
                             NSLocalizedString("Shared.NoFilePlaying", comment: ""),
                         font: UIFont.preferredFont(forTextStyle: .body),
                         leftFade: 16, rightFade: 16, startDelay: 1.5)

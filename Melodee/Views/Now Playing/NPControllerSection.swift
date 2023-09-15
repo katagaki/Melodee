@@ -35,10 +35,16 @@ struct NPControllerSection: View {
                     .shadow(color: .black.opacity(0.1), radius: 10.0)
                     .padding(.bottom)
                     .transition(.slide.animation(.default))
-                MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
-                            NSLocalizedString("Shared.NoFilePlaying", comment: ""),
-                            font: UIFont.preferredFont(forTextStyle: .body),
-                            leftFade: 16, rightFade: 16, startDelay: 1.5)
+                VStack(alignment: .leading, spacing: 8.0) {
+                    MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
+                                NSLocalizedString("Shared.NoFilePlaying", comment: ""),
+                                font: UIFont.preferredFont(forTextStyle: .body),
+                                leftFade: 16, rightFade: 16, startDelay: 1.5)
+                    MarqueeText(text: mediaPlayer.currentlyPlayingAlbumName() ?? "-",
+                                font: UIFont.preferredFont(forTextStyle: .body),
+                                leftFade: 16, rightFade: 16, startDelay: 1.5)
+                    .opacity(0.5)
+                }
                 MusicProgressSlider(value: $currentDuration,
                                     inRange: .zero...totalDuration,
                                     activeFillColor: .accentColor,

@@ -79,16 +79,30 @@ class MediaPlayerManager: NSObject,
                     if let tag = try ID3TagEditor().read(from: file.path) {
                         let contentReader = ID3TagContentReader(id3Tag: tag)
                         return contentReader.title() ?? file.name
-                    } else {
-                        return file.name
                     }
                 } catch {
                     debugPrint(error.localizedDescription)
-                    return file.name
                 }
-            } else {
-                return file.name
             }
+            return file.name
+        } else {
+            return nil
+        }
+    }
+
+    func currentlyPlayingAlbumName() -> String? {
+        if audioPlayer != nil, let file = currentlyPlayingFile() {
+            if file.extension == "mp3" {
+                do {
+                    if let tag = try ID3TagEditor().read(from: file.path) {
+                        let contentReader = ID3TagContentReader(id3Tag: tag)
+                        return contentReader.album() ?? file.containingFolderName()
+                    }
+                } catch {
+                    debugPrint(error.localizedDescription)
+                }
+            }
+            return file.containingFolderName()
         } else {
             return nil
         }

@@ -65,6 +65,9 @@ struct NowPlayingView: View {
                     }
                 }
             }
+            .onAppear {
+                isClearQueueButtonConfirming = false
+            }
         }
     }
 }

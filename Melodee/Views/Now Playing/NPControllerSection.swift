@@ -73,7 +73,7 @@ struct NPControllerSection: View {
                                 .frame(width: 24.0, height: 24.0)
                                 .padding()
                         }
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(.primary)
                         .disabled(!(mediaPlayer.isPlaybackActive && mediaPlayer.canGoToPreviousTrack()))
                         Group {
                             if mediaPlayer.isPaused {
@@ -101,7 +101,8 @@ struct NPControllerSection: View {
                                 }
                             }
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.bordered)
+                        .foregroundStyle(.primary)
                         Button {
                             withAnimation(.default.speed(2)) {
                                 mediaPlayer.skipToNextTrack()
@@ -113,7 +114,7 @@ struct NPControllerSection: View {
                                 .frame(width: 24.0, height: 24.0)
                                 .padding()
                         }
-                        .foregroundStyle(.accent)
+                        .foregroundStyle(.primary)
                         .disabled(!(mediaPlayer.isPlaybackActive && mediaPlayer.canGoToNextTrack()))
                     }
                     .clipShape(Circle())

@@ -155,7 +155,9 @@ struct FileBrowserView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
-            refreshFiles()
+            if !isInitialLoadCompleted {
+                refreshFiles()
+            }
         }
         .onChange(of: state.fileBeingRenamed) { _, newValue in
             if let fileBeingRenamed = newValue {

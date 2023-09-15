@@ -1,5 +1,7 @@
 # Melodee
 
+![Banner image depicting the Melodee app's file management and audio player features.](github/banner.png?raw=true "Melodee")
+
 A basic audio file player built for iOS.
 
 ## Development
@@ -13,4 +15,5 @@ A basic audio file player built for iOS.
 - Viewing, editing, and saving ID3 tags in MP3 files
 - Batch editing ID3 tags
 - Using tokens to fill out ID3 tags using existing data (such as the track name or track number)
+- Viewing image, text, and PDF files
 - Extracting ZIP files

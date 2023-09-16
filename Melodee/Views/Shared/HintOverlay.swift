@@ -12,7 +12,7 @@ struct HintOverlay: View {
     var text: String
 
     var body: some View {
-        VStack(alignment: .center, spacing: 4.0) {
+        VStack(alignment: .center, spacing: 8.0) {
             Image(systemName: image)
                 .symbolRenderingMode(.multicolor)
                 .font(.system(size: 32.0, weight: .regular))

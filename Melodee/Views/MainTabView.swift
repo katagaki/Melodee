@@ -26,7 +26,7 @@ struct MainTabView: View {
                     .tabItem {
                         Label("TabTitle.Files", image: "Tab.FileBrowser")
                     }
-                    .toolbarBackground(.visible, for: .tabBar)
+                    .toolbarBackground(settings.showNowPlayingBar ? .visible : .automatic, for: .tabBar)
                     .tag(TabType.fileManager)
                     .overlay {
                         ZStack(alignment: .bottom) {

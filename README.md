@@ -4,6 +4,8 @@
 
 A basic audio file player built for iOS.
 
+**Download: [App Store](https://apps.apple.com/app/id6465898934)**
+
 ## Development
 
 ### What works

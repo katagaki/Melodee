@@ -43,7 +43,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「%1」を削除してよろしいですか？"
+            "value" : "「%1」を削除してもよろしいですか？"
           }
         }
       }

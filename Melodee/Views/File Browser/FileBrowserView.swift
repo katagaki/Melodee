@@ -52,6 +52,16 @@ struct FileBrowserView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .overlay {
+            if files.count == 0 && currentDirectory == nil {
+                TipView(FBNoFilesTip())
+                    .padding(20.0)
+            } else if files.count == 0 && state.isInitialLoadCompleted {
+                VStack {
+                    HintOverlay(image: "questionmark.folder", text: "FileBrowser.Hint")
+                }
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             if settings.showNowPlayingBar {
                 Color.clear
@@ -73,14 +83,6 @@ struct FileBrowserView: View {
             refreshFiles()
         }
         .overlay {
-            if files.count == 0 && state.isInitialLoadCompleted {
-                VStack {
-                    HintOverlay(image: "questionmark.folder",
-                                    text: "FileBrowser.Hint")
-                }
-            }
-        }
-        .overlay {
             if state.isExtractingZIP {
                 ProgressAlert(title: "Alert.ExtractingZIP.Title",
                               message: "Alert.ExtractingZIP.Text",
@@ -99,7 +101,6 @@ struct FileBrowserView: View {
                 HStack {
                     if currentDirectory == nil {
                         OpenFilesAppButton()
-                            .popoverTip(FBNoFilesTip(), arrowEdge: .top)
                     }
                 }
             }

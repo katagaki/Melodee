@@ -84,6 +84,7 @@ struct MainTabView: View {
             }
         }
         .task {
+            try? Tips.resetDatastore()
             try? Tips.configure([
                 .displayFrequency(.immediate),
                 .datastoreLocation(.applicationDefault)

@@ -168,6 +168,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E4130F422ABEA2AE00AEF308 /* Tips */ = {
+			isa = PBXGroup;
+			children = (
+				E4A4D66B2AAEF2E30062D12C /* FBNoFilesTip.swift */,
+				E43C84732AAF901900D87A5F /* NPQueueTip.swift */,
+				E43C84902AB00FD100D87A5F /* TETokensTip.swift */,
+			);
+			path = Tips;
+			sourceTree = "<group>";
+		};
 		E43C845B2AAF38AA00D87A5F /* File Browser */ = {
 			isa = PBXGroup;
 			children = (
@@ -272,15 +282,13 @@
 		E4A4D65A2AAEF13E0062D12C /* Structs */ = {
 			isa = PBXGroup;
 			children = (
-				E4A4D6602AAEF1670062D12C /* FSFile.swift */,
-				E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */,
+				E4130F422ABEA2AE00AEF308 /* Tips */,
 				E4D09A462AB0B575008D115A /* FBState.swift */,
-				E4A4D66B2AAEF2E30062D12C /* FBNoFilesTip.swift */,
-				E43C84732AAF901900D87A5F /* NPQueueTip.swift */,
-				E43C84902AB00FD100D87A5F /* TETokensTip.swift */,
+				E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */,
+				E4A4D6602AAEF1670062D12C /* FSFile.swift */,
+				E43C846A2AAF39C700D87A5F /* License.swift */,
 				E43C84822AB00F1A00D87A5F /* Tag.swift */,
 				E43C84842AB00F4100D87A5F /* TagTyped.swift */,
-				E43C846A2AAF39C700D87A5F /* License.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";

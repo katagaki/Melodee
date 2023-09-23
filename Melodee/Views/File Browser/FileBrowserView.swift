@@ -62,7 +62,7 @@ struct FileBrowserView: View {
                 }
             }
         }
-        .safeAreaInset(edge: .bottom) {
+        .safeAreaInset(edge: .bottom, spacing: 0.0) {
             if settings.showNowPlayingBar {
                 Color.clear
                     .frame(height: 56.0)

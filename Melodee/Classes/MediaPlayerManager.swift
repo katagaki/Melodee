@@ -310,7 +310,7 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
             isPaused = true
         } else {
             debugPrint("Playing next file...")
-            playImmediately(queue[currentlyPlayingIndex() + 1])
+            playImmediately(queue[currentlyPlayingIndex() + 1], addToQueue: false)
         }
     }
 }

@@ -64,7 +64,9 @@ struct ListFileRow: View {
                 } else if file.type == .image {
                     if let thumbnail = await UIImage(contentsOfFile: file.path)?
                         .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
-                        self.thumbnail = thumbnail
+                        withAnimation(.default.speed(2)) {
+                            self.thumbnail = thumbnail
+                        }
                     }
                 }
                 isThumbnailFetchCompleted = true
@@ -80,8 +82,10 @@ struct ListFileRow: View {
                 switch item.commonKey {
                 case .commonKeyArtwork?:
                     if let data = try await item.load(.dataValue),
-                       let image = UIImage(data: data) {
-                        return image
+                       let image = UIImage(data: data),
+                       let thumbnail = await image.byPreparingThumbnail(ofSize: CGSize(width: 100.0, 
+                                                                                       height: 100.0)){
+                        return thumbnail
                     }
                 default: break
                 }

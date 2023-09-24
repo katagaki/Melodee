@@ -83,8 +83,8 @@ struct ListFileRow: View {
                 case .commonKeyArtwork?:
                     if let data = try await item.load(.dataValue),
                        let image = UIImage(data: data),
-                       let thumbnail = await image.byPreparingThumbnail(ofSize: CGSize(width: 100.0, 
-                                                                                       height: 100.0)){
+                       let thumbnail = await image.byPreparingThumbnail(ofSize: CGSize(width: 100.0,
+                                                                                       height: 100.0)) {
                         return thumbnail
                     }
                 default: break

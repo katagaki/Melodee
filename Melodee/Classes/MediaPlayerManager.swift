@@ -191,13 +191,13 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func stop() {
         if let audioPlayer = audioPlayer {
             audioPlayer.stop()
-            queue.removeAll()
-            self.audioPlayer = nil
-            currentlyPlayingID = ""
-            nowPlayingInfoCenter.nowPlayingInfo = nil
-            isPlaybackActive = false
-            isPaused = false
         }
+        queue.removeAll()
+        self.audioPlayer = nil
+        currentlyPlayingID = ""
+        nowPlayingInfoCenter.nowPlayingInfo = nil
+        isPlaybackActive = false
+        isPaused = false
     }
 
     func skipToNextTrack() {

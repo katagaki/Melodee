@@ -24,7 +24,11 @@ struct TextViewerView: View {
             }
             .onAppear {
                 do {
-                    text = try String(contentsOfFile: file.path)
+                    if let text = try? String(contentsOfFile: file.path, encoding: .shiftJIS) {
+                        self.text = text
+                    } else {
+                        self.text = try String(contentsOfFile: file.path)
+                    }
                 } catch {
                     debugPrint(error.localizedDescription)
                 }

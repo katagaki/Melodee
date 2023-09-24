@@ -66,7 +66,7 @@ struct NowPlayingBar: View {
         }
         .padding(.all, 8.0)
         .frame(maxWidth: .infinity, minHeight: 56.0, maxHeight: 56.0)
-        .background(.ultraThinMaterial)
+        .background(.regularMaterial)
         .overlay(Rectangle().frame(width: nil,
                                     height: 1/3,
                                     alignment: .top).foregroundColor(.primary.opacity(0.3)),

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E4130F572ABFEF5200AEF308 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4130F562ABFEF5200AEF308 /* URL.swift */; };
 		E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84582AAF087300D87A5F /* MarqueeText */; };
 		E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845C2AAF38B600D87A5F /* MainTabView.swift */; };
 		E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845E2AAF38D800D87A5F /* TabType.swift */; };
@@ -81,6 +82,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E4130F562ABFEF5200AEF308 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		E43C845C2AAF38B600D87A5F /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		E43C845E2AAF38D800D87A5F /* TabType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabType.swift; sourceTree = "<group>"; };
 		E43C84612AAF391200D87A5F /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				E4EE91EB2AB09A92004AC3D2 /* Bundle.swift */,
 				E4DB2A5D2AB3F34500C5810D /* ID3Tag.swift */,
 				E4DB2A642AB4029100C5810D /* UIView.swift */,
+				E4130F562ABFEF5200AEF308 /* URL.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -526,6 +529,7 @@
 				E4DB2A5E2AB3F34500C5810D /* ID3Tag.swift in Sources */,
 				E4A4D66A2AAEF2BD0062D12C /* HintOverlay.swift in Sources */,
 				E4D09A4B2AB0CBA1008D115A /* NPControllerSection.swift in Sources */,
+				E4130F572ABFEF5200AEF308 /* URL.swift in Sources */,
 				E43C84852AB00F4100D87A5F /* TagTyped.swift in Sources */,
 				E4A4D6762AAEF4040062D12C /* ListFolderRow.swift in Sources */,
 				E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */,

@@ -198,10 +198,12 @@ struct FileBrowserView: View {
         withAnimation(.easeOut.speed(2)) {
             state.isExtractingZIP = true
         }
+        UIApplication.shared.isIdleTimerDisabled = true
         fileManager.extractFiles(file: file) {
             state.extractionPercentage =
                 Int((fileManager.extractionProgress?.fractionCompleted ?? 0) * 100)
         } onError: { error in
+            UIApplication.shared.isIdleTimerDisabled = false
             withAnimation(.easeOut.speed(2)) {
                 state.isExtractingZIP = false
                 state.errorText = error
@@ -210,6 +212,7 @@ struct FileBrowserView: View {
                 state.isErrorAlertPresenting = true
             }
         } onCompletion: {
+            UIApplication.shared.isIdleTimerDisabled = false
             withAnimation(.easeOut.speed(2)) {
                 state.isExtractingZIP = false
             }

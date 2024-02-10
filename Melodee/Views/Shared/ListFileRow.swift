@@ -17,7 +17,7 @@ struct ListFileRow: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 16.0) {
-            if (file.extension == "mp3" || file.type == .image),
+            if file.extension == "mp3" || file.type == .image,
                let thumbnail = thumbnail {
                 Image(uiImage: thumbnail)
                     .resizable()

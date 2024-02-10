@@ -38,6 +38,7 @@
 		E43C84992AB0179200D87A5F /* FBContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84982AB0179200D87A5F /* FBContextMenu.swift */; };
 		E43C849B2AB0180400D87A5F /* OpenFilesAppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C849A2AB0180400D87A5F /* OpenFilesAppButton.swift */; };
 		E43C849D2AB0188B00D87A5F /* ProgressAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */; };
+		E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E447AAB92B771CC7009A3D3E /* Komponents */; };
 		E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64A2AAEF11F0062D12C /* App.swift */; };
 		E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */; };
 		E4A4D64F2AAEF1200062D12C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D64E2AAEF1200062D12C /* Assets.xcassets */; };
@@ -161,6 +162,7 @@
 			files = (
 				E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */,
 				E43C84772AB0099F00D87A5F /* ID3TagEditor in Frameworks */,
+				E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
 				E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */,
 				E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */,
@@ -405,6 +407,7 @@
 				E43C84792AB009B300D87A5F /* ZIPFoundation */,
 				E4DB2A622AB3FFA800C5810D /* Zoomy */,
 				E4DB2A672AB4032900C5810D /* VariableBlurView */,
+				E447AAB92B771CC7009A3D3E /* Komponents */,
 			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
@@ -418,7 +421,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					E4A4D6462AAEF11F0062D12C = {
 						CreatedOnToolsVersion = 15.0;
@@ -441,6 +444,7 @@
 				E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */,
 				E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */,
+				E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */,
 			);
 			productRefGroup = E4A4D6482AAEF11F0062D12C /* Products */;
 			projectDirPath = "";
@@ -565,6 +569,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -594,6 +599,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -626,6 +632,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -655,6 +662,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -682,6 +690,7 @@
 				CODE_SIGN_ENTITLEMENTS = Melodee/Melodee.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -724,6 +733,7 @@
 				CODE_SIGN_ENTITLEMENTS = Melodee/Melodee.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = YYM4Z6MU8F;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -806,6 +816,14 @@
 				minimumVersion = 0.9.16;
 			};
 		};
+		E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/katagaki/Komponents";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lvnkmn/Zoomy";
@@ -839,6 +857,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
+		};
+		E447AAB92B771CC7009A3D3E /* Komponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */;
+			productName = Komponents;
 		};
 		E4DB2A622AB3FFA800C5810D /* Zoomy */ = {
 			isa = XCSwiftPackageProductDependency;

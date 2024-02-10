@@ -144,7 +144,7 @@ class FilesystemManager: ObservableObject {
                                             to: URL(filePath: destinationDirectory),
                                             skipCRC32: true,
                                             progress: self.extractionProgress,
-                                            preferredEncoding: encoding)
+                                            pathEncoding: encoding)
                 DispatchQueue.main.async {
                     onCompletion()
                 }

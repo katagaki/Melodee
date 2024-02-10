@@ -12,7 +12,7 @@ class SettingsManager: ObservableObject {
     let defaults = UserDefaults.standard
 
     @Published var showNowPlayingBar: Bool = true
-    @Published var showNowPlayingTab: Bool = true
+    @Published var showNowPlayingTab: Bool = false
 
     init() {
         // Set default settings
@@ -20,7 +20,7 @@ class SettingsManager: ObservableObject {
             defaults.set(true, forKey: "ShowNowPlayingBar")
         }
         if defaults.value(forKey: "ShowNowPlayingTab") == nil {
-            defaults.set(true, forKey: "ShowNowPlayingTab")
+            defaults.set(false, forKey: "ShowNowPlayingTab")
         }
 
         // Load configuration into global variables

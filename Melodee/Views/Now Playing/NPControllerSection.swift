@@ -11,11 +11,10 @@ import SwiftUI
 struct NPControllerSection: View {
 
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
-    @State var albumArt: Image = Image("Album.Generic")
+    @Binding var albumArt: Image
     @State var currentDuration: TimeInterval = .zero
     @State var totalDuration: TimeInterval = .zero
     @State var isSeekbarSeeking: Bool = false
-    @State var previousQueueID: String = ""
 
     let updateTimer = Timer.publish(every: 0.5, on: .current, in: .common).autoconnect()
 
@@ -121,26 +120,7 @@ struct NPControllerSection: View {
                 .buttonStyle(.plain)
             }
             .padding([.top, .bottom])
-            .background {
-                albumArt
-                    .blur(radius: 64.0)
-                    .opacity(0.3)
-            }
-        } header: {
-            ListSectionHeader(text: "")
         }
-        .task {
-            if previousQueueID != mediaPlayer.currentlyPlayingID {
-                await setAlbumArt()
-                previousQueueID = mediaPlayer.currentlyPlayingID
-            }
-        }
-        .onChange(of: mediaPlayer.currentlyPlayingID, { _, _ in
-            Task {
-                await setAlbumArt()
-                previousQueueID = mediaPlayer.currentlyPlayingID
-            }
-        })
         .onReceive(updateTimer, perform: { _ in
             if !isSeekbarSeeking {
                 if let audioPlayer = mediaPlayer.audioPlayer {
@@ -152,12 +132,5 @@ struct NPControllerSection: View {
                 }
             }
         })
-    }
-
-    func setAlbumArt() async {
-        let albumArtUIImage = await mediaPlayer.albumArt()
-        withAnimation(.default.speed(2)) {
-            albumArt = Image(uiImage: albumArtUIImage)
-        }
     }
 }

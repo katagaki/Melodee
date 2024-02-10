@@ -13,46 +13,50 @@ struct NPQueueSection: View {
 
     var body: some View {
         Section {
-            ForEach($mediaPlayer.queue, id: \.playbackQueueID) { $file in
-                Button {
-                    mediaPlayer.playImmediately(file, addToQueue: false)
-                } label: {
-                    HStack(alignment: .center, spacing: 8.0) {
-                        if file.playbackQueueID == mediaPlayer.currentlyPlayingID {
-                            Image("Play")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 18.0, height: 18.0)
-                                .foregroundStyle(.accent)
+            if $mediaPlayer.queue.isEmpty {
+                Text("")
+                    .listRowSeparator(.hidden)
+            } else {
+                ForEach($mediaPlayer.queue, id: \.playbackQueueID) { $file in
+                    Button {
+                        mediaPlayer.playImmediately(file, addToQueue: false)
+                    } label: {
+                        HStack(alignment: .center, spacing: 8.0) {
+                            if file.playbackQueueID == mediaPlayer.currentlyPlayingID {
+                                Image("Play")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 18.0, height: 18.0)
+                                    .foregroundStyle(.accent)
+                            }
+                            Text(file.name)
+                                .font(.body)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Spacer()
                         }
-                        Text(file.name)
-                            .font(.body)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                        Spacer()
+                        .contentShape(Rectangle())
                     }
-                    .contentShape(Rectangle())
+                    .buttonStyle(.plain)
+                    .deleteDisabled(file.playbackQueueID == mediaPlayer.currentlyPlayingID)
                 }
-                .buttonStyle(.plain)
-                .deleteDisabled(file.playbackQueueID == mediaPlayer.currentlyPlayingID)
-            }
-            .onMove { indexSet, offset in
-                mediaPlayer.queue.move(fromOffsets: indexSet, toOffset: offset)
-            }
-            .onDelete { indexSet in
-                mediaPlayer.queue.remove(atOffsets: indexSet)
+                .onMove { indexSet, offset in
+                    mediaPlayer.queue.move(fromOffsets: indexSet, toOffset: offset)
+                }
+                .onDelete { indexSet in
+                    mediaPlayer.queue.remove(atOffsets: indexSet)
+                }
             }
         } header: {
             HStack(alignment: .center, spacing: 8.0) {
                 ListSectionHeader(text: "Shared.Queue")
                     .font(.body)
                     .popoverTip(NPQueueTip(), arrowEdge: .bottom)
-                if !mediaPlayer.queue.isEmpty {
-                    Spacer()
-                    EditButton()
-                        .bold()
-                        .textCase(.none)
-                }
+                Spacer()
+                EditButton()
+                    .bold()
+                    .textCase(.none)
+                    .disabled(mediaPlayer.queue.isEmpty)
             }
         }
     }

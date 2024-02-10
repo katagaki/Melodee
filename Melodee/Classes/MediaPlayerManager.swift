@@ -20,6 +20,7 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var audioPlayer: AVAudioPlayer?
     @Published var isPlaybackActive: Bool = false
     @Published var isPaused: Bool = true
+    @Published var repeatMode: RepeatMode = .none
     @Published var queue: [FSFile] = []
     @Published var currentlyPlayingID: String = ""
 
@@ -302,15 +303,29 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         debugPrint("AVAudioPlayer finished playing!")
-        if currentlyPlayingIndex() == queue.count - 1 {
-            debugPrint("Killing AVAudioPlayer instance...")
-            audioPlayer = nil
-            nowPlayingInfoCenter.nowPlayingInfo = nil
-            isPlaybackActive = false
-            isPaused = true
-        } else {
-            debugPrint("Playing next file...")
-            playImmediately(queue[currentlyPlayingIndex() + 1], addToQueue: false)
+        switch repeatMode {
+        case .none:
+            if currentlyPlayingIndex() == queue.count - 1 {
+                debugPrint("Killing AVAudioPlayer instance...")
+                audioPlayer = nil
+                nowPlayingInfoCenter.nowPlayingInfo = nil
+                isPlaybackActive = false
+                isPaused = true
+            } else {
+                debugPrint("Playing next file...")
+                playImmediately(queue[currentlyPlayingIndex() + 1], addToQueue: false)
+            }
+        case .single:
+            debugPrint("Repeating current file...")
+            playImmediately(queue[currentlyPlayingIndex()], addToQueue: false)
+        case .all:
+            if currentlyPlayingIndex() == queue.count - 1 {
+                debugPrint("Repeating queue...")
+                playImmediately(queue[0], addToQueue: false)
+            } else {
+                debugPrint("Playing next file...")
+                playImmediately(queue[currentlyPlayingIndex() + 1], addToQueue: false)
+            }
         }
     }
 }

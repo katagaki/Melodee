@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/13.
 //
 
+import AVKit
 import MarqueeText
 import SwiftUI
 
@@ -118,6 +119,44 @@ struct NPControllerSection: View {
                 }
                 .disabled(!mediaPlayer.canStartPlayback())
                 .buttonStyle(.plain)
+                HStack(alignment: .center, spacing: 16.0) {
+                    Spacer()
+                    DevicePickerView()
+                        .frame(width: 24.0, height: 24.0)
+                        .padding()
+                    Spacer()
+                    Button {
+                        withAnimation(.default.speed(2)) {
+                            switch mediaPlayer.repeatMode {
+                            case .none: mediaPlayer.repeatMode = .single
+                            case .single: mediaPlayer.repeatMode = .all
+                            case .all: mediaPlayer.repeatMode = .none
+                            }
+                        }
+                    } label: {
+                        Group {
+                            switch mediaPlayer.repeatMode {
+                            case .none:
+                                Image(systemName: "repeat")
+                                    .resizable()
+                                    .opacity(0.5)
+                            case .single:
+                                Image(systemName: "repeat.1")
+                                    .resizable()
+                            case .all:
+                                Image(systemName: "repeat")
+                                    .resizable()
+                            }
+                        }
+                        .scaledToFit()
+                        .padding(2.0)
+                        .frame(width: 24.0, height: 24.0)
+                        .padding()
+                    }
+                    .foregroundStyle(.primary)
+                    .disabled(!(mediaPlayer.isPlaybackActive))
+                    Spacer()
+                }
             }
             .padding([.top, .bottom])
         }
@@ -132,5 +171,15 @@ struct NPControllerSection: View {
                 }
             }
         })
+    }
+}
+
+struct DevicePickerView: UIViewRepresentable {
+    func makeUIView(context: Context) -> UIView {
+        return AVRoutePickerView()
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        // Not implemented
     }
 }

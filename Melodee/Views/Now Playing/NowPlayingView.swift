@@ -94,7 +94,7 @@ struct NowPlayingView: View {
             }
         })
     }
-    
+
     func setAlbumArt() async {
         let albumArtUIImage = await mediaPlayer.albumArt()
         withAnimation(.default.speed(2)) {

@@ -153,6 +153,7 @@ struct NPControllerSection: View {
                         .frame(width: 24.0, height: 24.0)
                         .padding()
                     }
+                    .buttonStyle(.borderless)
                     .foregroundStyle(.primary)
                     .disabled(!(mediaPlayer.isPlaybackActive))
                     Spacer()

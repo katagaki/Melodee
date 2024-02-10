@@ -12,7 +12,7 @@ import ZIPFoundation
 class FilesystemManager: ObservableObject {
 
     let manager = FileManager.default
-    var documentsDirectory: String?
+    var directory: URL?
 
     @Published var files: [any FilesystemObject] = []
     @Published var extractionProgress: Progress?
@@ -26,23 +26,22 @@ class FilesystemManager: ObservableObject {
                      in: .userDomainMask,
                      appropriateFor: nil,
                      create: true)
-            self.documentsDirectory = documentsDirectoryURL.absoluteString
+            self.directory = documentsDirectoryURL
             manager
                 .createFile(atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
                             contents: "".data(using: .utf8))
         } catch {
             debugPrint(error.localizedDescription)
-            documentsDirectory = ""
+            directory = nil
         }
     }
 
     func files(in subPath: String = "") -> [any FilesystemObject] {
-        debugPrint("Enumerating files in '\(subPath)' (blank if root).")
+        debugPrint("Enumerating files in '\(subPath == "" ? directory?.absoluteString ?? "": subPath)'.")
         do {
-            if let documentsDirectory = documentsDirectory,
-               let documentsDirectoryURL = URL(string: documentsDirectory) {
-                if directoryOrFileExists(at: subPath == "" ? documentsDirectoryURL.path() : subPath) {
-                    let pathToEnumerate = subPath == "" ? documentsDirectoryURL : URL(string: subPath)!
+            if let directory {
+                if directoryOrFileExists(at: subPath == "" ? directory.path() : subPath) {
+                    let pathToEnumerate = subPath == "" ? directory : URL(string: subPath)!
                     return try manager
                         .contentsOfDirectory(at: pathToEnumerate,
                                              includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],

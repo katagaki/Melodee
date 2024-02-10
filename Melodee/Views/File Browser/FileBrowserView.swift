@@ -8,6 +8,7 @@
 import SwiftUI
 import TipKit
 
+// swiftlint:disable type_body_length
 struct FileBrowserView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
@@ -17,6 +18,7 @@ struct FileBrowserView: View {
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
+    @State var selectingExternalDirectory = false
 
     var body: some View {
         List {
@@ -100,7 +102,27 @@ struct FileBrowserView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 HStack {
                     if currentDirectory == nil {
-                        OpenFilesAppButton()
+                        Menu {
+                            Button {
+                                let documentsUrl = FileManager.default.urls(for: .documentDirectory,
+                                                                            in: .userDomainMask).first!
+                                if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
+                                    if UIApplication.shared.canOpenURL(sharedUrl) {
+                                        UIApplication.shared.open(sharedUrl, options: [:])
+                                    }
+                                }
+                            } label: {
+                                Label("Shared.OpenFilesApp", systemImage: "arrow.up.right.square")
+                            }
+                            Divider()
+                            Button {
+                                selectingExternalDirectory = true
+                            } label: {
+                                Label("Shared.UseExternalDirectory", systemImage: "plus.rectangle.on.folder")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }
                     }
                 }
             }
@@ -118,7 +140,7 @@ struct FileBrowserView: View {
                 state.fileBeingRenamed = nil
             }
         })
-        .alert("Alert.RenameFile.Title", isPresented: $state.isRenamingDirectory, actions: {
+        .alert("Alert.RenameDirectory.Title", isPresented: $state.isRenamingDirectory, actions: {
             TextField("Shared.NewDirectoryName", text: $state.newDirectoryName)
             Button("Shared.Change") {
                 if let directoryBeingRenamed = state.directoryBeingRenamed {
@@ -153,6 +175,17 @@ struct FileBrowserView: View {
         })
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $selectingExternalDirectory) {
+            DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
+                fileManager.directory = url
+                let isAccessSuccessful = url.startAccessingSecurityScopedResource()
+                if isAccessSuccessful {
+                    refreshFiles()
+                } else {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            })
+        }
         .onAppear {
             if !state.isInitialLoadCompleted {
                 refreshFiles()
@@ -239,3 +272,4 @@ struct FileBrowserView: View {
     }
 
 }
+// swiftlint:enable type_body_length

@@ -36,10 +36,10 @@
 		E43C84952AB0100900D87A5F /* ListInputRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84942AB0100900D87A5F /* ListInputRow.swift */; };
 		E43C84972AB0104900D87A5F /* ListDetailRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84962AB0104900D87A5F /* ListDetailRow.swift */; };
 		E43C84992AB0179200D87A5F /* FBContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84982AB0179200D87A5F /* FBContextMenu.swift */; };
-		E43C849B2AB0180400D87A5F /* OpenFilesAppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C849A2AB0180400D87A5F /* OpenFilesAppButton.swift */; };
 		E43C849D2AB0188B00D87A5F /* ProgressAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */; };
 		E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E447AAB92B771CC7009A3D3E /* Komponents */; };
 		E447AABC2B772312009A3D3E /* RepeatMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E447AABB2B772312009A3D3E /* RepeatMode.swift */; };
+		E447AAC02B773BF8009A3D3E /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */; };
 		E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64A2AAEF11F0062D12C /* App.swift */; };
 		E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */; };
 		E4A4D64F2AAEF1200062D12C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4A4D64E2AAEF1200062D12C /* Assets.xcassets */; };
@@ -110,9 +110,9 @@
 		E43C84942AB0100900D87A5F /* ListInputRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInputRow.swift; sourceTree = "<group>"; };
 		E43C84962AB0104900D87A5F /* ListDetailRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListDetailRow.swift; sourceTree = "<group>"; };
 		E43C84982AB0179200D87A5F /* FBContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBContextMenu.swift; sourceTree = "<group>"; };
-		E43C849A2AB0180400D87A5F /* OpenFilesAppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFilesAppButton.swift; sourceTree = "<group>"; };
 		E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAlert.swift; sourceTree = "<group>"; };
 		E447AABB2B772312009A3D3E /* RepeatMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatMode.swift; sourceTree = "<group>"; };
+		E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
 		E4A4D6472AAEF11F0062D12C /* Melodee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Melodee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A4D64A2AAEF11F0062D12C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
@@ -198,7 +198,6 @@
 				E4D09A3C2AB0B1D1008D115A /* FBTagSection.swift */,
 				E43C84982AB0179200D87A5F /* FBContextMenu.swift */,
 				E4A4D67E2AAF05F70062D12C /* NowPlayingBar.swift */,
-				E43C849A2AB0180400D87A5F /* OpenFilesAppButton.swift */,
 			);
 			path = "File Browser";
 			sourceTree = "<group>";
@@ -333,6 +332,7 @@
 				E4A4D67A2AAEFB750062D12C /* ActionButton.swift */,
 				E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */,
 				E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */,
+				E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -532,7 +532,6 @@
 				E43C847C2AB009D600D87A5F /* FileType.swift in Sources */,
 				E4DB2A522AB3445600C5810D /* ImageViewerView.swift in Sources */,
 				E4D09A3F2AB0B229008D115A /* FBPlaybackSection.swift in Sources */,
-				E43C849B2AB0180400D87A5F /* OpenFilesAppButton.swift in Sources */,
 				E43C84812AB00F0800D87A5F /* FocusedField.swift in Sources */,
 				E4DB2A5E2AB3F34500C5810D /* ID3Tag.swift in Sources */,
 				E4A4D66A2AAEF2BD0062D12C /* HintOverlay.swift in Sources */,
@@ -541,6 +540,7 @@
 				E43C84852AB00F4100D87A5F /* TagTyped.swift in Sources */,
 				E4A4D6762AAEF4040062D12C /* ListFolderRow.swift in Sources */,
 				E4EE91EC2AB09A92004AC3D2 /* Bundle.swift in Sources */,
+				E447AAC02B773BF8009A3D3E /* DocumentPicker.swift in Sources */,
 				E4A4D67F2AAF05F70062D12C /* NowPlayingBar.swift in Sources */,
 				E43C84672AAF393600D87A5F /* ListSectionHeader.swift in Sources */,
 				E43C84832AB00F1A00D87A5F /* Tag.swift in Sources */,

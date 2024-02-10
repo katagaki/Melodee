@@ -150,6 +150,17 @@
         }
       }
     },
+    "Alert.RenameDirectory.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename Folder"
+          }
+        }
+      }
+    },
     "Alert.RenameFile.Title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -997,6 +1008,22 @@
         }
       }
     },
+    "Shared.UseExternalDirectory" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Folder from Files App"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「ファイル」アプリからフォルダーを開く"
+          }
+        }
+      }
+    },
     "Shared.Yes" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1463,23 +1490,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル"
-          }
-        }
-      }
-    },
-    "ViewTitle.More" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "その他"
           }
         }
       }

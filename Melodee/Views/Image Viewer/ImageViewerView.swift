@@ -44,9 +44,7 @@ struct ImageViewerView: View {
                         .bold()
                         .padding([.leading, .trailing], 8.0)
                         .padding([.top, .bottom], 4.0)
-                        .background {
-                            Color(uiColor: UIColor.systemBackground)
-                        }
+                        .background(Material.thin)
                         .clipShape(RoundedRectangle(cornerRadius: 99))
                 }
             }

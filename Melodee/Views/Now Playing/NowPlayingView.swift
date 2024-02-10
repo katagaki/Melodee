@@ -52,7 +52,7 @@ struct NowPlayingView: View {
                 .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
-            .navigationTitle("ViewTitle.NowPlaying")
+            .navigationTitle(settings.showNowPlayingTab ? NSLocalizedString("ViewTitle.NowPlaying", comment: "") : "")
             .navigationBarTitleDisplayMode(settings.showNowPlayingTab ? .large : .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

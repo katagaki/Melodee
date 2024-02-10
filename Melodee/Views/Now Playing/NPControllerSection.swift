@@ -57,7 +57,9 @@ struct NPControllerSection: View {
                                         }
                                     }
                 .frame(maxWidth: .infinity, minHeight: 32)
-                HStack(alignment: .center, spacing: 16.0) {
+                HStack(alignment: .center, spacing: 10.0) {
+                    DevicePickerView()
+                        .frame(width: 24.0, height: 24.0)
                     Spacer()
                     Group {
                         Button {
@@ -71,7 +73,7 @@ struct NPControllerSection: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 24.0, height: 24.0)
-                                .padding()
+                                .padding(10.0)
                         }
                         .foregroundStyle(.primary)
                         .disabled(!(mediaPlayer.isPlaybackActive && mediaPlayer.canGoToPreviousTrack()))
@@ -109,21 +111,12 @@ struct NPControllerSection: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 24.0, height: 24.0)
-                                .padding()
+                                .padding(10.0)
                         }
                         .foregroundStyle(.primary)
                         .disabled(!(mediaPlayer.isPlaybackActive && mediaPlayer.canGoToNextTrack()))
                     }
                     .clipShape(Circle())
-                    Spacer()
-                }
-                .disabled(!mediaPlayer.canStartPlayback())
-                .buttonStyle(.plain)
-                HStack(alignment: .center, spacing: 16.0) {
-                    Spacer()
-                    DevicePickerView()
-                        .frame(width: 24.0, height: 24.0)
-                        .padding()
                     Spacer()
                     Button {
                         withAnimation(.default.speed(2)) {
@@ -151,13 +144,13 @@ struct NPControllerSection: View {
                         .scaledToFit()
                         .padding(2.0)
                         .frame(width: 24.0, height: 24.0)
-                        .padding()
                     }
                     .buttonStyle(.borderless)
                     .foregroundStyle(.primary)
                     .disabled(!(mediaPlayer.isPlaybackActive))
-                    Spacer()
                 }
+                .disabled(!mediaPlayer.canStartPlayback())
+                .buttonStyle(.plain)
             }
             .padding([.top, .bottom])
         }

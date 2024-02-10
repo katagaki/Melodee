@@ -113,49 +113,55 @@ struct FBContextMenu: View {
     }
 
     func isDirectoryEligibleForQueue(_ directory: FSDirectory) -> Bool {
-        let files = fileManager.files(in: directory.path).filter({ $0 is FSFile })
-        return files.contains(where: { file in
-            if let file = file as? FSFile {
-                return file.type == .audio
-            }
-            return false
-        })
+        if let url = URL(string: directory.path) {
+            let files = fileManager.files(in: url).filter({ $0 is FSFile })
+            return files.contains(where: { file in
+                if let file = file as? FSFile {
+                    return file.type == .audio
+                }
+                return false
+            })
+        }
+        return false
     }
 
     func isDirectoryEligibleForQueueRecursively(_ directory: FSDirectory) -> Bool {
-        let files = fileManager.files(in: directory.path).filter({ $0 is FSDirectory })
-        for file in files {
-            if let directory = file as? FSDirectory {
-                let filesInDirectory = fileManager.files(in: directory.path)
-                if filesInDirectory.contains(where: { file in
-                    if let file = file as? FSFile {
-                        return file.type == .audio
+        if let url = URL(string: directory.path) {
+            let files = fileManager.files(in: url).filter({ $0 is FSDirectory })
+            for file in files {
+                if let directory = file as? FSDirectory {
+                    let filesInDirectory = fileManager.files(in: url)
+                    if filesInDirectory.contains(where: { file in
+                        if let file = file as? FSFile {
+                            return file.type == .audio
+                        }
+                        return false
+                    }) {
+                        return true
+                    } else {
+                        return isDirectoryEligibleForQueueRecursively(directory)
                     }
-                    return false
-                }) {
-                    return true
-                } else {
-                    return isDirectoryEligibleForQueueRecursively(directory)
                 }
             }
         }
         return false
-
     }
 
     func addToQueue(directory: FSDirectory, recursively isRecursiveAdd: Bool = false) {
-        let contents = fileManager.files(in: directory.path).sorted { lhs, rhs in
-            lhs.name < rhs.name
-        }
-        for content in contents {
-            if let file = content as? FSFile, file.type == .audio {
-                mediaPlayer.queueLast(file: file)
+        if let url = URL(string: directory.path) {
+            let contents = fileManager.files(in: url).sorted { lhs, rhs in
+                lhs.name < rhs.name
             }
-        }
-        if isRecursiveAdd {
             for content in contents {
-                if let directory = content as? FSDirectory {
-                    addToQueue(directory: directory, recursively: isRecursiveAdd)
+                if let file = content as? FSFile, file.type == .audio {
+                    mediaPlayer.queueLast(file: file)
+                }
+            }
+            if isRecursiveAdd {
+                for content in contents {
+                    if let directory = content as? FSDirectory {
+                        addToQueue(directory: directory, recursively: isRecursiveAdd)
+                    }
                 }
             }
         }

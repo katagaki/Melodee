@@ -36,48 +36,48 @@ class FilesystemManager: ObservableObject {
         }
     }
 
-    func files(in subPath: String = "") -> [any FilesystemObject] {
-        debugPrint("Enumerating files in '\(subPath == "" ? directory?.absoluteString ?? "": subPath)'.")
+    func files(in url: URL? = nil) -> [any FilesystemObject] {
+        debugPrint("Enumerating files in '\(url == nil ? directory?.absoluteString ?? "": url?.absoluteString ?? "")'.")
         do {
-            if let directory {
-                if directoryOrFileExists(at: subPath == "" ? directory.path() : subPath) {
-                    let pathToEnumerate = subPath == "" ? directory : URL(string: subPath)!
-                    return try manager
-                        .contentsOfDirectory(at: pathToEnumerate,
-                                             includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
-                                             options: [.skipsHiddenFiles]).compactMap { url in
-                            if url.hasDirectoryPath {
-                                return FSDirectory(name: url.lastPathComponent,
-                                                   path: url.path,
-                                                   files: files(in: url.path(percentEncoded: true)))
-                            } else {
-                                let fileExtension = url.pathExtension.lowercased()
-                                var file = FSFile(name: url.deletingPathExtension().lastPathComponent,
-                                                  extension: url.pathExtension.lowercased(),
-                                                  path: url.path,
-                                                  type: .notSet)
-                                switch fileExtension {
-                                case "mp3", "m4a", "wav", "alac":
-                                    file.type = .audio
-                                    return file
-                                case "png", "jpg", "jpeg", "tif", "tiff":
-                                    file.type = .image
-                                    return file
-                                case "txt":
-                                    file.type = .text
-                                    return file
-                                case "pdf":
-                                    file.type = .pdf
-                                    return file
-                                case "zip":
-                                    file.type = .zip
-                                    return file
-                                default: break
-                                }
+            if let url {
+                directory = url
+            }
+            if let directory, directoryOrFileExists(at: directory) {
+                return try manager
+                    .contentsOfDirectory(at: directory,
+                                         includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
+                                         options: [.skipsHiddenFiles]).compactMap { url in
+                        if url.hasDirectoryPath {
+                            return FSDirectory(name: url.lastPathComponent,
+                                               path: url.path,
+                                               files: files(in: url))
+                        } else {
+                            let fileExtension = url.pathExtension.lowercased()
+                            var file = FSFile(name: url.deletingPathExtension().lastPathComponent,
+                                              extension: url.pathExtension.lowercased(),
+                                              path: url.path,
+                                              type: .notSet)
+                            switch fileExtension {
+                            case "mp3", "m4a", "wav", "alac":
+                                file.type = .audio
+                                return file
+                            case "png", "jpg", "jpeg", "tif", "tiff":
+                                file.type = .image
+                                return file
+                            case "txt":
+                                file.type = .text
+                                return file
+                            case "pdf":
+                                file.type = .pdf
+                                return file
+                            case "zip":
+                                file.type = .zip
+                                return file
+                            default: break
                             }
-                            return nil
                         }
-                }
+                        return nil
+                    }
             }
         } catch {
             debugPrint(error.localizedDescription)
@@ -86,19 +86,21 @@ class FilesystemManager: ObservableObject {
     }
 
     func createDirectory(at directoryPath: String) {
-        if !directoryOrFileExists(at: directoryPath) {
-            do {
-                try FileManager.default.createDirectory(atPath: directoryPath,
-                                                        withIntermediateDirectories: true,
-                                                        attributes: nil)
-            } catch {
-                debugPrint("Error occurred while creating directory: \(error.localizedDescription)")
+        if let url = URL(string: directoryPath) {
+            if !directoryOrFileExists(at: url) {
+                do {
+                    try FileManager.default.createDirectory(atPath: directoryPath,
+                                                            withIntermediateDirectories: true,
+                                                            attributes: nil)
+                } catch {
+                    debugPrint("Error occurred while creating directory: \(error.localizedDescription)")
+                }
             }
         }
     }
 
-    func directoryOrFileExists(at directoryPath: String) -> Bool {
-        return FileManager.default.fileExists(atPath: directoryPath)
+    func directoryOrFileExists(at url: URL) -> Bool {
+        return FileManager.default.fileExists(atPath: url.path(percentEncoded: false))
     }
 
     func rename(file: FSFile, newName: String) {

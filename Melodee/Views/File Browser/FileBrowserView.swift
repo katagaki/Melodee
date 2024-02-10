@@ -185,6 +185,7 @@ struct FileBrowserView: View {
                     url.stopAccessingSecurityScopedResource()
                 }
             })
+            .ignoresSafeArea(edges: [.bottom])
         }
         .onAppear {
             if !state.isInitialLoadCompleted {
@@ -208,7 +209,7 @@ struct FileBrowserView: View {
     }
 
     func refreshFiles() {
-        let filesStaged = fileManager.files(in: currentDirectory?.path ?? "")
+        let filesStaged = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
             .sorted(by: { lhs, rhs in
                 lhs.name < rhs.name
             })

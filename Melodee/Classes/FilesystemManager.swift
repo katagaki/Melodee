@@ -39,10 +39,7 @@ class FilesystemManager: ObservableObject {
     func files(in url: URL? = nil) -> [any FilesystemObject] {
         debugPrint("Enumerating files in '\(url == nil ? directory?.absoluteString ?? "": url?.absoluteString ?? "")'.")
         do {
-            if let url {
-                directory = url
-            }
-            if let directory, directoryOrFileExists(at: directory) {
+            if let directory = (url == nil ? directory : url), directoryOrFileExists(at: directory) {
                 return try manager
                     .contentsOfDirectory(at: directory,
                                          includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],

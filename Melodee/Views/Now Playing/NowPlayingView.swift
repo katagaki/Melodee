@@ -10,6 +10,7 @@ import SwiftUI
 struct NowPlayingView: View {
 
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var mediaPlayer: MediaPlayerManager
     @EnvironmentObject var settings: SettingsManager
     @State var albumArt: Image = Image("Album.Generic")
@@ -72,7 +73,14 @@ struct NowPlayingView: View {
                 isClearQueueButtonConfirming = false
             }
             .listRowBackground(Color.clear)
-            .background {
+        }
+        .presentationBackground {
+            ZStack {
+                switch colorScheme {
+                case .light: Color.white
+                case .dark: Color.black
+                @unknown default: Color.black
+                }
                 albumArt
                     .blur(radius: 64.0)
                     .opacity(0.3)

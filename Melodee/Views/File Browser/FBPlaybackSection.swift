@@ -55,6 +55,7 @@ struct FBPlaybackSection: View {
                 .bold()
                 .foregroundColor(.primary)
                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
+                .textSelection(.enabled)
         }
     }
 

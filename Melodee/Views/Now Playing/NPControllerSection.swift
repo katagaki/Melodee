@@ -33,12 +33,12 @@ struct NPControllerSection: View {
                                 .stroke(.primary, lineWidth: 1/3)
                                 .opacity(0.3)
                         )
-                        .shadow(color: .black.opacity(0.1), radius: 10.0)
-                        .padding(.bottom)
-                        .transition(.slide.animation(.default))
                 }
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1.0, contentMode: .fit)
+                .shadow(color: .black.opacity(0.1), radius: 10.0)
+                .padding(.bottom)
+                .transition(.slide.animation(.default))
                 VStack(alignment: .leading, spacing: 8.0) {
                     MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
                                 NSLocalizedString("Shared.NoFilePlaying", comment: ""),

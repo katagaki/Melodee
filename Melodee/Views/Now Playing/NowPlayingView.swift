@@ -23,6 +23,7 @@ struct NowPlayingView: View {
                 Group {
                     NPControllerSection(albumArt: $albumArt)
                         .listRowSeparator(.hidden)
+                        .padding(.top, 52.0)
                     NPQueueSection()
                     if !mediaPlayer.queue.isEmpty {
                         Section {
@@ -53,22 +54,8 @@ struct NowPlayingView: View {
                 .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
-            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.primary)
-                            .symbolRenderingMode(.hierarchical)
-                            .font(.title2)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
             .onAppear {
                 isClearQueueButtonConfirming = false
             }
@@ -82,6 +69,7 @@ struct NowPlayingView: View {
                 @unknown default: Color.black
                 }
                 albumArt
+                    .aspectRatio(contentMode: .fill)
                     .blur(radius: 64.0)
                     .opacity(0.3)
             }

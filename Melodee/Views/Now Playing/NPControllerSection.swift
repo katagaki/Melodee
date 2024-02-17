@@ -22,19 +22,23 @@ struct NPControllerSection: View {
     var body: some View {
         Section {
             VStack(alignment: .center, spacing: 16.0) {
-                albumArt
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 200.0)
-                    .clipShape(RoundedRectangle(cornerRadius: 16.0))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16.0)
-                            .stroke(.primary, lineWidth: 1/3)
-                            .opacity(0.3)
-                    )
-                    .shadow(color: .black.opacity(0.1), radius: 10.0)
-                    .padding(.bottom)
-                    .transition(.slide.animation(.default))
+                ZStack {
+                    Color.clear
+                    albumArt
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16.0)
+                                .stroke(.primary, lineWidth: 1/3)
+                                .opacity(0.3)
+                        )
+                        .shadow(color: .black.opacity(0.1), radius: 10.0)
+                        .padding(.bottom)
+                        .transition(.slide.animation(.default))
+                }
+                .frame(maxWidth: .infinity)
+                .aspectRatio(1.0, contentMode: .fit)
                 VStack(alignment: .leading, spacing: 8.0) {
                     MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
                                 NSLocalizedString("Shared.NoFilePlaying", comment: ""),

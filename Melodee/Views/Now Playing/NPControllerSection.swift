@@ -37,7 +37,6 @@ struct NPControllerSection: View {
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1.0, contentMode: .fit)
                 .shadow(color: .black.opacity(0.1), radius: 10.0)
-                .padding(.bottom)
                 .transition(.slide.animation(.default))
                 VStack(alignment: .leading, spacing: 8.0) {
                     MarqueeText(text: mediaPlayer.currentlyPlayingAlbumName() ?? "-",

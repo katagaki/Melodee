@@ -23,8 +23,11 @@ struct NowPlayingView: View {
                 Group {
                     NPControllerSection(albumArt: $albumArt)
                         .listRowSeparator(.hidden)
-                        .padding(.top, 52.0)
+                        .padding(.top, 28.0)
                     NPQueueSection()
+                        .alignmentGuide(.listRowSeparatorTrailing) { dimensions in
+                            return dimensions.width
+                        }
                     if !mediaPlayer.queue.isEmpty {
                         Section {
                             HStack(alignment: .center, spacing: 8.0) {
@@ -44,16 +47,17 @@ struct NowPlayingView: View {
                                 .frame(maxWidth: .infinity)
                                 .disabled(mediaPlayer.queue.isEmpty)
                             }
-                            .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                             .buttonStyle(.plain)
                             .frame(maxWidth: .infinity)
                         }
                     }
                 }
+                .listRowInsets(.init(top: 0.0, leading: 32.0, bottom: 0.0, trailing: 32.0))
                 .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
+            .listSectionSpacing(.compact)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .onAppear {

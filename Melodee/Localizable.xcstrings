@@ -158,6 +158,12 @@
             "state" : "translated",
             "value" : "Rename Folder"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名称変更"
+          }
         }
       }
     },
@@ -335,9 +341,6 @@
           }
         }
       }
-    },
-    "Key" : {
-      "extractionState" : "manual"
     },
     "More.Attribution" : {
       "extractionState" : "manual",
@@ -981,13 +984,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open Folder from Files App"
+            "value" : "Open External Folder"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「ファイル」アプリからフォルダーを開く"
+            "value" : "外部フォルダーを開く"
           }
         }
       }

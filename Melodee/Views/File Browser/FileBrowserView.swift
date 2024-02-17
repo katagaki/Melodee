@@ -171,7 +171,6 @@ struct FileBrowserView: View {
             Text(NSLocalizedString("Alert.DeleteFile.Text", comment: "")
                 .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
         })
-        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $selectingExternalDirectory) {
             DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in

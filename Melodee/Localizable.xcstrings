@@ -353,57 +353,6 @@
         }
       }
     },
-    "More.General" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "General"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一般"
-          }
-        }
-      }
-    },
-    "More.General.ShowNowPlayingBar" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Now Playing Bar"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生中バーを表示"
-          }
-        }
-      }
-    },
-    "More.General.ShowNowPlayingTab" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Now Playing Tab"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生中タブを表示"
-          }
-        }
-      }
-    },
     "More.Help" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1076,6 +1025,7 @@
       }
     },
     "TabTitle.NowPlaying" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1490,23 +1440,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル"
-          }
-        }
-      }
-    },
-    "ViewTitle.NowPlaying" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Now Playing"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生中"
           }
         }
       }

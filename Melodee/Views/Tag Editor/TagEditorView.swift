@@ -83,7 +83,7 @@ struct TagEditorView: View {
                 .frame(minHeight: 56.0)
                 .padding([.leading, .trailing], 16.0)
                 Color.clear
-                    .frame(height: settings.showNowPlayingBar ? 56.0 : 0.0)
+                    .frame(height: 56.0)
                     .padding(.top)
             }
         }

@@ -67,10 +67,8 @@ struct ImageViewerView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if settings.showNowPlayingBar {
-                    Color.clear
-                        .frame(height: 48.0)
-                }
+                Color.clear
+                    .frame(height: 48.0)
             }
             .onAppear {
                 image = UIImage(contentsOfFile: file.path)

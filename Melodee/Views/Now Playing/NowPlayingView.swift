@@ -52,23 +52,20 @@ struct NowPlayingView: View {
                 .listRowBackground(Color.clear)
             }
             .listStyle(.plain)
-            .navigationTitle(settings.showNowPlayingTab ? NSLocalizedString("ViewTitle.NowPlaying", comment: "") : "")
-            .navigationBarTitleDisplayMode(settings.showNowPlayingTab ? .large : .inline)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if !settings.showNowPlayingTab {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(.primary)
-                                .symbolRenderingMode(.hierarchical)
-                                .font(.title2)
-                        }
-                        .buttonStyle(.plain)
-                    } else {
-                        Color.clear
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.primary)
+                            .symbolRenderingMode(.hierarchical)
+                            .font(.title2)
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .onAppear {

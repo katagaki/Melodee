@@ -18,69 +18,41 @@ struct MainTabView: View {
 
     var body: some View {
         Group {
-            if settings.showNowPlayingTab {
-                TabView(selection: $tabManager.selectedTab) {
-                    NavigationStack(path: $navigationManager.filesTabPath) {
-                        FileBrowserView()
-                    }
-                    .tabItem {
-                        Label("TabTitle.Files", image: "Tab.FileBrowser")
-                    }
-                    .toolbarBackground(settings.showNowPlayingBar ? .hidden : .automatic, for: .tabBar)
-                    .tag(TabType.fileManager)
-                    .overlay {
-                        ZStack(alignment: .bottom) {
-                            Color.clear
-                            if settings.showNowPlayingBar {
-                                NowPlayingBar()
-                                    .onTapGesture {
-                                        tabManager.selectedTab = .nowPlaying
-                                    }
+            TabView(selection: $tabManager.selectedTab) {
+                NavigationStack(path: $navigationManager.filesTabPath) {
+                    FileBrowserView()
+                }
+                .tabItem {
+                    Label("TabTitle.Files", image: "Tab.FileBrowser")
+                }
+                .toolbarBackground(.hidden, for: .tabBar)
+                .tag(TabType.fileManager)
+                .overlay {
+                    ZStack(alignment: .bottom) {
+                        Color.clear
+                        NowPlayingBar()
+                            .onTapGesture {
+                                isNowPlayingSheetPresented.toggle()
                             }
-                        }
+                            .gesture(
+                                DragGesture()
+                                    .onEnded { value in
+                                        if value.translation.height <= -25 {
+                                            isNowPlayingSheetPresented.toggle()
+                                        }
+                                    }
+                            )
                     }
+                }
+                .sheet(isPresented: $isNowPlayingSheetPresented, content: {
                     NowPlayingView()
-                        .tabItem {
-                            Label("TabTitle.NowPlaying", image: "Tab.NowPlaying")
-                        }
-                        .tag(TabType.nowPlaying)
-                    MoreView()
-                        .tabItem {
-                            Label("TabTitle.More", systemImage: "ellipsis")
-                        }
-                        .tag(TabType.more)
-                }
-            } else {
-                TabView(selection: $tabManager.selectedTab) {
-                    NavigationStack(path: $navigationManager.filesTabPath) {
-                        FileBrowserView()
-                    }
+                        .presentationDragIndicator(.visible)
+                })
+                MoreView()
                     .tabItem {
-                        Label("TabTitle.Files", image: "Tab.FileBrowser")
+                        Label("TabTitle.More", systemImage: "ellipsis")
                     }
-                    .toolbarBackground(settings.showNowPlayingBar ? .hidden : .automatic, for: .tabBar)
-                    .tag(TabType.fileManager)
-                    .overlay {
-                        ZStack(alignment: .bottom) {
-                            Color.clear
-                            if settings.showNowPlayingBar {
-                                NowPlayingBar()
-                                    .onTapGesture {
-                                        isNowPlayingSheetPresented.toggle()
-                                    }
-                            }
-                        }
-                    }
-                    .sheet(isPresented: $isNowPlayingSheetPresented, content: {
-                        NowPlayingView()
-                            .presentationDragIndicator(.visible)
-                    })
-                    MoreView()
-                        .tabItem {
-                            Label("TabTitle.More", systemImage: "ellipsis")
-                        }
-                        .tag(TabType.more)
-                }
+                    .tag(TabType.more)
             }
         }
         .task {

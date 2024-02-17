@@ -17,10 +17,8 @@ struct TextViewerView: View {
         TextEditor(text: .constant(text))
             .navigationTitle(file.name)
             .safeAreaInset(edge: .bottom) {
-                if settings.showNowPlayingBar {
-                    Color.clear
-                        .frame(height: 48.0)
-                }
+                Color.clear
+                    .frame(height: 48.0)
             }
             .onAppear {
                 do {

@@ -40,11 +40,14 @@ struct NPControllerSection: View {
                 .padding(.bottom)
                 .transition(.slide.animation(.default))
                 VStack(alignment: .leading, spacing: 8.0) {
+                    MarqueeText(text: mediaPlayer.currentlyPlayingAlbumName() ?? "-",
+                                font: UIFont.preferredFont(forTextStyle: .caption1),
+                                leftFade: 16, rightFade: 16, startDelay: 1.5)
                     MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
                                 NSLocalizedString("Shared.NoFilePlaying", comment: ""),
-                                font: UIFont.preferredFont(forTextStyle: .body),
+                                font: UIFont.preferredFont(forTextStyle: .headline),
                                 leftFade: 16, rightFade: 16, startDelay: 1.5)
-                    MarqueeText(text: mediaPlayer.currentlyPlayingAlbumName() ?? "-",
+                    MarqueeText(text: mediaPlayer.currentlyPlayingArtistName() ?? "-",
                                 font: UIFont.preferredFont(forTextStyle: .body),
                                 leftFade: 16, rightFade: 16, startDelay: 1.5)
                     .opacity(0.5)

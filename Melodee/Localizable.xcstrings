@@ -336,6 +336,9 @@
         }
       }
     },
+    "Key" : {
+      "extractionState" : "manual"
+    },
     "More.Attribution" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -957,6 +960,22 @@
         }
       }
     },
+    "Shared.UnknownArtist" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown Artist"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アーティストなし"
+          }
+        }
+      }
+    },
     "Shared.UseExternalDirectory" : {
       "localizations" : {
         "en" : {
@@ -1020,23 +1039,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "その他"
-          }
-        }
-      }
-    },
-    "TabTitle.NowPlaying" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Now Playing"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生中"
           }
         }
       }

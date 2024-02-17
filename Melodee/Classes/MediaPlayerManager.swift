@@ -88,6 +88,24 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
 
+    func currentlyPlayingArtistName() -> String? {
+        if audioPlayer != nil, let file = currentlyPlayingFile() {
+            if file.extension == "mp3" {
+                do {
+                    if let tag = try ID3TagEditor().read(from: file.path) {
+                        let contentReader = ID3TagContentReader(id3Tag: tag)
+                        return contentReader.artist() ?? NSLocalizedString("Shared.UnknownArtist", comment: "")
+                    }
+                } catch {
+                    debugPrint(error.localizedDescription)
+                }
+            }
+            return NSLocalizedString("Shared.UnknownArtist", comment: "")
+        } else {
+            return nil
+        }
+    }
+
     func currentlyPlayingAlbumName() -> String? {
         if audioPlayer != nil, let file = currentlyPlayingFile() {
             if file.extension == "mp3" {

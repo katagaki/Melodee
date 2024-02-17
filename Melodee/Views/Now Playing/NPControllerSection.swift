@@ -36,6 +36,7 @@ struct NPControllerSection: View {
                 }
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1.0, contentMode: .fit)
+                .padding(.bottom, 4.0)
                 .shadow(color: .black.opacity(0.1), radius: 10.0)
                 .transition(.slide.animation(.default))
                 VStack(alignment: .leading, spacing: 8.0) {

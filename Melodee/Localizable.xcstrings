@@ -1215,6 +1215,22 @@
         }
       }
     },
+    "TagEditor.SelectAlbumArt.FromFiles" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select From Files App"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「ファイル」アプリから選択"
+          }
+        }
+      }
+    },
     "TagEditor.TagData" : {
       "extractionState" : "manual",
       "localizations" : {

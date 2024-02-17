@@ -28,7 +28,6 @@
 		E43C84832AB00F1A00D87A5F /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84822AB00F1A00D87A5F /* Tag.swift */; };
 		E43C84852AB00F4100D87A5F /* TagTyped.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84842AB00F4100D87A5F /* TagTyped.swift */; };
 		E43C84872AB00F5000D87A5F /* SaveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84862AB00F5000D87A5F /* SaveState.swift */; };
-		E43C84892AB00F8200D87A5F /* TEFileHeaderSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84882AB00F8200D87A5F /* TEFileHeaderSection.swift */; };
 		E43C848B2AB00F8D00D87A5F /* TETagDataSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C848A2AB00F8D00D87A5F /* TETagDataSection.swift */; };
 		E43C848F2AB00FB600D87A5F /* TEAvailableTokenRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C848E2AB00FB600D87A5F /* TEAvailableTokenRow.swift */; };
 		E43C84912AB00FD100D87A5F /* TETokensTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84902AB00FD100D87A5F /* TETokensTip.swift */; };
@@ -102,7 +101,6 @@
 		E43C84822AB00F1A00D87A5F /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		E43C84842AB00F4100D87A5F /* TagTyped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagTyped.swift; sourceTree = "<group>"; };
 		E43C84862AB00F5000D87A5F /* SaveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveState.swift; sourceTree = "<group>"; };
-		E43C84882AB00F8200D87A5F /* TEFileHeaderSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEFileHeaderSection.swift; sourceTree = "<group>"; };
 		E43C848A2AB00F8D00D87A5F /* TETagDataSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TETagDataSection.swift; sourceTree = "<group>"; };
 		E43C848E2AB00FB600D87A5F /* TEAvailableTokenRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEAvailableTokenRow.swift; sourceTree = "<group>"; };
 		E43C84902AB00FD100D87A5F /* TETokensTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TETokensTip.swift; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				E43C847E2AB00EF300D87A5F /* TagEditorView.swift */,
-				E43C84882AB00F8200D87A5F /* TEFileHeaderSection.swift */,
 				E43C848A2AB00F8D00D87A5F /* TETagDataSection.swift */,
 				E4EE91ED2AB09E8E004AC3D2 /* TEAvailableTokensSection.swift */,
 				E43C848E2AB00FB600D87A5F /* TEAvailableTokenRow.swift */,
@@ -321,18 +318,18 @@
 		E4A4D6682AAEF2B40062D12C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				E43C84662AAF393600D87A5F /* ListSectionHeader.swift */,
-				E43C84632AAF392C00D87A5F /* ListRow.swift */,
-				E43C84962AB0104900D87A5F /* ListDetailRow.swift */,
-				E43C84942AB0100900D87A5F /* ListInputRow.swift */,
-				E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */,
-				E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */,
+				E4A4D67A2AAEFB750062D12C /* ActionButton.swift */,
+				E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */,
 				E4A4D6692AAEF2BD0062D12C /* HintOverlay.swift */,
 				E43C84922AB00FF200D87A5F /* LargeButtonLabel.swift */,
-				E4A4D67A2AAEFB750062D12C /* ActionButton.swift */,
+				E43C84962AB0104900D87A5F /* ListDetailRow.swift */,
+				E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */,
+				E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */,
+				E43C84942AB0100900D87A5F /* ListInputRow.swift */,
+				E43C84632AAF392C00D87A5F /* ListRow.swift */,
+				E43C84662AAF393600D87A5F /* ListSectionHeader.swift */,
 				E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */,
 				E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */,
-				E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -509,7 +506,6 @@
 				E43C848F2AB00FB600D87A5F /* TEAvailableTokenRow.swift in Sources */,
 				E4A4D6742AAEF3B30062D12C /* ViewPath.swift in Sources */,
 				E4A4D67B2AAEFB750062D12C /* ActionButton.swift in Sources */,
-				E43C84892AB00F8200D87A5F /* TEFileHeaderSection.swift in Sources */,
 				E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */,
 				E43C849D2AB0188B00D87A5F /* ProgressAlert.swift in Sources */,
 				E4A4D6632AAEF16D0062D12C /* FSDirectory.swift in Sources */,

@@ -18,7 +18,8 @@ struct TagEditorView: View {
     @State var files: [FSFile]
     @State var tags: [FSFile: ID3Tag] = [:]
     @State var tagData = Tag()
-    @State var selectedAlbumArt: PhotosPickerItem?
+    @State var selectedPhoto: PhotosPickerItem?
+    @State var isSelectingFile: Bool = false
     @State var saveState: SaveState = .notSaved
     @State var savePercentage: Int = 0
     @State var isInitialLoadCompleted: Bool = false
@@ -28,23 +29,73 @@ struct TagEditorView: View {
     var body: some View {
         List {
             if files.count == 1 {
-                TEFileHeaderSection(filename: files[0].name,
-                                  albumArt: $tagData.albumArt,
-                                  selectedAlbumArt: $selectedAlbumArt)
                 TETagDataSection(tagData: $tagData, focusedField: $focusedField)
                     .popoverTip(TETokensTip(), arrowEdge: .top)
             } else {
-                TEFileHeaderSection(filename: NSLocalizedString("BatchEdit.MultipleFiles", comment: ""),
-                                  albumArt: $tagData.albumArt,
-                                  selectedAlbumArt: $selectedAlbumArt)
                 TETagDataSection(tagData: $tagData, focusedField: $focusedField,
                                placeholder: NSLocalizedString("BatchEdit.Keep", comment: ""))
             }
             TEAvailableTokensSection()
         }
-        .disabled(saveState == .saving)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .safeAreaInset(edge: .top) {
+            VStack {
+                HStack(alignment: .top, spacing: 16.0) {
+                    Group {
+                        if let albumArt = tagData.albumArt,
+                           let albumArtImage = UIImage(data: albumArt) {
+                            Image(uiImage: albumArtImage)
+                                .resizable()
+                        } else {
+                            Image(.albumGeneric)
+                                .resizable()
+                        }
+                    }
+                    .scaledToFill()
+                    .frame(width: 100.0, height: 100.0)
+                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10.0)
+                            .stroke(.primary, lineWidth: 1/3)
+                            .opacity(0.3)
+                    )
+                    VStack(alignment: .leading) {
+                        Text(files.count == 1 ? files[0].name :
+                                NSLocalizedString("BatchEdit.MultipleFiles", comment: ""))
+                            .bold()
+                            .textCase(.none)
+                            .foregroundStyle(.primary)
+                        PhotosPicker(selection: $selectedPhoto,
+                                     matching: .images,
+                                     photoLibrary: .shared()) {
+                            Text("TagEditor.SelectAlbumArt")
+                                .bold()
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 99))
+                        .buttonStyle(.borderedProminent)
+                        .contextMenu {
+                            Button {
+                                isSelectingFile = true
+                            } label: {
+                                Text("TagEditor.SelectAlbumArt.FromFiles")
+                            }
+                        }
+                    }
+                    Spacer(minLength: .zero)
+                }
+                .padding(.top, 10.0)
+                .padding([.leading, .trailing, .bottom], 20.0)
+            }
+            .frame(maxWidth: .infinity)
+            .background(Material.bar)
+            .overlay(alignment: .bottom) {
+                Rectangle()
+                    .frame(height: 1/3)
+                    .foregroundColor(.primary.opacity(0.2))
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .center, spacing: 0.0) {
                 Button {
@@ -87,6 +138,19 @@ struct TagEditorView: View {
                     .padding(.top)
             }
         }
+        .disabled(saveState == .saving)
+        .sheet(isPresented: $isSelectingFile) {
+            DocumentPicker(allowedUTIs: [.image], onDocumentPicked: { url in
+                let isAccessSuccessful = url.startAccessingSecurityScopedResource()
+                if isAccessSuccessful {
+                    selectedPhoto = nil
+                    let imageFileData: Data? = try? Data(contentsOf: url)
+                    tagData.albumArt = imageFileData
+                }
+                url.stopAccessingSecurityScopedResource()
+            })
+            .ignoresSafeArea(edges: [.bottom])
+        }
         .overlay {
             if !isInitialLoadCompleted {
                 ProgressAlert(title: "Alert.ReadingTags.Title",
@@ -123,10 +187,10 @@ struct TagEditorView: View {
                 isInitialLoadCompleted = true
             }
         }
-        .onChange(of: selectedAlbumArt) { _, _ in
+        .onChange(of: selectedPhoto) { _, _ in
             Task {
-                if let selectedAlbumArt = selectedAlbumArt,
-                    let data = try? await selectedAlbumArt.loadTransferable(type: Data.self) {
+                if let selectedPhoto = selectedPhoto,
+                    let data = try? await selectedPhoto.loadTransferable(type: Data.self) {
                     tagData.albumArt = data
                 }
             }

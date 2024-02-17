@@ -18,7 +18,7 @@ struct FileBrowserView: View {
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
-    @State var selectingExternalDirectory = false
+    @State var isSelectingExternalDirectory = false
 
     var body: some View {
         List {
@@ -114,7 +114,7 @@ struct FileBrowserView: View {
                             }
                             Divider()
                             Button {
-                                selectingExternalDirectory = true
+                                isSelectingExternalDirectory = true
                             } label: {
                                 Label("Shared.UseExternalDirectory", systemImage: "plus.rectangle.on.folder")
                             }
@@ -172,7 +172,7 @@ struct FileBrowserView: View {
                 .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
         })
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $selectingExternalDirectory) {
+        .sheet(isPresented: $isSelectingExternalDirectory) {
             DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
                 fileManager.directory = url
                 let isAccessSuccessful = url.startAccessingSecurityScopedResource()

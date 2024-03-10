@@ -10,11 +10,10 @@ import SwiftUI
 struct PlaylistsView: View {
     var body: some View {
         NavigationStack {
-            List {}
+            List {
+                // TODO
+            }
+            .navigationTitle("ViewTitle.Playlists")
         }
     }
-}
-
-#Preview {
-    PlaylistsView()
 }

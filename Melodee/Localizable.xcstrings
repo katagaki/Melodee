@@ -1480,6 +1480,22 @@
           }
         }
       }
+    },
+    "ViewTitle.Playlists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生リスト"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

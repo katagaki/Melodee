@@ -8,7 +8,6 @@
 import SwiftUI
 import TipKit
 
-// swiftlint:disable type_body_length
 struct FileBrowserView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
@@ -259,4 +258,3 @@ struct FileBrowserView: View {
     }
 
 }
-// swiftlint:enable type_body_length

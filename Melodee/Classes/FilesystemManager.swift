@@ -21,6 +21,8 @@ class FilesystemManager: ObservableObject {
         do {
             let placeholderFilename = NSLocalizedString("Shared.DropFilesFileName",
                                                         comment: "")
+
+            // Set up local Documents folder
             let documentsDirectoryURL = try FileManager.default
                 .url(for: .documentDirectory,
                      in: .userDomainMask,
@@ -30,6 +32,16 @@ class FilesystemManager: ObservableObject {
             manager
                 .createFile(atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
                             contents: "".data(using: .utf8))
+
+            // Set up iCloud folder
+            let cloudDocumentsDirectoryURL = FileManager.default
+                .url(forUbiquityContainerIdentifier: nil)?
+                .appendingPathComponent("Documents")
+            if let cloudDocumentsDirectoryURL {
+                manager
+                    .createFile(atPath: "\(cloudDocumentsDirectoryURL.path())\(placeholderFilename)",
+                                contents: "".data(using: .utf8))
+            }
         } catch {
             debugPrint(error.localizedDescription)
             directory = nil

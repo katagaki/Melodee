@@ -26,48 +26,41 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     override init() {
         super.init()
-        do {
-            // Set up audio session
-            try audioSession.setCategory(AVAudioSession.Category.playback)
-            try audioSession.setActive(true)
-            // Set up remote controls
-            remoteCommandCenter.playCommand.addTarget { _ in
-                if let audioPlayer = self.audioPlayer, !audioPlayer.isPlaying {
-                    self.play()
-                    return .success
-                }
-                return .commandFailed
-            }
-            remoteCommandCenter.pauseCommand.addTarget { _ in
-                if let audioPlayer = self.audioPlayer, audioPlayer.isPlaying {
-                    self.pause()
-                    return .success
-                }
-                return .commandFailed
-            }
-            remoteCommandCenter.nextTrackCommand.addTarget { _ in
-                self.skipToNextTrack()
+        // Set up remote controls
+        remoteCommandCenter.playCommand.addTarget { _ in
+            if let audioPlayer = self.audioPlayer, !audioPlayer.isPlaying {
+                self.play()
                 return .success
             }
-            remoteCommandCenter.previousTrackCommand.addTarget { _ in
-                self.backToPreviousTrack()
-                return .success
-            }
-            remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
-                if let event = event as? MPChangePlaybackPositionCommandEvent {
-                    self.seekTo(event.positionTime)
-                    return .success
-                }
-                return .commandFailed
-            }
-            // Set up interruption notification observer
-            notificationCenter.addObserver(self,
-                                           selector: #selector(handleInterruption),
-                                           name: AVAudioSession.interruptionNotification,
-                                           object: AVAudioSession.sharedInstance())
-        } catch {
-            debugPrint(error.localizedDescription)
+            return .commandFailed
         }
+        remoteCommandCenter.pauseCommand.addTarget { _ in
+            if let audioPlayer = self.audioPlayer, audioPlayer.isPlaying {
+                self.pause()
+                return .success
+            }
+            return .commandFailed
+        }
+        remoteCommandCenter.nextTrackCommand.addTarget { _ in
+            self.skipToNextTrack()
+            return .success
+        }
+        remoteCommandCenter.previousTrackCommand.addTarget { _ in
+            self.backToPreviousTrack()
+            return .success
+        }
+        remoteCommandCenter.changePlaybackPositionCommand.addTarget { event in
+            if let event = event as? MPChangePlaybackPositionCommandEvent {
+                self.seekTo(event.positionTime)
+                return .success
+            }
+            return .commandFailed
+        }
+        // Set up interruption notification observer
+        notificationCenter.addObserver(self,
+                                       selector: #selector(handleInterruption),
+                                       name: AVAudioSession.interruptionNotification,
+                                       object: AVAudioSession.sharedInstance())
     }
 
     func currentlyPlayingTitle() -> String? {
@@ -170,6 +163,15 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
 
     func play() {
+        // Set up audio session
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setActive(true)
+        } catch {
+            debugPrint(error.localizedDescription)
+        }
+        // Play audio
         if let audioPlayer = audioPlayer {
             audioPlayer.delegate = self
             audioPlayer.play()
@@ -216,7 +218,7 @@ class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
         currentlyPlayingID = ""
         nowPlayingInfoCenter.nowPlayingInfo = nil
         isPlaybackActive = false
-        isPaused = false
+        isPaused = true
     }
 
     func skipToNextTrack() {

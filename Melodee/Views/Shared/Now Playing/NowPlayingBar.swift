@@ -15,7 +15,7 @@ struct NowPlayingBar: View {
     @State var previousQueueID: String = ""
 
     var body: some View {
-        HStack(alignment: .center, spacing: 16.0) {
+        HStack(alignment: .center, spacing: 12.0) {
             albumArt
                 .resizable()
                 .scaledToFit()
@@ -30,8 +30,8 @@ struct NowPlayingBar: View {
                 .transition(.slide.animation(.default))
             MarqueeText(text: mediaPlayer.currentlyPlayingTitle() ??
                             NSLocalizedString("Shared.NoFilePlaying", comment: ""),
-                        font: UIFont.preferredFont(forTextStyle: .body),
-                        leftFade: 16, rightFade: 16, startDelay: 1.5)
+                        font: UIFont.preferredFont(forTextStyle: .subheadline),
+                        leftFade: 12, rightFade: 12, startDelay: 1.5)
             .frame(maxWidth: .infinity)
             HStack(alignment: .center, spacing: 8.0) {
                 Divider()

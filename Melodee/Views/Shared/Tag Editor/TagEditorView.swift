@@ -12,8 +12,8 @@ import TipKit
 
 struct TagEditorView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-    @EnvironmentObject var settings: SettingsManager
+    @Environment(NavigationManager.self) var navigationManager
+
     let id3TagEditor = ID3TagEditor()
     @State var files: [FSFile]
     @State var tags: [FSFile: ID3Tag] = [:]
@@ -241,7 +241,7 @@ struct TagEditorView: View {
         _ = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
             for (file, tag) in tags {
                 group.addTask {
-                    return await tag.saveTagData(to: file, tagData: tagData)
+                    return tag.saveTagData(to: file, tagData: tagData)
                 }
             }
             var saveStates: [Bool] = []

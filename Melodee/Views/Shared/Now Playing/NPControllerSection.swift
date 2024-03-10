@@ -11,7 +11,8 @@ import SwiftUI
 
 struct NPControllerSection: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @Binding var albumArt: Image
     @State var currentDuration: TimeInterval = .zero
     @State var totalDuration: TimeInterval = .zero

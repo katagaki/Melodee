@@ -9,13 +9,14 @@ import Foundation
 import SwiftUI
 import ZIPFoundation
 
-class FilesystemManager: ObservableObject {
+@Observable
+class FilesystemManager {
 
-    let manager = FileManager.default
-    var directory: URL?
+    @ObservationIgnored let manager = FileManager.default
+    @ObservationIgnored var directory: URL?
 
-    @Published var files: [any FilesystemObject] = []
-    @Published var extractionProgress: Progress?
+    var files: [any FilesystemObject] = []
+    var extractionProgress: Progress?
 
     init() {
         do {

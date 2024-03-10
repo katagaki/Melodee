@@ -10,10 +10,10 @@ import SwiftUI
 
 struct MoreView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-    @EnvironmentObject var settings: SettingsManager
+    @Environment(NavigationManager.self) var navigationManager
 
     var body: some View {
+        @Bindable var navigationManager = navigationManager
         NavigationStack(path: $navigationManager.moreTabPath) {
             MoreList(repoName: "katagaki/Melodee", viewPath: ViewPath.moreAttributions) { }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in

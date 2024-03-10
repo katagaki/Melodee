@@ -9,7 +9,8 @@ import SwiftUI
 
 struct FBAudioFileRow: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @State var file: FSFile
 
     var body: some View {

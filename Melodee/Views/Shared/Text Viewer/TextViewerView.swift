@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TextViewerView: View {
 
-    @EnvironmentObject var settings: SettingsManager
     @State var file: FSFile
     @State var text: String = ""
 

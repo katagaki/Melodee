@@ -9,7 +9,8 @@ import SwiftUI
 
 struct FBPlaybackSection: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @Binding var currentDirectory: FSDirectory?
     @Binding var files: [any FilesystemObject]
 

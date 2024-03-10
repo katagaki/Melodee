@@ -11,8 +11,8 @@ struct NowPlayingView: View {
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
-    @EnvironmentObject var settings: SettingsManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @State var albumArt: Image = Image("Album.Generic")
     @State var previousQueueID: String = ""
     @State var isClearQueueButtonConfirming: Bool = false

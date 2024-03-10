@@ -10,10 +10,10 @@ import TipKit
 
 struct FileBrowserView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-    @EnvironmentObject var fileManager: FilesystemManager
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
-    @EnvironmentObject var settings: SettingsManager
+    @Environment(NavigationManager.self) var navigationManager
+    @Environment(FilesystemManager.self) var fileManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()

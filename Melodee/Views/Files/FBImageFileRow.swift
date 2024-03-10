@@ -9,7 +9,8 @@ import SwiftUI
 
 struct FBImageFileRow: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
+    @Environment(NavigationManager.self) var navigationManager
+
     @State var file: FSFile
 
     var body: some View {

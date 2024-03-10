@@ -9,9 +9,10 @@ import SwiftUI
 
 struct NPQueueSection: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
 
     var body: some View {
+        @Bindable var mediaPlayer = mediaPlayer
         Section {
             if $mediaPlayer.queue.isEmpty {
                 Text("")

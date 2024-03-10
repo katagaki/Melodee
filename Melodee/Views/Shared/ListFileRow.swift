@@ -10,7 +10,8 @@ import SwiftUI
 
 struct ListFileRow: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @Binding var file: FSFile
     @State var thumbnail: UIImage?
     @State var isThumbnailFetchCompleted: Bool = false

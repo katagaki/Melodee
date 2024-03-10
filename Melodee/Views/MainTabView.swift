@@ -12,11 +12,12 @@ import TipKit
 struct MainTabView: View {
 
     @EnvironmentObject var tabManager: TabManager
-    @EnvironmentObject var navigationManager: NavigationManager
-    @EnvironmentObject var settings: SettingsManager
+    @Environment(NavigationManager.self) var navigationManager
+
     @State var isNowPlayingSheetPresented: Bool = false
 
     var body: some View {
+        @Bindable var navigationManager = navigationManager
         TabView(selection: $tabManager.selectedTab) {
             Group {
                 NavigationStack(path: $navigationManager.filesTabPath) {

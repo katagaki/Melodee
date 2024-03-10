@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E4130F572ABFEF5200AEF308 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4130F562ABFEF5200AEF308 /* URL.swift */; };
+		E414A54C2B9DD2A300C7903E /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */; };
 		E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84582AAF087300D87A5F /* MarqueeText */; };
 		E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845C2AAF38B600D87A5F /* MainTabView.swift */; };
 		E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845E2AAF38D800D87A5F /* TabType.swift */; };
@@ -69,7 +70,6 @@
 		E4D09A492AB0BABA008D115A /* FBImageFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A482AB0BABA008D115A /* FBImageFileRow.swift */; };
 		E4D09A4B2AB0CBA1008D115A /* NPControllerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4A2AB0CBA1008D115A /* NPControllerSection.swift */; };
 		E4D09A4D2AB0CC4E008D115A /* NPQueueSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4C2AB0CC4E008D115A /* NPQueueSection.swift */; };
-		E4D09A4F2AB0CFE7008D115A /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D09A4E2AB0CFE7008D115A /* SettingsManager.swift */; };
 		E4D09A502AB0F25C008D115A /* ProperDigit.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4EE91E92AB0998A004AC3D2 /* ProperDigit.plist */; };
 		E4DB2A522AB3445600C5810D /* ImageViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A512AB3445600C5810D /* ImageViewerView.swift */; };
 		E4DB2A552AB350F500C5810D /* PDFViewerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DB2A542AB350F500C5810D /* PDFViewerView.swift */; };
@@ -87,6 +87,7 @@
 
 /* Begin PBXFileReference section */
 		E4130F562ABFEF5200AEF308 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
 		E43C845C2AAF38B600D87A5F /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		E43C845E2AAF38D800D87A5F /* TabType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabType.swift; sourceTree = "<group>"; };
 		E43C84612AAF391200D87A5F /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
@@ -147,7 +148,6 @@
 		E4D09A482AB0BABA008D115A /* FBImageFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBImageFileRow.swift; sourceTree = "<group>"; };
 		E4D09A4A2AB0CBA1008D115A /* NPControllerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPControllerSection.swift; sourceTree = "<group>"; };
 		E4D09A4C2AB0CC4E008D115A /* NPQueueSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPQueueSection.swift; sourceTree = "<group>"; };
-		E4D09A4E2AB0CFE7008D115A /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		E4DB2A512AB3445600C5810D /* ImageViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewerView.swift; sourceTree = "<group>"; };
 		E4DB2A542AB350F500C5810D /* PDFViewerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFViewerView.swift; sourceTree = "<group>"; };
 		E4DB2A562AB351CB00C5810D /* FBPdfFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBPdfFileRow.swift; sourceTree = "<group>"; };
@@ -299,10 +299,10 @@
 				E4A4D6622AAEF16D0062D12C /* FSDirectory.swift */,
 				E4A4D6602AAEF1670062D12C /* FSFile.swift */,
 				E43C846A2AAF39C700D87A5F /* License.swift */,
-				E43C84822AB00F1A00D87A5F /* Tag.swift */,
-				E43C84842AB00F4100D87A5F /* TagTyped.swift */,
 				E48AE70D2B9D845800DAC2D2 /* Playlist.swift */,
 				E48AE70F2B9D847900DAC2D2 /* PlaylistItem.swift */,
+				E43C84822AB00F1A00D87A5F /* Tag.swift */,
+				E43C84842AB00F4100D87A5F /* TagTyped.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -312,8 +312,8 @@
 			children = (
 				E4A4D6642AAEF1F80062D12C /* FilesystemManager.swift */,
 				E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */,
-				E4D09A4E2AB0CFE7008D115A /* SettingsManager.swift */,
 				E4A4D6702AAEF39B0062D12C /* NavigationManager.swift */,
+				E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */,
 				E43C846C2AAF39EA00D87A5F /* TabManager.swift */,
 			);
 			path = Classes;
@@ -565,9 +565,9 @@
 				E4DB2A652AB4029100C5810D /* UIView.swift in Sources */,
 				E4A4D65F2AAEF15B0062D12C /* FilesystemObject.swift in Sources */,
 				E43C84702AAF3EE100D87A5F /* NowPlayingView.swift in Sources */,
-				E4D09A4F2AB0CFE7008D115A /* SettingsManager.swift in Sources */,
 				E43C84872AB00F5000D87A5F /* SaveState.swift in Sources */,
 				E43C84642AAF392C00D87A5F /* ListRow.swift in Sources */,
+				E414A54C2B9DD2A300C7903E /* PlaylistManager.swift in Sources */,
 				E4D09A432AB0B34C008D115A /* FBAudioFileRow.swift in Sources */,
 				E43C84992AB0179200D87A5F /* FBContextMenu.swift in Sources */,
 				E4A4D66F2AAEF36D0062D12C /* ListFileRow.swift in Sources */,

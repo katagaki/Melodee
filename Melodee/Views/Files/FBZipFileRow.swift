@@ -9,7 +9,8 @@ import SwiftUI
 
 struct FBZipFileRow: View {
 
-    @EnvironmentObject var fileManager: FilesystemManager
+    @Environment(FilesystemManager.self) var fileManager
+
     @State var file: FSFile
     @State var action: () -> Void
 

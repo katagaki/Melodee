@@ -11,7 +11,6 @@ import VariableBlurView
 struct ImageViewerView: View {
 
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var settings: SettingsManager
     @State var file: FSFile
     @State var image: UIImage?
     let gradient = LinearGradient(

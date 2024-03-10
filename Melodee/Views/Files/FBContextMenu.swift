@@ -9,9 +9,10 @@ import SwiftUI
 
 struct FBContextMenu: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-    @EnvironmentObject var fileManager: FilesystemManager
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(NavigationManager.self) var navigationManager
+    @Environment(FilesystemManager.self) var fileManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @Binding var state: FBState
     var file: any FilesystemObject
     var extractZIPAction: () -> Void

@@ -10,7 +10,8 @@ import SwiftUI
 
 struct NowPlayingBar: View {
 
-    @EnvironmentObject var mediaPlayer: MediaPlayerManager
+    @Environment(MediaPlayerManager.self) var mediaPlayer
+
     @State var albumArt: Image = Image("Album.Generic")
     @State var previousQueueID: String = ""
 

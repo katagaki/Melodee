@@ -10,7 +10,6 @@ import SwiftUI
 
 struct PDFViewerView: View {
 
-    @EnvironmentObject var settings: SettingsManager
     @State var file: FSFile
 
     var body: some View {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Playlist {
+struct Playlist: Codable {
     var name: String
     var items: PlaylistItem
 }

@@ -11,18 +11,19 @@ import ID3TagEditor
 import MediaPlayer
 
 // swiftlint:disable type_body_length
+@Observable
 class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
-    let notificationCenter = NotificationCenter.default
-    let audioSession = AVAudioSession.sharedInstance()
-    let remoteCommandCenter = MPRemoteCommandCenter.shared()
-    let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-    var audioPlayer: AVAudioPlayer?
-    @Published var isPlaybackActive: Bool = false
-    @Published var isPaused: Bool = true
-    @Published var repeatMode: RepeatMode = .none
-    @Published var queue: [FSFile] = []
-    @Published var currentlyPlayingID: String = ""
+    @ObservationIgnored let notificationCenter = NotificationCenter.default
+    @ObservationIgnored let audioSession = AVAudioSession.sharedInstance()
+    @ObservationIgnored let remoteCommandCenter = MPRemoteCommandCenter.shared()
+    @ObservationIgnored let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+    @ObservationIgnored var audioPlayer: AVAudioPlayer?
+    var isPlaybackActive: Bool = false
+    var isPaused: Bool = true
+    var repeatMode: RepeatMode = .none
+    var queue: [FSFile] = []
+    var currentlyPlayingID: String = ""
 
     override init() {
         super.init()

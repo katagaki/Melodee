@@ -8,6 +8,7 @@
 import Foundation
 
 struct Playlist: Codable {
+    var id: String = UUID().uuidString
     var name: String
-    var items: PlaylistItem
+    var items: [PlaylistItem]
 }

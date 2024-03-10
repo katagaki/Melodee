@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct PlaylistItem: Codable {
+struct PlaylistItem: Codable, Identifiable {
+    var id: Int { order }
     var order: Int
     var path: String
 }

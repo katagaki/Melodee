@@ -21,6 +21,17 @@ struct MainTabView: View {
             Group {
                 NavigationStack(path: $navigationManager.filesTabPath) {
                     FileBrowserView()
+                        .navigationDestination(for: ViewPath.self, destination: { viewPath in
+                            switch viewPath {
+                            case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
+                            case .imageViewer(let file): ImageViewerView(file: file)
+                            case .textViewer(let file): TextViewerView(file: file)
+                            case .pdfViewer(let file): PDFViewerView(file: file)
+                            case .tagEditorSingle(let file): TagEditorView(files: [file])
+                            case .tagEditorMultiple(let files): TagEditorView(files: files)
+                            default: Color.clear
+                            }
+                        })
                 }
                 .tabItem {
                     Label("TabTitle.Files", image: "Tab.FileBrowser")

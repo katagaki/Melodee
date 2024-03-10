@@ -66,19 +66,8 @@ struct FileBrowserView: View {
         }
         .safeAreaInset(edge: .bottom, spacing: 0.0) {
             Color.clear
-                .frame(height: 56.0)
+                .frame(height: 62.0)
         }
-        .navigationDestination(for: ViewPath.self, destination: { viewPath in
-            switch viewPath {
-            case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
-            case .imageViewer(let file): ImageViewerView(file: file)
-            case .textViewer(let file): TextViewerView(file: file)
-            case .pdfViewer(let file): PDFViewerView(file: file)
-            case .tagEditorSingle(let file): TagEditorView(files: [file])
-            case .tagEditorMultiple(let files): TagEditorView(files: files)
-            default: Color.clear
-            }
-        })
         .refreshable {
             refreshFiles()
         }

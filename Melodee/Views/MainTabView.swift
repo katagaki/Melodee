@@ -17,44 +17,59 @@ struct MainTabView: View {
     @State var isNowPlayingSheetPresented: Bool = false
 
     var body: some View {
-        Group {
-            TabView(selection: $tabManager.selectedTab) {
+        TabView(selection: $tabManager.selectedTab) {
+            Group {
                 NavigationStack(path: $navigationManager.filesTabPath) {
                     FileBrowserView()
                 }
                 .tabItem {
                     Label("TabTitle.Files", image: "Tab.FileBrowser")
                 }
-                .toolbarBackground(.hidden, for: .tabBar)
                 .tag(TabType.fileManager)
-                .overlay {
-                    ZStack(alignment: .bottom) {
-                        Color.clear
-                        NowPlayingBar()
-                            .onTapGesture {
-                                isNowPlayingSheetPresented.toggle()
-                            }
-                            .gesture(
-                                DragGesture()
-                                    .onEnded { value in
-                                        if value.translation.height <= -25 {
-                                            isNowPlayingSheetPresented.toggle()
-                                        }
-                                    }
-                            )
+                PlaylistsView()
+                    .tabItem {
+                        Label("TabTitle.Playlists", systemImage: "music.note.list")
                     }
-                }
-                .sheet(isPresented: $isNowPlayingSheetPresented, content: {
-                    NowPlayingView()
-                        .presentationDragIndicator(.visible)
-                })
+                    .tag(TabType.playlists)
                 MoreView()
                     .tabItem {
                         Label("TabTitle.More", systemImage: "ellipsis")
                     }
                     .tag(TabType.more)
             }
+            .toolbarBackground(.hidden, for: .tabBar)
+            .overlay {
+                ZStack(alignment: .bottom) {
+                    Color.clear
+                    Color.clear
+                        .frame(maxWidth: .infinity, minHeight: 62.0, maxHeight: 62.0)
+                        .background(.regularMaterial)
+                }
+            }
         }
+        .overlay {
+            ZStack(alignment: .bottom) {
+                Color.clear
+                NowPlayingBar()
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        isNowPlayingSheetPresented.toggle()
+                    }
+                    .gesture(
+                        DragGesture()
+                            .onEnded { value in
+                                if value.translation.height <= -25 {
+                                    isNowPlayingSheetPresented.toggle()
+                                }
+                            }
+                    )
+                    .safeAreaPadding(.bottom, 50.0)
+            }
+        }
+        .sheet(isPresented: $isNowPlayingSheetPresented, content: {
+            NowPlayingView()
+                .presentationDragIndicator(.visible)
+        })
         .task {
             try? Tips.configure([
                 .displayFrequency(.immediate),

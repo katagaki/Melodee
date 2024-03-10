@@ -974,7 +974,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アーティストなし"
+            "value" : "アーティスト名なし"
           }
         }
       }
@@ -1042,6 +1042,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "その他"
+          }
+        }
+      }
+    },
+    "TabTitle.Playlists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生リスト"
           }
         }
       }

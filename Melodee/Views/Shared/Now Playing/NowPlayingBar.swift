@@ -62,11 +62,11 @@ struct NowPlayingBar: View {
                     }
                 }
             }
+            .frame(maxHeight: 40.0)
             .disabled(!mediaPlayer.canStartPlayback())
         }
-        .padding(.all, 8.0)
-        .frame(maxWidth: .infinity, minHeight: 56.0, maxHeight: 56.0)
-        .background(.regularMaterial)
+        .padding(.all, 12.0)
+        .frame(maxWidth: .infinity, minHeight: 62.0, maxHeight: 62.0)
         .overlay(Rectangle().frame(width: nil,
                                     height: 1/3,
                                     alignment: .top).foregroundColor(.primary.opacity(0.3)),

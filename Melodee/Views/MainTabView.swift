@@ -12,28 +12,15 @@ import TipKit
 struct MainTabView: View {
 
     @EnvironmentObject var tabManager: TabManager
-    @Environment(NavigationManager.self) var navigationManager
+    @EnvironmentObject var navigationManager: NavigationManager
+    @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
 
     @State var isNowPlayingSheetPresented: Bool = false
 
     var body: some View {
-        @Bindable var navigationManager = navigationManager
         TabView(selection: $tabManager.selectedTab) {
             Group {
-                NavigationStack(path: $navigationManager.filesTabPath) {
-                    FileBrowserView()
-                        .navigationDestination(for: ViewPath.self, destination: { viewPath in
-                            switch viewPath {
-                            case .fileBrowser(let directory): FileBrowserView(currentDirectory: directory)
-                            case .imageViewer(let file): ImageViewerView(file: file)
-                            case .textViewer(let file): TextViewerView(file: file)
-                            case .pdfViewer(let file): PDFViewerView(file: file)
-                            case .tagEditorSingle(let file): TagEditorView(files: [file])
-                            case .tagEditorMultiple(let files): TagEditorView(files: files)
-                            default: Color.clear
-                            }
-                        })
-                }
+                FileBrowserNavigationStack()
                 .tabItem {
                     Label("TabTitle.Files", image: "Tab.FileBrowser")
                 }
@@ -52,30 +39,34 @@ struct MainTabView: View {
             .toolbarBackground(.hidden, for: .tabBar)
             .overlay {
                 ZStack(alignment: .bottom) {
-                    Color.clear
-                    Color.clear
-                        .frame(maxWidth: .infinity, minHeight: 62.0, maxHeight: 62.0)
-                        .background(.regularMaterial)
+                    if !nowPlayingBarManager.keyboardShowing {
+                        Color.clear
+                        Color.clear
+                            .frame(maxWidth: .infinity, minHeight: 62.0, maxHeight: 62.0)
+                            .background(.regularMaterial)
+                    }
                 }
             }
         }
         .overlay {
             ZStack(alignment: .bottom) {
-                Color.clear
-                NowPlayingBar()
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        isNowPlayingSheetPresented.toggle()
-                    }
-                    .gesture(
-                        DragGesture()
-                            .onEnded { value in
-                                if value.translation.height <= -25 {
-                                    isNowPlayingSheetPresented.toggle()
+                if !nowPlayingBarManager.keyboardShowing {
+                    Color.clear
+                    NowPlayingBar()
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            isNowPlayingSheetPresented.toggle()
+                        }
+                        .gesture(
+                            DragGesture()
+                                .onEnded { value in
+                                    if value.translation.height <= -25 {
+                                        isNowPlayingSheetPresented.toggle()
+                                    }
                                 }
-                            }
-                    )
-                    .safeAreaPadding(.bottom, 50.0)
+                        )
+                        .safeAreaPadding(.bottom, 50.0)
+                }
             }
         }
         .sheet(isPresented: $isNowPlayingSheetPresented, content: {

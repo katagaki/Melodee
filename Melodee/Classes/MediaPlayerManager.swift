@@ -12,7 +12,7 @@ import MediaPlayer
 
 // swiftlint:disable type_body_length
 @Observable
-class MediaPlayerManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
+class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     @ObservationIgnored let notificationCenter = NotificationCenter.default
     @ObservationIgnored let audioSession = AVAudioSession.sharedInstance()

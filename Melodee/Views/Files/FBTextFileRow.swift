@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FBTextFileRow: View {
 
-    @Environment(NavigationManager.self) var navigationManager
+    @EnvironmentObject var navigationManager: NavigationManager
 
     @State var file: FSFile
 

@@ -10,14 +10,23 @@ import SwiftUI
 
 struct MoreView: View {
 
-    @Environment(NavigationManager.self) var navigationManager
+    @EnvironmentObject var navigationManager: NavigationManager
 
     var body: some View {
-        @Bindable var navigationManager = navigationManager
         NavigationStack(path: $navigationManager.moreTabPath) {
-            MoreList(repoName: "katagaki/Melodee", viewPath: ViewPath.moreAttributions) { }
+            MoreList(repoName: "katagaki/Melodee", viewPath: ViewPath.moreAttributions) {
+                Section {
+                    NavigationLink(value: ViewPath.moreCloudSync) {
+                        ListRow(image: "ListIcon.iCloud", title: "iCloud")
+                    }
+                } header: {
+                    ListSectionHeader(text: "More.General")
+                        .font(.body)
+                }
+            }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
+                case .moreCloudSync: HStack {}
                 case .moreAttributions: LicensesView()
                 default: Color.clear
                 }

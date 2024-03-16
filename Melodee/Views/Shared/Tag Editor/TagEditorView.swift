@@ -10,9 +10,11 @@ import PhotosUI
 import SwiftUI
 import TipKit
 
+// swiftlint:disable type_body_length
 struct TagEditorView: View {
 
-    @Environment(NavigationManager.self) var navigationManager
+    @EnvironmentObject var navigationManager: NavigationManager
+    @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
 
     let id3TagEditor = ID3TagEditor()
     @State var files: [FSFile]
@@ -134,7 +136,7 @@ struct TagEditorView: View {
                 .frame(minHeight: 56.0)
                 .padding([.leading, .trailing], 16.0)
                 Color.clear
-                    .frame(height: 56.0)
+                    .frame(height: nowPlayingBarManager.keyboardShowing ? 0.0 : 56.0)
                     .padding(.top)
             }
         }
@@ -205,6 +207,16 @@ struct TagEditorView: View {
                 break
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation(.easeOut) {
+                nowPlayingBarManager.keyboardShowing = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation(.easeOut) {
+                nowPlayingBarManager.keyboardShowing = false
+            }
+        }
     }
 
     func readAllTagData() async {
@@ -241,7 +253,7 @@ struct TagEditorView: View {
         _ = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
             for (file, tag) in tags {
                 group.addTask {
-                    return tag.saveTagData(to: file, tagData: tagData)
+                    return await tag.saveTagData(to: file, tagData: tagData)
                 }
             }
             var saveStates: [Bool] = []
@@ -262,3 +274,4 @@ struct TagEditorView: View {
     }
 
 }
+// swiftlint:enable type_body_length

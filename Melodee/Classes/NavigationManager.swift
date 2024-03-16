@@ -7,12 +7,11 @@
 
 import Foundation
 
-@Observable
-class NavigationManager {
+class NavigationManager: ObservableObject {
 
-    var filesTabPath: [ViewPath] = []
-    var playlistsTabPath: [ViewPath] = []
-    var moreTabPath: [ViewPath] = []
+    @Published var filesTabPath: [ViewPath] = []
+    @Published var playlistsTabPath: [ViewPath] = []
+    @Published var moreTabPath: [ViewPath] = []
 
     func popToRoot(for tab: TabType) {
         switch tab {

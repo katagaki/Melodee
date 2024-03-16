@@ -11,15 +11,21 @@ import SwiftUI
 struct MelodeeApp: App {
 
     @StateObject var tabManager: TabManager = TabManager()
+    @StateObject var navigationManager: NavigationManager = NavigationManager()
+    @State var filesystemManager: FilesystemManager = FilesystemManager()
+    @State var playlistManager: PlaylistManager = PlaylistManager()
+    @State var mediaPlayerManager: MediaPlayerManager = MediaPlayerManager()
+    @State var nowPlayingBarManager: NowPlayingBarManager = NowPlayingBarManager()
 
     var body: some Scene {
         WindowGroup {
             MainTabView()
                 .environmentObject(tabManager)
-                .environment(NavigationManager())
-                .environment(FilesystemManager())
-                .environment(PlaylistManager())
-                .environment(MediaPlayerManager())
+                .environmentObject(navigationManager)
+                .environment(filesystemManager)
+                .environment(playlistManager)
+                .environment(mediaPlayerManager)
+                .environment(nowPlayingBarManager)
         }
     }
 }

@@ -10,6 +10,8 @@
 		E4130F572ABFEF5200AEF308 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4130F562ABFEF5200AEF308 /* URL.swift */; };
 		E414A54C2B9DD2A300C7903E /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */; };
 		E414A54E2B9DEC6400C7903E /* StorageLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A54D2B9DEC6400C7903E /* StorageLocation.swift */; };
+		E414A5502BA5B96900C7903E /* FileBrowserNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A54F2BA5B96900C7903E /* FileBrowserNavigationStack.swift */; };
+		E414A5522BA5BC7700C7903E /* NowPlayingBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A5512BA5BC7700C7903E /* NowPlayingBarManager.swift */; };
 		E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84582AAF087300D87A5F /* MarqueeText */; };
 		E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845C2AAF38B600D87A5F /* MainTabView.swift */; };
 		E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845E2AAF38D800D87A5F /* TabType.swift */; };
@@ -90,6 +92,8 @@
 		E4130F562ABFEF5200AEF308 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
 		E414A54D2B9DEC6400C7903E /* StorageLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageLocation.swift; sourceTree = "<group>"; };
+		E414A54F2BA5B96900C7903E /* FileBrowserNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserNavigationStack.swift; sourceTree = "<group>"; };
+		E414A5512BA5BC7700C7903E /* NowPlayingBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingBarManager.swift; sourceTree = "<group>"; };
 		E43C845C2AAF38B600D87A5F /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		E43C845E2AAF38D800D87A5F /* TabType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabType.swift; sourceTree = "<group>"; };
 		E43C84612AAF391200D87A5F /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
@@ -193,6 +197,7 @@
 		E43C845B2AAF38AA00D87A5F /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				E414A54F2BA5B96900C7903E /* FileBrowserNavigationStack.swift */,
 				E4A4D64C2AAEF11F0062D12C /* FileBrowserView.swift */,
 				E4D09A402AB0B2E9008D115A /* FBDirectoryRow.swift */,
 				E4D09A422AB0B34C008D115A /* FBAudioFileRow.swift */,
@@ -315,6 +320,7 @@
 				E4A4D6642AAEF1F80062D12C /* FilesystemManager.swift */,
 				E4A4D67C2AAEFD9D0062D12C /* MediaPlayerManager.swift */,
 				E4A4D6702AAEF39B0062D12C /* NavigationManager.swift */,
+				E414A5512BA5BC7700C7903E /* NowPlayingBarManager.swift */,
 				E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */,
 				E43C846C2AAF39EA00D87A5F /* TabManager.swift */,
 			);
@@ -525,6 +531,7 @@
 				E43C84622AAF391200D87A5F /* MoreView.swift in Sources */,
 				E43C848F2AB00FB600D87A5F /* TEAvailableTokenRow.swift in Sources */,
 				E4A4D6742AAEF3B30062D12C /* ViewPath.swift in Sources */,
+				E414A5522BA5BC7700C7903E /* NowPlayingBarManager.swift in Sources */,
 				E414A54E2B9DEC6400C7903E /* StorageLocation.swift in Sources */,
 				E4A4D67B2AAEFB750062D12C /* ActionButton.swift in Sources */,
 				E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */,
@@ -533,6 +540,7 @@
 				E4A4D64D2AAEF11F0062D12C /* FileBrowserView.swift in Sources */,
 				E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */,
 				E447AABC2B772312009A3D3E /* RepeatMode.swift in Sources */,
+				E414A5502BA5B96900C7903E /* FileBrowserNavigationStack.swift in Sources */,
 				E43C846B2AAF39C700D87A5F /* License.swift in Sources */,
 				E4DB2A572AB351CB00C5810D /* FBPdfFileRow.swift in Sources */,
 				E43C84912AB00FD100D87A5F /* TETokensTip.swift in Sources */,

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FBTagSection: View {
 
-    @Environment(NavigationManager.self) var navigationManager
+    @EnvironmentObject var navigationManager: NavigationManager
 
     @Binding var files: [any FilesystemObject]
 

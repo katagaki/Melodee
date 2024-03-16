@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FBContextMenu: View {
 
-    @Environment(NavigationManager.self) var navigationManager
+    @EnvironmentObject var navigationManager: NavigationManager
     @Environment(FilesystemManager.self) var fileManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 

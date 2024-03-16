@@ -27,9 +27,17 @@ class PlaylistManager {
     func create(_ name: String, with items: [String]) {
         var newPlaylist = Playlist(name: name, items: [])
         for index in 0..<items.count {
-            newPlaylist.items.append(PlaylistItem(order: index, path: items[index]))
+            newPlaylist.append(PlaylistItem(order: index, path: items[index]))
         }
         save(to: .cloud)
+    }
+
+    func add(_ filePath: String, to playlistID: String) {
+        if let playlistIndex = playlists.firstIndex(where: { $0.id == playlistID }) {
+            let orderNumber = playlists[playlistIndex].playlistItemCount()
+            playlists[playlistIndex].append(PlaylistItem(order: orderNumber, path: filePath))
+            save(to: .cloud)
+        }
     }
 
     func delete(id: String) {

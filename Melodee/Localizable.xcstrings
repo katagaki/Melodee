@@ -31,6 +31,22 @@
         }
       }
     },
+    "Alert.CreatePlaylist.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Playlist"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新規再生リスト"
+          }
+        }
+      }
+    },
     "Alert.DeleteFile.Text" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -561,6 +577,22 @@
         }
       }
     },
+    "Playlists.AddFiles" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Files"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを追加"
+          }
+        }
+      }
+    },
     "Shared.AreYouSure" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -607,6 +639,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "変更"
+          }
+        }
+      }
+    },
+    "Shared.Create" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作成"
           }
         }
       }
@@ -740,6 +788,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいファイル名"
+          }
+        }
+      }
+    },
+    "Shared.NewPlaylistName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlist Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生リスト名"
           }
         }
       }

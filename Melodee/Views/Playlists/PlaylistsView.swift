@@ -12,26 +12,44 @@ struct PlaylistsView: View {
 
     @Environment(PlaylistManager.self) var playlistManager
 
+    @State var isCreatingPlaylist: Bool = false
+    @State var newPlaylistName: String = ""
+
     var body: some View {
         @Bindable var playlistManager = playlistManager
         NavigationStack {
-            List($playlistManager.playlists, id: \.id, editActions: [.all]) { $playlist in
-                Section {
-                    ForEach(playlist.items.sorted(by: { $0.order < $1.order })) { item in
-                        Text(item.path)
-                    }
-                } header: {
-                    ListSectionHeader(text: playlist.name)
-                        .font(.body)
+            List(playlistManager.playlists, id: \.id) { playlist in
+                NavigationLink {
+                    PlaylistView(playlist: playlist)
+                } label: {
+                    ListFolderRow(name: playlist.name)
                 }
             }
             .navigationTitle("ViewTitle.Playlists")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        playlistManager.create(UUID().uuidString)
+                        isCreatingPlaylist = true
                     } label: {
                         Image(systemName: "plus")
+                    }
+                }
+            }
+            .alert("Alert.CreatePlaylist.Title", isPresented: $isCreatingPlaylist, actions: {
+                TextField("Shared.NewPlaylistName", text: $newPlaylistName)
+                Button("Shared.Create") {
+                    isCreatingPlaylist = false
+                }
+                .disabled(newPlaylistName == "")
+                Button("Shared.Cancel", role: .cancel) {
+                    newPlaylistName = ""
+                }
+            })
+            .onChange(of: isCreatingPlaylist) { oldValue, newValue in
+                if oldValue && !newValue {
+                    if newPlaylistName != "" {
+                        playlistManager.create(newPlaylistName)
+                        newPlaylistName = ""
                     }
                 }
             }

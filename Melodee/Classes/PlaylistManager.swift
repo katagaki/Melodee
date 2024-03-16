@@ -42,18 +42,27 @@ class PlaylistManager {
            let playlistsJSONString =  String(data: playlistsJSONData, encoding: .utf8) {
             switch storageLocation {
             case .local:
-                if let documentsDirectoryURL = PlaylistManager.localStorageLocationPath() {
-                    debugPrint("Saving playlists to On My Device")
-                    manager.createFile(atPath: "\(documentsDirectoryURL.path())Playlists.json",
-                                       contents: playlistsJSONString.data(using: .utf8))
+                debugPrint("Saving playlists to On My Device")
+                if let documentsDirectoryURL = PlaylistManager.localStorageLocationPath(),
+                   manager.createFile(atPath: "\(documentsDirectoryURL.path())Playlists.json",
+                                      contents: playlistsJSONString.data(using: .utf8)) {
+                    debugPrint("Saved playlists to On My Device")
                 } else {
                     debugPrint("Error while saving playlists")
                 }
             case .cloud:
-                if let cloudDocumentsDirectoryURL = PlaylistManager.cloudStorageLocationPath() {
-                    debugPrint("Saving playlists to iCloud")
-                    manager.createFile(atPath: "\(cloudDocumentsDirectoryURL.path())Playlists.json",
-                                       contents: playlistsJSONString.data(using: .utf8))
+                debugPrint("Saving playlists to iCloud")
+                if let cloudStorageLocationPath = PlaylistManager.cloudStorageLocationPath() {
+                    let playlistsURL = URL(filePath: cloudStorageLocationPath.path(percentEncoded: false))
+                        .appending(path: "Playlists.json")
+                    NSFileCoordinator().coordinate(writingItemAt: playlistsURL, error: .none) { url in
+                        if manager.createFile(atPath: url.path(percentEncoded: false),
+                                              contents: playlistsJSONString.data(using: .utf8)) {
+                            debugPrint("Saved playlists to iCloud")
+                        } else {
+                            debugPrint("Error while saving playlists to iCloud")
+                        }
+                    }
                 } else {
                     debugPrint("Error while saving playlists to iCloud, trying On My Device")
                     save(to: .local)
@@ -87,9 +96,17 @@ class PlaylistManager {
                 return []
             }
         case .cloud:
-            if let cloudDocumentsDirectoryURL = cloudStorageLocationPath(),
-               let playlists = playlists(atPath: "\(cloudDocumentsDirectoryURL.path())Playlists.json") {
-                debugPrint("Loading playlists JSON from iCloud")
+            let semaphore = DispatchSemaphore(value: 0)
+            if let cloudStorageLocationPath = cloudStorageLocationPath() {
+                let playlistsURL = URL(filePath: cloudStorageLocationPath.path(percentEncoded: false))
+                    .appending(path: "Playlists.json")
+                var playlists: [Playlist] = []
+                NSFileCoordinator().coordinate(readingItemAt: playlistsURL, error: .none) { url in
+                    debugPrint("Loading playlists JSON from iCloud")
+                    playlists = PlaylistManager.playlists(atPath: url.path(percentEncoded: false)) ?? []
+                    semaphore.signal()
+                }
+                semaphore.wait()
                 return playlists
             } else {
                 debugPrint("Could not load playlists JSON from iCloud, trying On My Device")

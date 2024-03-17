@@ -1638,6 +1638,7 @@
       }
     },
     "ViewTitle.Attributions" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

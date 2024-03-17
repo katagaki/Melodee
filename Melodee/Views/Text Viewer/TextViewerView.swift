@@ -17,7 +17,7 @@ struct TextViewerView: View {
             .navigationTitle(file.name)
             .safeAreaInset(edge: .bottom) {
                 Color.clear
-                    .frame(height: 48.0)
+                    .frame(height: 56.0)
             }
             .onAppear {
                 do {

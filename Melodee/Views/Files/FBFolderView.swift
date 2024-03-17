@@ -207,21 +207,11 @@ struct FBFolderView: View {
     }
 
     func folderContainsPlayableAudio() -> Bool {
-        for file in files {
-            if let file = file as? FSFile, file.type == .audio {
-                return true
-            }
-        }
-        return false
+        files.contains { ($0 as? FSFile)?.type == .audio }
     }
 
     func folderContainsEditableMP3s() -> Bool {
-        for file in files {
-            if let file = file as? FSFile, file.extension == "mp3" {
-                return true
-            }
-        }
-        return false
+        files.contains { ($0 as? FSFile)?.extension == "mp3" }
     }
 
 }

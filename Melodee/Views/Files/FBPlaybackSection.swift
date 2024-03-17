@@ -22,7 +22,7 @@ struct FBPlaybackSection: View {
                 .textCase(.none)
                 .bold()
                 .foregroundColor(.primary)
-                .listRowSeparator(.hidden) //, edges: .top)
+                .listRowSeparator(.hidden) // , edges: .top)
                 .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
                 .textSelection(.enabled)
             HStack(alignment: .center, spacing: 8.0) {

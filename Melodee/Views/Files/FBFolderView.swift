@@ -1,5 +1,5 @@
 //
-//  FileBrowserView.swift
+//  FBFolderView.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/11.
@@ -8,7 +8,7 @@
 import SwiftUI
 import TipKit
 
-struct FileBrowserView: View {
+struct FBFolderView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
     @Environment(FilesystemManager.self) var fileManager
@@ -18,6 +18,8 @@ struct FileBrowserView: View {
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
     @State var isSelectingExternalDirectory = false
+
+    var overrideStorageLocation: StorageLocation? = nil
 
     var body: some View {
         List {
@@ -53,6 +55,12 @@ struct FileBrowserView: View {
             }
         }
         .listStyle(.plain)
+        .toolbar {
+            // HACK: Prevent weird animation when going from view to view
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack { }
+            }
+        }
         .overlay {
             if files.count == 0 && currentDirectory == nil {
                 TipView(FBNoFilesTip())
@@ -79,15 +87,6 @@ struct FileBrowserView: View {
                         fileManager.extractionProgress?.cancel()
                         state.extractionPercentage = 0
                         state.isExtractingZIP = false
-                    }
-                }
-            }
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                HStack {
-                    if currentDirectory == nil {
-                        StorageLocationSelector(isSelectingExternalDirectory: $isSelectingExternalDirectory)
                     }
                 }
             }
@@ -140,6 +139,9 @@ struct FileBrowserView: View {
         })
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            if let overrideStorageLocation {
+                fileManager.storageLocation = overrideStorageLocation
+            }
             if !state.isInitialLoadCompleted {
                 refreshFiles()
             }

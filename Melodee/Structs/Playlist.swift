@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Playlist: Codable, Identifiable {
+struct Playlist: Identifiable, Equatable, Hashable, Codable {
     var id: String = UUID().uuidString
     var name: String
     var items: [PlaylistItem]?
@@ -36,4 +36,13 @@ struct Playlist: Codable, Identifiable {
             self.items?.append(item)
         }
     }
+
+    static func == (lhs: Playlist, rhs: Playlist) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine([id, name])
+    }
+
 }

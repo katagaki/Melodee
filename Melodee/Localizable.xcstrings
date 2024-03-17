@@ -11,26 +11,6 @@
         }
       }
     },
-    "-00:00" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        }
-      }
-    },
-    "00:00" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : ""
-          }
-        }
-      }
-    },
     "Alert.CreatePlaylist.Title" : {
       "localizations" : {
         "en" : {
@@ -612,7 +592,7 @@
       }
     },
     "Playlists.AddFiles" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -781,13 +761,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "External Folder"
+            "value" : "Open External Folder..."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "外部フォルダー"
+            "value" : "外部フォルダーを開く…"
           }
         }
       }
@@ -966,6 +946,7 @@
       }
     },
     "Shared.OpenFilesApp" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1083,6 +1064,23 @@
         }
       }
     },
+    "Shared.Playlists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生リスト"
+          }
+        }
+      }
+    },
     "Shared.Queue" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1168,6 +1166,23 @@
         }
       }
     },
+    "Shared.StorageLocations" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storage Locations"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "場所"
+          }
+        }
+      }
+    },
     "Shared.UnknownArtist" : {
       "localizations" : {
         "en" : {
@@ -1231,22 +1246,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "その他"
-          }
-        }
-      }
-    },
-    "TabTitle.Playlists" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlists"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生リスト"
           }
         }
       }
@@ -1666,22 +1665,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル"
-          }
-        }
-      }
-    },
-    "ViewTitle.Playlists" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlists"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生リスト"
           }
         }
       }

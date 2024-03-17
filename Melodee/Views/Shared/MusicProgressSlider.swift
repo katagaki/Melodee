@@ -65,13 +65,13 @@ struct MusicProgressSlider<T: BinaryFloatingPoint>: View {
                         if progressDuration.isFinite {
                             Text(progressDuration.asTimeString(style: .positional))
                         } else {
-                            Text("00:00")
+                            Text(verbatim: "00:00")
                         }
                             Spacer(minLength: 0)
                         if progressDuration.isFinite {
                             Text("-" + (inRange.upperBound - progressDuration).asTimeString(style: .positional))
                         } else {
-                            Text("-00:00")
+                            Text(verbatim: "-00:00")
                         }
                     }
                     .font(.caption)

@@ -39,7 +39,7 @@ struct MoreView: View {
                 }
             }
             .sheet(isPresented: $isPendingMoveToiCloudPrompt) {
-                MoreMoveToCloudView()
+                MoreMoveToCloudView(storeFilesInCloud: $storeFilesInCloud)
                     .interactiveDismissDisabled()
             }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in

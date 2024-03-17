@@ -11,6 +11,8 @@ struct MoreMoveToCloudView: View {
 
     @Environment(\.dismiss) var dismiss
 
+    @Binding var storeFilesInCloud: Bool
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .center, spacing: 16.0) {
@@ -19,7 +21,13 @@ struct MoreMoveToCloudView: View {
                         .bold()
                         .font(.largeTitle)
                     // swiftlint:disable line_length
-                    Text(verbatim: "iCloud sync has been turned on, but your files are still stored on your device. Before you can use those files, you will need to move those files to iCloud. Melodee can help move all your locally stored files to iCloud automatically.\n\nIf you would like to move your files manually, select Cancel, then from the Files app, move your files from On My Device > Melodee to iCloud Drive > Melodee.\n\nYou can turn iCloud sync off at any time in the Melodee app from More > iCloud Sync > Files.")
+                    Text(verbatim: """
+iCloud sync has been turned on, but your files are still stored on your device. Before you can use those files, you will need to move those files to iCloud. Melodee can help move all your locally stored files to iCloud automatically.
+
+If you would like to move your files manually, open the Files app, then move your files from On My Device > Melodee to iCloud Drive > Melodee.
+
+You can turn iCloud sync off at any time in the Melodee app from More > iCloud Sync > Files.
+""")
                     // swiftlint:enable line_length
                 }
                 .multilineTextAlignment(.center)
@@ -27,7 +35,7 @@ struct MoreMoveToCloudView: View {
                 Button {
                     // TODO: Move files to iCloud
                 } label: {
-                    Text(verbatim: "Upload Files to iCloud")
+                    Text(verbatim: "Move Files to iCloud")
                         .bold()
                         .padding([.leading, .trailing], 16.0)
                         .padding([.top, .bottom], 8.0)
@@ -38,7 +46,7 @@ struct MoreMoveToCloudView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Text("Shared.Cancel")
+                    Text(verbatim: "Move Files Manually")
                         .bold()
                         .padding([.leading, .trailing], 16.0)
                         .padding([.top, .bottom], 8.0)
@@ -52,6 +60,7 @@ struct MoreMoveToCloudView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        storeFilesInCloud = false
                         dismiss()
                     } label: {
                         Image(systemName: "xmark.circle.fill")

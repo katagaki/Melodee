@@ -12,7 +12,7 @@ struct FBDirectoryRow: View {
     @State var directory: FSDirectory
 
     var body: some View {
-        NavigationLink(value: ViewPath.fileBrowser(directory: directory)) {
+        NavigationLink(value: ViewPath.fileBrowser(directory: directory, storageLocation: nil)) {
             ListFolderRow(name: directory.name)
         }
     }

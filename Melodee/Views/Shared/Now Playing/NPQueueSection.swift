@@ -15,7 +15,7 @@ struct NPQueueSection: View {
         @Bindable var mediaPlayer = mediaPlayer
         Section {
             if $mediaPlayer.queue.isEmpty {
-                Text("")
+                Text(verbatim: "")
                     .listRowSeparator(.hidden)
             } else {
                 ForEach($mediaPlayer.queue, id: \.playbackQueueID) { $file in

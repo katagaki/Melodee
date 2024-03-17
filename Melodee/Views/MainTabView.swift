@@ -20,16 +20,11 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $tabManager.selectedTab) {
             Group {
-                FileBrowserNavigationStack()
+                FilesView()
                 .tabItem {
                     Label("TabTitle.Files", image: "Tab.FileBrowser")
                 }
                 .tag(TabType.fileManager)
-                PlaylistsView()
-                    .tabItem {
-                        Label("TabTitle.Playlists", systemImage: "music.note.list")
-                    }
-                    .tag(TabType.playlists)
                 MoreView()
                     .tabItem {
                         Label("TabTitle.More", systemImage: "ellipsis")

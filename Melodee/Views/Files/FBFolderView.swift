@@ -19,7 +19,7 @@ struct FBFolderView: View {
     @State var state = FBState()
     @State var isSelectingExternalDirectory = false
 
-    var overrideStorageLocation: StorageLocation? = nil
+    var overrideStorageLocation: StorageLocation?
 
     var body: some View {
         List {

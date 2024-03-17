@@ -10,6 +10,7 @@ import SwiftUI
 
 struct FBPlaybackSection: View {
 
+    @Environment(FilesystemManager.self) var fileManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @Binding var currentDirectory: FSDirectory?
@@ -17,14 +18,26 @@ struct FBPlaybackSection: View {
 
     var body: some View {
         Section {
-            Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
-                .font(.largeTitle)
-                .textCase(.none)
-                .bold()
-                .foregroundColor(.primary)
-                .listRowSeparator(.hidden) // , edges: .top)
-                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
-                .textSelection(.enabled)
+            Group {
+                switch fileManager.storageLocation {
+                case .cloud:
+                    Text(currentDirectory?.name ??
+                         NSLocalizedString("Shared.iCloudDrive", comment: ""))
+                case .local:
+                    Text(currentDirectory?.name ??
+                         NSLocalizedString("Shared.OnMyDevice", comment: ""))
+                case .external:
+                    Text(fileManager.directory?.lastPathComponent ??
+                         NSLocalizedString("ViewTitle.Files", comment: ""))
+                }
+            }
+            .font(.largeTitle)
+            .textCase(.none)
+            .bold()
+            .foregroundColor(.primary)
+            .listRowSeparator(.hidden) // , edges: .top)
+            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+            .textSelection(.enabled)
             HStack(alignment: .center, spacing: 8.0) {
                 Group {
                     ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
@@ -54,7 +67,7 @@ struct FBPlaybackSection: View {
                 .frame(maxWidth: .infinity)
                 .disabled(!folderContainsPlayableAudio())
             }
-            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 22, trailing: 16))
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
             .alignmentGuide(.listRowSeparatorLeading) { _ in
                 return 0.0
             }

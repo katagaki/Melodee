@@ -25,11 +25,11 @@ struct FilesView: View {
                 Section {
                     if FileManager.default.ubiquityIdentityToken != nil {
                         NavigationLink(value: ViewPath.fileBrowser(directory: nil, storageLocation: .cloud)) {
-                            Label("Shared.iCloudDrive", systemImage: "icloud")
+                            ListRow(image: "ListIcon.iCloud", title: "Shared.iCloudDrive")
                         }
                     }
                     NavigationLink(value: ViewPath.fileBrowser(directory: nil, storageLocation: .local)) {
-                        Label("Shared.OnMyDevice", systemImage: "iphone")
+                        ListRow(image: "ListIcon.OnMyDevice", title: "Shared.OnMyDevice")
                     }
                     Button {
                         isSelectingExternalDirectory = true
@@ -50,7 +50,7 @@ struct FilesView: View {
                             }
                         }
                     } label: {
-                        ListRow(image: "ListIcon.Files", title: "Shared.ExternalFolder")
+                        ListRow(image: "ListIcon.Files", title: "Shared.OpenFilesApp")
                     }
                 }
                 Section {

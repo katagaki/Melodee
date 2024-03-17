@@ -25,7 +25,7 @@ class PlaylistManager {
 
     func create(_ name: String) {
         playlists.append(Playlist(name: name, items: []))
-        save(to: .cloud)
+        save()
     }
 
     func create(_ name: String, with items: [String]) {
@@ -33,36 +33,26 @@ class PlaylistManager {
         for index in 0..<items.count {
             newPlaylist.append(PlaylistItem(order: index, path: items[index]))
         }
-        save(to: .cloud)
+        save()
     }
 
     func add(_ filePath: String, to playlistID: String) {
         if let playlistIndex = playlists.firstIndex(where: { $0.id == playlistID }) {
             let orderNumber = playlists[playlistIndex].playlistItemCount()
             playlists[playlistIndex].append(PlaylistItem(order: orderNumber, path: filePath))
-            save(to: .cloud)
+            save()
         }
     }
 
     func delete(id: String) {
         playlists.removeAll(where: { $0.id == id })
-        save(to: .cloud)
+        save()
     }
 
-    func save(to storageLocation: StorageLocation) {
+    func save() {
         if let playlistsJSONData = try? JSONEncoder().encode(playlists),
            let playlistsJSONString =  String(data: playlistsJSONData, encoding: .utf8) {
-            switch storageLocation {
-            case .local:
-                debugPrint("Saving playlists to On My Device")
-                if let documentsDirectoryURL = PlaylistManager.localStorageLocationPath(),
-                   manager.createFile(atPath: "\(documentsDirectoryURL.path())Playlists.json",
-                                      contents: playlistsJSONString.data(using: .utf8)) {
-                    debugPrint("Saved playlists to On My Device")
-                } else {
-                    debugPrint("Error while saving playlists")
-                }
-            case .cloud:
+            if defaults.bool(forKey: "CloudStoresPlaylists") {
                 debugPrint("Saving playlists to iCloud")
                 if let cloudStorageLocationPath = PlaylistManager.cloudStorageLocationPath() {
                     let playlistsURL = URL(filePath: cloudStorageLocationPath.path(percentEncoded: false))
@@ -76,11 +66,19 @@ class PlaylistManager {
                         }
                     }
                 } else {
-                    debugPrint("Error while saving playlists to iCloud, trying On My Device")
-                    save(to: .local)
+                    debugPrint("Error while saving playlists to iCloud, falling back to On My Device")
+                    defaults.setValue(false, forKey: "CloudStoresPlaylists")
+                    save()
                 }
-            case .external:
-                debugPrint("Not implemented")
+            } else {
+                debugPrint("Saving playlists to On My Device")
+                if let documentsDirectoryURL = PlaylistManager.localStorageLocationPath(),
+                   manager.createFile(atPath: "\(documentsDirectoryURL.path())Playlists.json",
+                                      contents: playlistsJSONString.data(using: .utf8)) {
+                    debugPrint("Saved playlists to On My Device")
+                } else {
+                    debugPrint("Error while saving playlists")
+                }
             }
         } else {
             debugPrint("Error while encoding playlists")

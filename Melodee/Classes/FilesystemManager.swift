@@ -45,7 +45,7 @@ class FilesystemManager {
         do {
             if let directory = (url == nil ? directory : url), directoryOrFileExists(at: directory) {
                 // Get contents of directory
-                var filesStaged: [any FilesystemObject] = try manager
+                let filesStaged: [any FilesystemObject] = try manager
                     .contentsOfDirectory(at: directory,
                                          includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
                                          options: [.skipsHiddenFiles]).compactMap { url in
@@ -60,25 +60,15 @@ class FilesystemManager {
                                               path: url.path,
                                               type: .notSet)
                             switch fileExtension {
-                            case "mp3", "m4a", "wav", "alac":
-                                file.type = .audio
-                                return file
-                            case "png", "jpg", "jpeg", "tif", "tiff", "heic":
-                                file.type = .image
-                                return file
-                            case "txt":
-                                file.type = .text
-                                return file
-                            case "pdf":
-                                file.type = .pdf
-                                return file
-                            case "zip":
-                                file.type = .zip
-                                return file
-                            default: break
+                            case "mp3", "m4a", "wav", "alac": file.type = .audio
+                            case "png", "jpg", "jpeg", "tif", "tiff", "heic": file.type = .image
+                            case "txt": file.type = .text
+                            case "pdf": file.type = .pdf
+                            case "zip": file.type = .zip
+                            default: return nil
                             }
+                            return file
                         }
-                        return nil
                     }
                 // Sort folders above files
                 var filesCombined: [any FilesystemObject] = filesStaged.filter({ $0 is FSDirectory })

@@ -172,21 +172,8 @@ struct FileBrowserView: View {
     }
 
     func refreshFiles() {
-        let filesStaged = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
-            .sorted(by: { lhs, rhs in
-                lhs.name < rhs.name
-            })
-        var filesCombined: [any FilesystemObject] = filesStaged.filter({ $0 is FSDirectory })
-        let filesOnly: [any FilesystemObject] = filesStaged.filter({ $0 is FSFile })
-            .sorted { lhs, rhs in
-                if let lhs = lhs as? FSFile, let rhs = rhs as? FSFile {
-                    return lhs.type.rawValue < rhs.type.rawValue
-                }
-                return false
-            }
-        filesCombined.append(contentsOf: filesOnly)
         withAnimation {
-            self.files = filesCombined
+            self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
             state.isInitialLoadCompleted = true
         }
     }

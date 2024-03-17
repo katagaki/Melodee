@@ -44,7 +44,8 @@ class FilesystemManager {
         debugPrint("Enumerating files in '\(url == nil ? directory?.absoluteString ?? "": url?.absoluteString ?? "")'.")
         do {
             if let directory = (url == nil ? directory : url), directoryOrFileExists(at: directory) {
-                return try manager
+                // Get contents of directory
+                var filesStaged: [any FilesystemObject] = try manager
                     .contentsOfDirectory(at: directory,
                                          includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
                                          options: [.skipsHiddenFiles]).compactMap { url in
@@ -79,6 +80,19 @@ class FilesystemManager {
                         }
                         return nil
                     }
+                // Sort folders above files
+                var filesCombined: [any FilesystemObject] = filesStaged.filter({ $0 is FSDirectory })
+                    .sorted { $0.name < $1.name }
+                let filesOnly: [any FilesystemObject] = filesStaged.filter({ $0 is FSFile })
+                    .sorted { $0.name < $1.name }
+                    .sorted { lhs, rhs in
+                        if let lhs = lhs as? FSFile, let rhs = rhs as? FSFile {
+                            return lhs.type.rawValue < rhs.type.rawValue
+                        }
+                        return false
+                    }
+                filesCombined.append(contentsOf: filesOnly)
+                return filesCombined
             }
         } catch {
             debugPrint(error.localizedDescription)

@@ -16,7 +16,11 @@ class PlaylistManager {
     var playlists: [Playlist]
 
     init() {
-        self.playlists = PlaylistManager.playlists(from: .cloud)
+        if defaults.bool(forKey: "CloudStoresPlaylists") && FileManager.default.ubiquityIdentityToken != nil {
+            self.playlists = PlaylistManager.playlists(from: .cloud)
+        } else {
+            self.playlists = PlaylistManager.playlists(from: .local)
+        }
     }
 
     func create(_ name: String) {
@@ -75,6 +79,8 @@ class PlaylistManager {
                     debugPrint("Error while saving playlists to iCloud, trying On My Device")
                     save(to: .local)
                 }
+            case .external:
+                debugPrint("Not implemented")
             }
         } else {
             debugPrint("Error while encoding playlists")
@@ -120,6 +126,9 @@ class PlaylistManager {
                 debugPrint("Could not load playlists JSON from iCloud, trying On My Device")
                 return playlists(from: .local)
             }
+        case .external:
+            debugPrint("Not implemented")
+            return []
         }
     }
 

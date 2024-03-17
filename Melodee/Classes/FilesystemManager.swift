@@ -15,37 +15,28 @@ class FilesystemManager {
     @ObservationIgnored let manager = FileManager.default
     @ObservationIgnored var directory: URL?
 
+    var storageLocation: StorageLocation = .local
+
+    @ObservationIgnored var documentsDirectoryURL: URL?
+    @ObservationIgnored var cloudDocumentsDirectoryURL: URL?
+    @ObservationIgnored var externalDirectoryURL: URL?
+
     var files: [any FilesystemObject] = []
     var extractionProgress: Progress?
 
     init() {
         do {
-            let placeholderFilename = NSLocalizedString("Shared.DropFilesFileName",
-                                                        comment: "")
-
-            // Set up local Documents folder
-            let documentsDirectoryURL = try FileManager.default
+            documentsDirectoryURL = try FileManager.default
                 .url(for: .documentDirectory,
                      in: .userDomainMask,
                      appropriateFor: nil,
                      create: true)
-            self.directory = documentsDirectoryURL
-            manager
-                .createFile(atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
-                            contents: "".data(using: .utf8))
-
-            // Set up iCloud folder
-            let cloudDocumentsDirectoryURL = FileManager.default
+            cloudDocumentsDirectoryURL = FileManager.default
                 .url(forUbiquityContainerIdentifier: nil)?
                 .appendingPathComponent("Documents")
-            if let cloudDocumentsDirectoryURL {
-                manager
-                    .createFile(atPath: "\(cloudDocumentsDirectoryURL.path())\(placeholderFilename)",
-                                contents: "".data(using: .utf8))
-            }
+            directory = documentsDirectoryURL
         } catch {
             debugPrint(error.localizedDescription)
-            directory = nil
         }
     }
 
@@ -105,6 +96,22 @@ class FilesystemManager {
                 } catch {
                     debugPrint("Error occurred while creating directory: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+
+    func createPlaceholders() {
+        let placeholderFilename = NSLocalizedString("Shared.DropFilesFileName",
+                                                    comment: "")
+        if let documentsDirectoryURL {
+            manager
+                .createFile(atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
+                            contents: "".data(using: .utf8))
+        }
+        if let cloudDocumentsDirectoryURL {
+            let placeholderFileURL: URL = cloudDocumentsDirectoryURL.appending(path: placeholderFilename)
+            NSFileCoordinator().coordinate(writingItemAt: placeholderFileURL, error: .none) { url in
+                self.manager.createFile(atPath: url.path(percentEncoded: false), contents: "".data(using: .utf8))
             }
         }
     }

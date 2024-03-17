@@ -20,6 +20,10 @@ struct MelodeeApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .task {
+                    debugPrint("Creating placeholder files")
+                    filesystemManager.createPlaceholders()
+                }
                 .environmentObject(tabManager)
                 .environmentObject(navigationManager)
                 .environment(filesystemManager)

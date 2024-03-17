@@ -14,6 +14,5 @@ enum ViewPath: Hashable {
     case pdfViewer(file: FSFile)
     case tagEditorSingle(file: FSFile)
     case tagEditorMultiple(files: [FSFile])
-    case moreCloudSync
     case moreAttributions
 }

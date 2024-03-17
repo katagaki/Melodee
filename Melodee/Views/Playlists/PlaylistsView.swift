@@ -25,6 +25,7 @@ struct PlaylistsView: View {
                     ListFolderRow(name: playlist.name)
                 }
             }
+            .listStyle(.plain)
             .navigationTitle("ViewTitle.Playlists")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

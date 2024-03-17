@@ -1,4 +1,5 @@
 {
+  "originHash" : "a2d4f763cc952df0685f34c11a3a61cd4e0c761f7377002035ab8e219265556b",
   "pins" : [
     {
       "identity" : "id3tageditor",
@@ -24,7 +25,7 @@
       "location" : "https://github.com/katagaki/Komponents",
       "state" : {
         "branch" : "main",
-        "revision" : "0e998a9d61416a0744768ef59a2096e142e53eef"
+        "revision" : "51c2c2a3f5eca90d49eafd7567991147b2869e9e"
       }
     },
     {
@@ -64,5 +65,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

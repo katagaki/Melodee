@@ -52,15 +52,14 @@ struct FileBrowserView: View {
                 FBTagSection(files: $files)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
         .overlay {
             if files.count == 0 && currentDirectory == nil {
                 TipView(FBNoFilesTip())
                     .padding(20.0)
             } else if files.count == 0 && state.isInitialLoadCompleted {
-                VStack {
-                    HintOverlay(image: "questionmark.folder", text: "FileBrowser.Hint")
-                }
+                ContentUnavailableView("FileBrowser.Hint", systemImage: "questionmark.folder")
+                    .font(.body)
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0.0) {
@@ -88,27 +87,7 @@ struct FileBrowserView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 HStack {
                     if currentDirectory == nil {
-                        Menu {
-                            Button {
-                                let documentsUrl = FileManager.default.urls(for: .documentDirectory,
-                                                                            in: .userDomainMask).first!
-                                if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
-                                    if UIApplication.shared.canOpenURL(sharedUrl) {
-                                        UIApplication.shared.open(sharedUrl, options: [:])
-                                    }
-                                }
-                            } label: {
-                                Label("Shared.OpenFilesApp", systemImage: "arrow.up.right.square")
-                            }
-                            Divider()
-                            Button {
-                                isSelectingExternalDirectory = true
-                            } label: {
-                                Label("Shared.UseExternalDirectory", systemImage: "plus.rectangle.on.folder")
-                            }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                        }
+                        StorageLocationSelector(isSelectingExternalDirectory: $isSelectingExternalDirectory)
                     }
                 }
             }
@@ -160,18 +139,6 @@ struct FileBrowserView: View {
                 .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
         })
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $isSelectingExternalDirectory) {
-            DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
-                fileManager.directory = url
-                let isAccessSuccessful = url.startAccessingSecurityScopedResource()
-                if isAccessSuccessful {
-                    refreshFiles()
-                } else {
-                    url.stopAccessingSecurityScopedResource()
-                }
-            })
-            .ignoresSafeArea(edges: [.bottom])
-        }
         .onAppear {
             if !state.isInitialLoadCompleted {
                 refreshFiles()
@@ -190,6 +157,17 @@ struct FileBrowserView: View {
             } else {
                 state.newDirectoryName = ""
             }
+        }
+        .onChange(of: fileManager.storageLocation) { _, newValue in
+            switch newValue {
+            case .local:
+                fileManager.directory = fileManager.documentsDirectoryURL
+            case .cloud:
+                fileManager.directory = fileManager.cloudDocumentsDirectoryURL
+            case .external:
+                debugPrint("DocumentPicker's responsibility has been fulfilled")
+            }
+            refreshFiles()
         }
     }
 

@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
+import Komponents
 import SwiftUI
 
 struct NowPlayingView: View {
@@ -34,7 +35,8 @@ struct NowPlayingView: View {
                                 Group {
                                     ActionButton(text: isClearQueueButtonConfirming ?
                                                  "Shared.AreYouSure" : "NowPlaying.ClearQueue",
-                                                 icon: "Clear") {
+                                                 icon: "Clear",
+                                                 isPrimary: false) {
                                         withAnimation(.default.speed(2)) {
                                             if isClearQueueButtonConfirming {
                                                 mediaPlayer.stop()

@@ -266,6 +266,40 @@
         }
       }
     },
+    "Cloud.Stores.Files" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Files"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイル"
+          }
+        }
+      }
+    },
+    "Cloud.Stores.Playlists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playlists"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再生リスト"
+          }
+        }
+      }
+    },
     "FileBrowser.Hint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -375,6 +409,23 @@
         }
       }
     },
+    "More.CloudSync" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Sync"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud同期"
+          }
+        }
+      }
+    },
     "More.General" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -388,23 +439,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一般"
-          }
-        }
-      }
-    },
-    "More.General.CloudSync" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud Sync"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud同期"
           }
         }
       }
@@ -578,6 +612,7 @@
       }
     },
     "Playlists.AddFiles" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -741,6 +776,22 @@
         }
       }
     },
+    "Shared.ExternalFolder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "External Folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外部フォルダー"
+          }
+        }
+      }
+    },
     "Shared.Extract" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -754,6 +805,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "解凍"
+          }
+        }
+      }
+    },
+    "Shared.iCloudDrive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive"
           }
         }
       }
@@ -854,6 +921,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "確認"
+          }
+        }
+      }
+    },
+    "Shared.OnMyDevice" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "On My iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "On My iPhone"
+                }
+              }
+            }
+          }
+        },
+        "ja" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "このiPad内"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "このiPhone内"
+                }
+              }
+            }
           }
         }
       }
@@ -1073,22 +1180,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "アーティスト名なし"
-          }
-        }
-      }
-    },
-    "Shared.UseExternalDirectory" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open External Folder"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "外部フォルダーを開く"
           }
         }
       }

@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2024/03/16.
 //
 
+import Komponents
 import SwiftUI
 
 struct PlaylistView: View {
@@ -17,19 +18,25 @@ struct PlaylistView: View {
 
     var body: some View {
         List {
-            ForEach(playlist.playlistItems(), id: \.id) { playlistItem in
-                ListFileRow(file: .constant(FSFile(name: playlistItem.path,
-                                                   extension: "mp3",
-                                                   path: playlistItem.path,
-                                                   type: .audio)))
+            Section {
+                ForEach(playlist.playlistItems(), id: \.id) { playlistItem in
+                    ListFileRow(file: .constant(FSFile(name: playlistItem.path,
+                                                       extension: "mp3",
+                                                       path: playlistItem.path,
+                                                       type: .audio)))
+                }
             }
-            Button {
-                playlistIDToAddFileTo = playlist.id
-                isSelectingFileToAdd = true
-            } label: {
-                Label("Playlists.AddFiles", systemImage: "plus")
+            Section {
+                ActionButton(text: "Playlists.AddFiles", icon: "plus", isPrimary: false) {
+                    playlistIDToAddFileTo = playlist.id
+                    isSelectingFileToAdd = true
+                }
+                .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+                .listRowSeparator(.hidden, edges: .bottom)
             }
         }
+        .listStyle(.plain)
+        .navigationTitle(playlist.name)
         .sheet(isPresented: $isSelectingFileToAdd) {
             DocumentPicker(allowedUTIs: [.audio], onDocumentPicked: { url in
                 let isAccessSuccessful = url.startAccessingSecurityScopedResource()

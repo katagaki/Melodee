@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/12.
 //
 
+import Komponents
 import SwiftUI
 
 struct FBPlaybackSection: View {
@@ -16,6 +17,14 @@ struct FBPlaybackSection: View {
 
     var body: some View {
         Section {
+            Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
+                .font(.largeTitle)
+                .textCase(.none)
+                .bold()
+                .foregroundColor(.primary)
+                .listRowSeparator(.hidden, edges: .top)
+                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                .textSelection(.enabled)
             HStack(alignment: .center, spacing: 8.0) {
                 Group {
                     ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
@@ -27,7 +36,7 @@ struct FBPlaybackSection: View {
                         }
                         mediaPlayer.play()
                     }
-                    ActionButton(text: "Shared.Shuffle", icon: "Shuffle") {
+                    ActionButton(text: "Shared.Shuffle", icon: "Shuffle", isPrimary: false) {
                         mediaPlayer.stop()
                         var filesReordered: [FSFile] = []
                         for file in files {
@@ -45,18 +54,10 @@ struct FBPlaybackSection: View {
                 .frame(maxWidth: .infinity)
                 .disabled(!folderContainsPlayableAudio())
             }
-            .listRowInsets(EdgeInsets())
-            .listRowBackground(Color.clear)
+            .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
+            .listRowSeparator(.hidden, edges: .bottom)
             .buttonStyle(.plain)
             .frame(maxWidth: .infinity)
-        } header: {
-            Text(currentDirectory?.name ?? NSLocalizedString("ViewTitle.Files", comment: ""))
-                .font(.largeTitle)
-                .textCase(.none)
-                .bold()
-                .foregroundColor(.primary)
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
-                .textSelection(.enabled)
         }
     }
 

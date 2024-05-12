@@ -292,7 +292,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このフォルダーに対応できるファイルはありません。"
+            "value" : "このフォルダーに対応できるファイルがありません。"
           }
         }
       }
@@ -946,7 +946,7 @@
       }
     },
     "Shared.OpenFilesApp" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1633,23 +1633,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル名の最前にあるトラック番号に変換します。\n例えば、「【１】花の塔.mp3」の場合、「1」になります。"
-          }
-        }
-      }
-    },
-    "ViewTitle.Attributions" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attributions"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "著者権表記"
           }
         }
       }

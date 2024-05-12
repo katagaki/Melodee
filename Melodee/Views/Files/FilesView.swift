@@ -19,6 +19,8 @@ struct FilesView: View {
     @State var isCreatingPlaylist: Bool = false
     @State var newPlaylistName: String = ""
 
+    @State var forceRefreshFlag: Bool = false
+
     var body: some View {
         @Bindable var playlistManager = playlistManager
         NavigationStack(path: $navigationManager.filesTabPath) {
@@ -74,6 +76,9 @@ struct FilesView: View {
                 }
             }
             .navigationTitle("ViewTitle.Files")
+            .refreshable {
+                forceRefreshFlag.toggle()
+            }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .fileBrowser(let directory, let storageLocation):

@@ -9,5 +9,5 @@ import Foundation
 
 @Observable
 class NowPlayingBarManager {
-    var keyboardShowing: Bool = false
+    var isKeyboardShowing: Bool = false
 }

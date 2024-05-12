@@ -136,7 +136,7 @@ struct TagEditorView: View {
                 .frame(minHeight: 56.0)
                 .padding([.leading, .trailing], 16.0)
                 Color.clear
-                    .frame(height: nowPlayingBarManager.keyboardShowing ? 0.0 : 56.0)
+                    .frame(height: nowPlayingBarManager.isKeyboardShowing ? 0.0 : 56.0)
                     .padding(.top)
             }
         }
@@ -209,12 +209,12 @@ struct TagEditorView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
             withAnimation(.easeOut) {
-                nowPlayingBarManager.keyboardShowing = true
+                nowPlayingBarManager.isKeyboardShowing = true
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
             withAnimation(.easeOut) {
-                nowPlayingBarManager.keyboardShowing = false
+                nowPlayingBarManager.isKeyboardShowing = false
             }
         }
     }

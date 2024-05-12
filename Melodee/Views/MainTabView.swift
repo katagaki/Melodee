@@ -34,7 +34,7 @@ struct MainTabView: View {
             .toolbarBackground(.hidden, for: .tabBar)
             .overlay {
                 ZStack(alignment: .bottom) {
-                    if !nowPlayingBarManager.keyboardShowing {
+                    if !nowPlayingBarManager.isKeyboardShowing {
                         Color.clear
                         Color.clear
                             .frame(maxWidth: .infinity, minHeight: 62.0, maxHeight: 62.0)
@@ -45,7 +45,7 @@ struct MainTabView: View {
         }
         .overlay {
             ZStack(alignment: .bottom) {
-                if !nowPlayingBarManager.keyboardShowing {
+                if !nowPlayingBarManager.isKeyboardShowing {
                     Color.clear
                     NowPlayingBar()
                         .contentShape(Rectangle())

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TextViewerView: View {
 
+    @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
+
     @State var file: FSFile
     @State var text: String = ""
 
@@ -16,8 +18,10 @@ struct TextViewerView: View {
         TextEditor(text: .constant(text))
             .navigationTitle(file.name)
             .safeAreaInset(edge: .bottom) {
-                Color.clear
-                    .frame(height: 56.0)
+                if !nowPlayingBarManager.isKeyboardShowing {
+                    Color.clear
+                        .frame(height: 56.0)
+                }
             }
             .onAppear {
                 do {
@@ -28,6 +32,16 @@ struct TextViewerView: View {
                     }
                 } catch {
                     debugPrint(error.localizedDescription)
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                withAnimation(.easeOut) {
+                    nowPlayingBarManager.isKeyboardShowing = true
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                withAnimation(.easeOut) {
+                    nowPlayingBarManager.isKeyboardShowing = false
                 }
             }
     }

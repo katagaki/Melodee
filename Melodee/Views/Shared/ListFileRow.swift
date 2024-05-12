@@ -57,16 +57,27 @@ struct ListFileRow: View {
         }
         .task {
             if !isThumbnailFetchCompleted {
-                if file.extension == "mp3" {
-                    let albumArt = await albumArt()
-                    withAnimation(.default.speed(2)) {
-                        self.thumbnail = albumArt
-                    }
-                } else if file.type == .image {
-                    if let thumbnail = await UIImage(contentsOfFile: file.path)?
-                        .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
-                        withAnimation(.default.speed(2)) {
-                            self.thumbnail = thumbnail
+                Task.detached {
+                    let fileURL: URL = URL(filePath: file.path)
+                    if file.extension == "mp3" {
+                        NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
+                            Task {
+                                let albumArt = await albumArt(at: url)
+                                withAnimation(.default.speed(2)) {
+                                    self.thumbnail = albumArt
+                                }
+                            }
+                        }
+                    } else if file.type == .image {
+                        NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
+                            Task {
+                                if let thumbnail = await UIImage(contentsOfFile: url.path(percentEncoded: false))?
+                                    .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
+                                    withAnimation(.default.speed(2)) {
+                                        self.thumbnail = thumbnail
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -75,9 +86,9 @@ struct ListFileRow: View {
         }
     }
 
-    func albumArt() async -> UIImage {
+    func albumArt(at url: URL) async -> UIImage {
         do {
-            let playerItem = AVPlayerItem(url: URL(filePath: file.path))
+            let playerItem = AVPlayerItem(url: url)
             let metadataList = try await playerItem.asset.load(.metadata)
             for item in metadataList {
                 switch item.commonKey {

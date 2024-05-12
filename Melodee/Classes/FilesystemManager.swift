@@ -48,26 +48,24 @@ class FilesystemManager {
                 let filesStaged: [any FilesystemObject] = try manager
                     .contentsOfDirectory(at: directory,
                                          includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
-                                         options: [.skipsHiddenFiles]).compactMap { url in
+                                         options: []).compactMap { url in
                         if url.hasDirectoryPath {
                             return FSDirectory(name: url.lastPathComponent,
                                                path: url.path,
                                                files: files(in: url))
                         } else {
-                            let fileExtension = url.pathExtension.lowercased()
-                            var file = FSFile(name: url.deletingPathExtension().lastPathComponent,
-                                              extension: url.pathExtension.lowercased(),
-                                              path: url.path,
+                            // Get actual path for dataless files
+                            let fileURL: URL = fileURL(for: url)
+                            var file = FSFile(name: fileURL.deletingPathExtension().lastPathComponent,
+                                              extension: fileURL.pathExtension.lowercased(),
+                                              path: fileURL.path,
                                               type: .notSet)
-                            switch fileExtension {
-                            case "mp3", "m4a", "wav", "alac": file.type = .audio
-                            case "png", "jpg", "jpeg", "tif", "tiff", "heic": file.type = .image
-                            case "txt": file.type = .text
-                            case "pdf": file.type = .pdf
-                            case "zip": file.type = .zip
-                            default: return nil
+                            if let fileType = fileType(for: fileURL) {
+                                file.type = fileType
+                                return file
+                            } else {
+                                return nil
                             }
-                            return file
                         }
                     }
                 // Sort folders above files
@@ -88,6 +86,29 @@ class FilesystemManager {
             debugPrint(error.localizedDescription)
         }
         return []
+    }
+
+    func fileURL(for url: URL) -> URL {
+        var fileName: String = url.lastPathComponent
+        if fileName.hasPrefix(".") && fileName.hasSuffix(".icloud") {
+            let fromIndex = fileName.index(fileName.startIndex, offsetBy: 1)
+            let toIndex = fileName.index(fileName.endIndex, offsetBy: -7)
+            fileName = String(fileName[fromIndex..<toIndex])
+        }
+        return url.deletingLastPathComponent().appending(path: fileName)
+    }
+
+    func fileType(for url: URL) -> FileType? {
+        let fileExtension = url.pathExtension.lowercased()
+        switch fileExtension {
+        case "mp3", "m4a", "wav", "alac": return .audio
+        case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
+        case "txt": return .text
+        case "pdf": return .pdf
+        case "zip": return .zip
+        case "icloud": return fileType(for: url.deletingPathExtension())
+        default: return nil
+        }
     }
 
     func createDirectory(at directoryPath: String) {

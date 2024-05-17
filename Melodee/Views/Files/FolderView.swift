@@ -1,14 +1,15 @@
 //
-//  FBFolderView.swift
+//  FolderView.swift
 //  Melodee
 //
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
+import Komponents
 import SwiftUI
 import TipKit
 
-struct FBFolderView: View {
+struct FolderView: View {
 
     @EnvironmentObject var navigationManager: NavigationManager
     @Environment(FilesystemManager.self) var fileManager
@@ -21,10 +22,74 @@ struct FBFolderView: View {
 
     var overrideStorageLocation: StorageLocation?
 
+    let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
+            .filter {$0.activationState == .foregroundActive }
+            .map {$0 as? UIWindowScene }
+            .compactMap { $0 }
+            .first?.windows
+            .filter({ $0.isKeyWindow }).first?
+            .windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+    @State var heightOfTitle: CGFloat = 1.0
+    @State var scrollOffset: CGFloat = 0.0
+
     var body: some View {
         List {
-            FBPlaybackSection(currentDirectory: $currentDirectory,
-                                 files: $files)
+            Section {
+                Text(viewTitle())
+                .font(.largeTitle)
+                .textCase(.none)
+                .bold()
+                .foregroundColor(.primary)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                .textSelection(.enabled)
+                .background {
+                    GeometryReader { geometry in
+                        DispatchQueue.main.async {
+                            withAnimation {
+                                scrollOffset = geometry.frame(in: .global).minY - statusBarHeight - 51.0
+                                heightOfTitle = geometry.frame(in: .local).height
+                            }
+                        }
+                        return Color.clear
+                    }
+                }
+                HStack(alignment: .center, spacing: 8.0) {
+                    Group {
+                        ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
+                            mediaPlayer.stop()
+                            for file in files {
+                                if let file = file as? FSFile, file.type == .audio {
+                                    mediaPlayer.queueLast(file: file)
+                                }
+                            }
+                            mediaPlayer.play()
+                        }
+                        ActionButton(text: "Shared.Shuffle", icon: "Shuffle", isPrimary: false) {
+                            mediaPlayer.stop()
+                            var filesReordered: [FSFile] = []
+                            for file in files {
+                                if let file = file as? FSFile, file.type == .audio {
+                                    filesReordered.append(file)
+                                }
+                            }
+                            filesReordered = filesReordered.shuffled()
+                            for file in filesReordered {
+                                mediaPlayer.queueLast(file: file)
+                            }
+                            mediaPlayer.play()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .disabled(!folderContainsPlayableAudio())
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
+                .alignmentGuide(.listRowSeparatorLeading) { _ in
+                    return 0.0
+                }
+                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
+            }
             Section {
                 ForEach($files, id: \.path) { $file in
                     Group {
@@ -56,9 +121,17 @@ struct FBFolderView: View {
         }
         .listStyle(.plain)
         .toolbar {
-            // HACK: Prevent weird animation when going from view to view
             ToolbarItem(placement: .topBarTrailing) {
+                // HACK: Prevent weird animation when going from view to view
                 HStack { }
+            }
+            ToolbarItem(placement: .principal) {
+                Text(viewTitle())
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .bold()
+                    .opacity(scrollOffset <= -heightOfTitle ? 1 : 0)
+                    .transition(.opacity.animation(.default.speed(0.2)))
             }
         }
         .overlay {
@@ -173,6 +246,20 @@ struct FBFolderView: View {
         }
     }
 
+    func viewTitle() -> String {
+        switch fileManager.storageLocation {
+        case .cloud:
+            return currentDirectory?.name ??
+            NSLocalizedString("Shared.iCloudDrive", comment: "")
+        case .local:
+            return currentDirectory?.name ?? 
+            NSLocalizedString("Shared.OnMyDevice", comment: "")
+        case .external:
+            return fileManager.directory?.lastPathComponent ??
+            NSLocalizedString("ViewTitle.Files", comment: "")
+        }
+    }
+
     func refreshFiles() {
         withAnimation {
             self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
@@ -213,5 +300,4 @@ struct FBFolderView: View {
     func folderContainsEditableMP3s() -> Bool {
         files.contains { ($0 as? FSFile)?.extension == "mp3" }
     }
-
 }

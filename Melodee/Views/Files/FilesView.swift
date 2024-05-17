@@ -82,7 +82,7 @@ struct FilesView: View {
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .fileBrowser(let directory, let storageLocation):
-                    FBFolderView(currentDirectory: directory, overrideStorageLocation: storageLocation)
+                    FolderView(currentDirectory: directory, overrideStorageLocation: storageLocation)
                 case .imageViewer(let file): ImageViewerView(file: file)
                 case .textViewer(let file): TextViewerView(file: file)
                 case .pdfViewer(let file): PDFViewerView(file: file)

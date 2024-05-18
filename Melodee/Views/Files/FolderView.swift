@@ -54,6 +54,7 @@ struct FolderView: View {
                         return Color.clear
                     }
                 }
+                .opacity(scrollOffset > -heightOfTitle ? 1 : 0)
                 HStack(alignment: .center, spacing: 8.0) {
                     Group {
                         ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {

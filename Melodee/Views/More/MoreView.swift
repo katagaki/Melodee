@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MoreView: View {
 
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var navigationManager: NavigationManager
 
     @AppStorage(wrappedValue: false, "CloudStoresPlaylists") var storePlaylistsInCloud: Bool
@@ -38,6 +39,7 @@ struct MoreView: View {
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isPendingMoveToiCloudPrompt) {
                 MoreMoveToCloudView(storeFilesInCloud: $storeFilesInCloud)
                     .interactiveDismissDisabled()
@@ -213,6 +215,13 @@ THE SOFTWARE.
                 default: Color.clear
                 }
             })
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    CloseButton {
+                        dismiss()
+                    }
+                }
+            }
             .onChange(of: storeFilesInCloud) { oldValue, newValue in
                 if !oldValue && newValue {
                     isPendingMoveToiCloudPrompt = true

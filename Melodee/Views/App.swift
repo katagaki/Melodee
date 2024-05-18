@@ -10,7 +10,6 @@ import SwiftUI
 @main
 struct MelodeeApp: App {
 
-    @StateObject var tabManager: TabManager = TabManager()
     @StateObject var navigationManager: NavigationManager = NavigationManager()
     @State var fileManager: FilesystemManager = FilesystemManager()
     @State var playlistManager: PlaylistManager = PlaylistManager()
@@ -24,7 +23,6 @@ struct MelodeeApp: App {
                     debugPrint("Creating placeholder files")
                     fileManager.createPlaceholders()
                 }
-                .environmentObject(tabManager)
                 .environmentObject(navigationManager)
                 .environment(fileManager)
                 .environment(playlistManager)

@@ -19,7 +19,6 @@
 		E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845C2AAF38B600D87A5F /* MainTabView.swift */; };
 		E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845E2AAF38D800D87A5F /* TabType.swift */; };
 		E43C84622AAF391200D87A5F /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84612AAF391200D87A5F /* MoreView.swift */; };
-		E43C846D2AAF39EA00D87A5F /* TabManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C846C2AAF39EA00D87A5F /* TabManager.swift */; };
 		E43C84702AAF3EE100D87A5F /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C846F2AAF3EE100D87A5F /* NowPlayingView.swift */; };
 		E43C84722AAF708500D87A5F /* MusicProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */; };
 		E43C84742AAF901900D87A5F /* NPQueueTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84732AAF901900D87A5F /* NPQueueTip.swift */; };
@@ -95,7 +94,6 @@
 		E43C845C2AAF38B600D87A5F /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		E43C845E2AAF38D800D87A5F /* TabType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabType.swift; sourceTree = "<group>"; };
 		E43C84612AAF391200D87A5F /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
-		E43C846C2AAF39EA00D87A5F /* TabManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabManager.swift; sourceTree = "<group>"; };
 		E43C846F2AAF3EE100D87A5F /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicProgressSlider.swift; sourceTree = "<group>"; };
 		E43C84732AAF901900D87A5F /* NPQueueTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPQueueTip.swift; sourceTree = "<group>"; };
@@ -315,7 +313,6 @@
 				E4A4D6702AAEF39B0062D12C /* NavigationManager.swift */,
 				E414A5512BA5BC7700C7903E /* NowPlayingBarManager.swift */,
 				E414A54B2B9DD2A300C7903E /* PlaylistManager.swift */,
-				E43C846C2AAF39EA00D87A5F /* TabManager.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -565,7 +562,6 @@
 				E4A4D66F2AAEF36D0062D12C /* ListFileRow.swift in Sources */,
 				E4A4D66C2AAEF2E30062D12C /* FBNoFilesTip.swift in Sources */,
 				E48AE70E2B9D845800DAC2D2 /* Playlist.swift in Sources */,
-				E43C846D2AAF39EA00D87A5F /* TabManager.swift in Sources */,
 				E43C84932AB00FF200D87A5F /* LargeButtonLabel.swift in Sources */,
 				E4DB2A552AB350F500C5810D /* PDFViewerView.swift in Sources */,
 				E414A55A2BA6E39300C7903E /* MoreMoveToCloudView.swift in Sources */,

@@ -11,27 +11,14 @@ import TipKit
 
 struct MainTabView: View {
 
-    @EnvironmentObject var tabManager: TabManager
     @EnvironmentObject var navigationManager: NavigationManager
     @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
 
     @State var isNowPlayingSheetPresented: Bool = false
 
     var body: some View {
-        TabView(selection: $tabManager.selectedTab) {
-            Group {
-                FilesView()
-                .tabItem {
-                    Label("TabTitle.Files", image: "Tab.FileBrowser")
-                }
-                .tag(TabType.fileManager)
-                MoreView()
-                    .tabItem {
-                        Label("TabTitle.More", systemImage: "ellipsis")
-                    }
-                    .tag(TabType.more)
-            }
-            .toolbarBackground(.hidden, for: .tabBar)
+        ZStack {
+            FilesView()
             .overlay {
                 ZStack(alignment: .bottom) {
                     if !nowPlayingBarManager.isKeyboardShowing {
@@ -60,7 +47,6 @@ struct MainTabView: View {
                                     }
                                 }
                         )
-                        .safeAreaPadding(.bottom, 50.0)
                 }
             }
         }
@@ -74,11 +60,5 @@ struct MainTabView: View {
                 .datastoreLocation(.applicationDefault)
             ])
         }
-        .onReceive(tabManager.$selectedTab, perform: { newValue in
-            if newValue == tabManager.previouslySelectedTab {
-                navigationManager.popToRoot(for: newValue)
-            }
-            tabManager.previouslySelectedTab = newValue
-        })
     }
 }

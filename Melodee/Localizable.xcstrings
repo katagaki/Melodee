@@ -805,6 +805,23 @@
         }
       }
     },
+    "Shared.More" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "その他"
+          }
+        }
+      }
+    },
     "Shared.NewDirectoryName" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1212,40 +1229,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "はい"
-          }
-        }
-      }
-    },
-    "TabTitle.Files" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Files"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ファイル"
-          }
-        }
-      }
-    },
-    "TabTitle.More" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "その他"
           }
         }
       }

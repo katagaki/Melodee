@@ -13,7 +13,9 @@ struct FilesView: View {
     @EnvironmentObject var navigationManager: NavigationManager
     @Environment(FilesystemManager.self) var fileManager
     @Environment(PlaylistManager.self) var playlistManager
+    @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
 
+    @State var isPresentingMoreSheet: Bool = false
     @State var isSelectingExternalDirectory: Bool = false
 
     @State var isCreatingPlaylist: Bool = false
@@ -92,6 +94,11 @@ struct FilesView: View {
                 default: Color.clear
                 }
             })
+            .sheet(isPresented: $isPresentingMoreSheet) {
+                MoreView()
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
+            }
             .sheet(isPresented: $isSelectingExternalDirectory) {
                 DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
                     fileManager.directory = url
@@ -116,6 +123,15 @@ struct FilesView: View {
                     newPlaylistName = ""
                 }
             })
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isPresentingMoreSheet = true
+                    } label: {
+                        Label("Shared.More", systemImage: "ellipsis.circle")
+                    }
+                }
+            }
             .onChange(of: isCreatingPlaylist) { oldValue, newValue in
                 if oldValue && !newValue {
                     if newPlaylistName != "" {

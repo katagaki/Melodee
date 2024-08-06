@@ -21,7 +21,8 @@ struct MoreView: View {
     var body: some View {
         NavigationStack(path: $navigationManager.moreTabPath) {
             MoreList(repoName: "katagaki/Melodee", viewPath: ViewPath.moreAttributions) {
-                if FileManager.default.ubiquityIdentityToken != nil {
+                // TODO: Implement playlists
+                if false && FileManager.default.ubiquityIdentityToken != nil {
                     Section {
                         Toggle(isOn: $storeFilesInCloud, label: {
                             ListRow(image: "ListIcon.Cloud.Files",

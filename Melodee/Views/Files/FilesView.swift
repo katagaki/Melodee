@@ -58,21 +58,23 @@ struct FilesView: View {
                         ListRow(image: "ListIcon.Files", title: "Shared.OpenFilesApp")
                     }
                 }
-                Section {
-                    ForEach(playlistManager.playlists, id: \.id) { playlist in
-                        NavigationLink(value: ViewPath.playlist(playlist: playlist)) {
-                            Label(playlist.name, systemImage: "music.note.list")
+                if false {
+                    Section {
+                        ForEach(playlistManager.playlists, id: \.id) { playlist in
+                            NavigationLink(value: ViewPath.playlist(playlist: playlist)) {
+                                Label(playlist.name, systemImage: "music.note.list")
+                            }
                         }
-                    }
-                } header: {
-                    HStack(alignment: .center, spacing: 8.0) {
-                        ListSectionHeader(text: "Shared.Playlists")
-                            .font(.body)
-                        Spacer()
-                        Button {
-                            isCreatingPlaylist = true
-                        } label: {
-                            Image(systemName: "plus")
+                    } header: {
+                        HStack(alignment: .center, spacing: 8.0) {
+                            ListSectionHeader(text: "Shared.Playlists")
+                                .font(.body)
+                            Spacer()
+                            Button {
+                                isCreatingPlaylist = true
+                            } label: {
+                                Image(systemName: "plus")
+                            }
                         }
                     }
                 }

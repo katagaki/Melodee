@@ -52,7 +52,6 @@ struct NPQueueSection: View {
         } header: {
             HStack(alignment: .center, spacing: 8.0) {
                 ListSectionHeader(text: "Shared.Queue")
-                    .font(.body)
                     .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 Spacer()
                 EditButton()

@@ -43,7 +43,6 @@ struct FilesView: View {
                     }
                 } header: {
                     ListSectionHeader(text: "Shared.StorageLocations")
-                        .font(.body)
                 }
                 Section {
                     Button {
@@ -58,6 +57,11 @@ struct FilesView: View {
                         ListRow(image: "ListIcon.Files", title: "Shared.OpenFilesApp")
                     }
                 }
+                Section {
+                    
+                } header: {
+                    ListSectionHeader(text: "Shared.RecentFiles")
+                }
                 if false {
                     Section {
                         ForEach(playlistManager.playlists, id: \.id) { playlist in
@@ -68,7 +72,6 @@ struct FilesView: View {
                     } header: {
                         HStack(alignment: .center, spacing: 8.0) {
                             ListSectionHeader(text: "Shared.Playlists")
-                                .font(.body)
                             Spacer()
                             Button {
                                 isCreatingPlaylist = true

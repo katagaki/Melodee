@@ -36,7 +36,6 @@ struct MoreView: View {
                         })
                     } header: {
                         ListSectionHeader(text: "More.CloudSync")
-                            .font(.body)
                     }
                 }
             }

@@ -28,7 +28,6 @@ struct TEAvailableTokensSection: View {
         } header: {
             VStack(alignment: .leading, spacing: 2.0) {
                 ListSectionHeader(text: "TagEditor.Tokens.Title")
-                    .font(.body)
             }
         }
     }

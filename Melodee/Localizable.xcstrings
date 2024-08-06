@@ -1115,6 +1115,23 @@
         }
       }
     },
+    "Shared.RecentFiles" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recent Files"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近再生したファイル"
+          }
+        }
+      }
+    },
     "Shared.Rename" : {
       "extractionState" : "manual",
       "localizations" : {

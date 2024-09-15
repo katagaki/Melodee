@@ -63,26 +63,24 @@ struct FilesView: View {
                 } header: {
                     ListSectionHeader(text: "Shared.RecentFiles")
                 }
-                #endif
-                if false {
-                    Section {
-                        ForEach(playlistManager.playlists, id: \.id) { playlist in
-                            NavigationLink(value: ViewPath.playlist(playlist: playlist)) {
-                                Label(playlist.name, systemImage: "music.note.list")
-                            }
+                Section {
+                    ForEach(playlistManager.playlists, id: \.id) { playlist in
+                        NavigationLink(value: ViewPath.playlist(playlist: playlist)) {
+                            Label(playlist.name, systemImage: "music.note.list")
                         }
-                    } header: {
-                        HStack(alignment: .center, spacing: 8.0) {
-                            ListSectionHeader(text: "Shared.Playlists")
-                            Spacer()
-                            Button {
-                                isCreatingPlaylist = true
-                            } label: {
-                                Image(systemName: "plus")
-                            }
+                    }
+                } header: {
+                    HStack(alignment: .center, spacing: 8.0) {
+                        ListSectionHeader(text: "Shared.Playlists")
+                        Spacer()
+                        Button {
+                            isCreatingPlaylist = true
+                        } label: {
+                            Image(systemName: "plus")
                         }
                     }
                 }
+                #endif
             }
             .navigationTitle("ViewTitle.Files")
             .refreshable {

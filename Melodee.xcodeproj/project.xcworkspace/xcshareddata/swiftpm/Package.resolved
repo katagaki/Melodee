@@ -25,7 +25,7 @@
       "location" : "https://github.com/katagaki/Komponents",
       "state" : {
         "branch" : "main",
-        "revision" : "90ed7e77031d4d4deb77b2aef7271f847c110f1e"
+        "revision" : "cb0a6a60bc091627c11e6eca511279414fd1d45e"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
-        "revision" : "b979e8b52c7ae7f3f39fa0182e738e9e7257eb78",
-        "version" : "0.9.18"
+        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+        "version" : "0.9.19"
       }
     },
     {

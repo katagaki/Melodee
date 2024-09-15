@@ -57,11 +57,13 @@ struct FilesView: View {
                         ListRow(image: "ListIcon.Files", title: "Shared.OpenFilesApp")
                     }
                 }
+                #if DEBUG
                 Section {
                     
                 } header: {
                     ListSectionHeader(text: "Shared.RecentFiles")
                 }
+                #endif
                 if false {
                     Section {
                         ForEach(playlistManager.playlists, id: \.id) { playlist in

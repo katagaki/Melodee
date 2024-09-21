@@ -19,27 +19,27 @@ struct TETagDataSection: View {
     var body: some View {
         Section {
             if let focusedField = focusedField {
-                ListInputRow(title: "Tag.Title", placeholder: placeholder,
-                              value: $tagData.title, focusedFieldValue: .title, focusedField: focusedField)
-                ListInputRow(title: "Tag.Artist", placeholder: placeholder,
-                              value: $tagData.artist, focusedFieldValue: .artist, focusedField: focusedField)
-                ListInputRow(title: "Tag.Album", placeholder: placeholder,
-                              value: $tagData.album, focusedFieldValue: .album, focusedField: focusedField)
-                ListInputRow(title: "Tag.AlbumArtist", placeholder: placeholder,
-                              value: $tagData.albumArtist, focusedFieldValue: .albumArtist, focusedField: focusedField)
-                ListInputRow(title: "Tag.Year", placeholder: placeholder,
-                              value: $tagData.year, focusedFieldValue: .year, focusedField: focusedField)
+                ListInputRow(title: "Tag.Title", value: $tagData.title,
+                             focusedFieldValue: .title, focusedField: focusedField)
+                ListInputRow(title: "Tag.Artist", value: $tagData.artist,
+                             focusedFieldValue: .artist, focusedField: focusedField)
+                ListInputRow(title: "Tag.Album", value: $tagData.album,
+                             focusedFieldValue: .album, focusedField: focusedField)
+                ListInputRow(title: "Tag.AlbumArtist", value: $tagData.albumArtist,
+                             focusedFieldValue: .albumArtist, focusedField: focusedField)
+                ListInputRow(title: "Tag.Year", value: $tagData.year,
+                             focusedFieldValue: .year, focusedField: focusedField)
                 .keyboardType(.numberPad)
-                ListInputRow(title: "Tag.TrackNumber", placeholder: placeholder,
-                              value: $tagData.track, focusedFieldValue: .trackNumber, focusedField: focusedField)
+                ListInputRow(title: "Tag.TrackNumber", value: $tagData.track,
+                             focusedFieldValue: .trackNumber, focusedField: focusedField)
                 .keyboardType(.numberPad)
-                ListInputRow(title: "Tag.Genre", placeholder: placeholder,
-                              value: $tagData.genre, focusedFieldValue: .genre, focusedField: focusedField)
+                ListInputRow(title: "Tag.Genre", value: $tagData.genre,
+                             focusedFieldValue: .genre, focusedField: focusedField)
                 .keyboardType(.asciiCapable)
-                ListInputRow(title: "Tag.Composer", placeholder: placeholder,
-                              value: $tagData.composer, focusedFieldValue: .composer, focusedField: focusedField)
-                ListInputRow(title: "Tag.DiscNumber", placeholder: placeholder,
-                              value: $tagData.discNumber, focusedFieldValue: .discNumber, focusedField: focusedField)
+                ListInputRow(title: "Tag.Composer", value: $tagData.composer,
+                             focusedFieldValue: .composer, focusedField: focusedField)
+                ListInputRow(title: "Tag.DiscNumber", value: $tagData.discNumber,
+                             focusedFieldValue: .discNumber, focusedField: focusedField)
                 .keyboardType(.numberPad)
             } else {
                 ListDetailRow(title: "Tag.Title", value: tagData.title)
@@ -61,19 +61,25 @@ struct TETagDataSection: View {
             }
         }
         .onReceive(Just(tagData.year)) { _ in
-            tagData.year = tagData.year.filter({ $0.isNumber })
-            tagData.year = String(tagData.year.prefix(4))
+            if let year = tagData.year {
+                tagData.year = year.filter({ $0.isNumber })
+                tagData.year = String(year.prefix(4))
+            }
         }
         .onReceive(Just(tagData.track)) { _ in
-            if tagData.track != "%TRACKNUMBER%" {
-                tagData.track = tagData.track.filter({ $0.isNumber })
+            if let track = tagData.track, tagData.track != "%TRACKNUMBER%" {
+                tagData.track = track.filter({ $0.isNumber })
             }
         }
         .onReceive(Just(tagData.genre)) { _ in
-            tagData.genre = tagData.genre.filter({ $0.isLetter || $0.isWhitespace })
+            if let genre = tagData.genre {
+                tagData.genre = genre.filter({ $0.isLetter || $0.isWhitespace })
+            }
         }
         .onReceive(Just(tagData.discNumber)) { _ in
-            tagData.discNumber = tagData.discNumber.filter({ $0.isNumber })
+            if let discNumber = tagData.discNumber {
+                tagData.discNumber = discNumber.filter({ $0.isNumber })
+            }
         }
     }
 }

@@ -59,9 +59,10 @@ extension ID3Tag {
                 tagBuilder = tagBuilder.recordingYear(frame: ID3FrameWithIntegerContent(value: value))
             }
             // Build track frame
-            if let frame = id3Frame(tagData.track, returns: ID3FramePartOfTotal.self, referencing: file) {
+            if let frame = id3Frame(tagData.track, returns: ID3FramePartOfTotal.self, referencing: file),
+                frame.part != -999999 {
                 tagBuilder = tagBuilder.trackPosition(frame: frame)
-            } else if let value = ID3TagContentReader(id3Tag: self).trackPosition() {
+            } else if tagData.track == nil, let value = ID3TagContentReader(id3Tag: self).trackPosition() {
                 tagBuilder = tagBuilder.trackPosition(frame: id3Frame(value.position, total: value.total))
             }
             // Build genre frame
@@ -107,12 +108,12 @@ extension ID3Tag {
     // swiftlint:enable cyclomatic_complexity function_body_length
 
     // swiftlint:disable cyclomatic_complexity
-    func id3Frame<T>(_ value: String,
+    func id3Frame<T>(_ value: String?,
                      returns type: T.Type,
                      referencing file: FSFile? = nil) -> T? {
         switch type {
         case is ID3FrameWithStringContent.Type:
-            if value != "" {
+            if let value {
                 if let file = file {
                     return ID3FrameWithStringContent(content: replaceTokens(value, file: file)) as? T
                 } else {
@@ -120,19 +121,23 @@ extension ID3Tag {
                 }
             }
         case is ID3FrameWithIntegerContent.Type:
-            if value != "", let int = Int(value) {
-                return ID3FrameWithIntegerContent(value: int) as? T
-            } else if value != "", let file = file, let int = Int(replaceTokens(value, file: file)) {
-                return ID3FrameWithIntegerContent(value: int) as? T
+            if let value {
+                if let int = Int(value) {
+                    return ID3FrameWithIntegerContent(value: int) as? T
+                } else {
+                    return ID3FrameWithIntegerContent(value: nil) as? T
+                }
             }
         case is ID3FramePartOfTotal.Type:
-            if value != "", let int = Int(value) {
-                return ID3FramePartOfTotal(part: int, total: nil) as? T
-            } else if value != "", let file = file, let int = Int(replaceTokens(value, file: file)) {
-                return ID3FramePartOfTotal(part: int, total: nil) as? T
+            if let value {
+                if value != "", let int = Int(value) {
+                    return ID3FramePartOfTotal(part: int, total: nil) as? T
+                } else {
+                    return ID3FramePartOfTotal(part: -999999, total: nil) as? T
+                }
             }
         case is ID3FrameGenre.Type:
-            if value != "" {
+            if let value {
                 return ID3FrameGenre(genre: nil, description: value) as? T
             }
         default: break

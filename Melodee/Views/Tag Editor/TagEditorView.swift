@@ -104,10 +104,10 @@ struct TagEditorView: View {
                     if saveState == .notSaved {
                         DispatchQueue.global(qos: .background).async {
                             Task {
-                                changeSaveState(to: .saving)
+                                await changeSaveState(to: .saving)
                                 await saveAllTagData()
                                 await readAllTagData()
-                                changeSaveState(to: .saved)
+                                await changeSaveState(to: .saved)
                             }
                         }
                     }

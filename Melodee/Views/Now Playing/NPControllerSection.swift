@@ -6,7 +6,6 @@
 //
 
 import AVKit
-import MarqueeText
 import SwiftUI
 
 struct NPControllerSection: View {

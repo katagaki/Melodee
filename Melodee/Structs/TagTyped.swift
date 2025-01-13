@@ -15,6 +15,10 @@ struct TagTyped {
     var title, artist, album, albumArtist, genre, composer: String?
     var year, track, discNumber: Int?
 
+    init() {
+        
+    }
+
     init(_ file: FSFile, reader tagContentReader: ID3TagContentReader) async {
         title = tagContentReader.title() ?? ""
         artist = tagContentReader.artist() ?? ""

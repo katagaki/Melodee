@@ -5,7 +5,6 @@
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
-import MarqueeText
 import SwiftUI
 import TipKit
 

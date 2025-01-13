@@ -228,13 +228,18 @@ struct TagEditorView: View {
             debugPrint("Attempting to read tag data for file \(file.name)...")
             do {
                 let tag = try id3TagEditor.read(from: file.path)
-                if let tag = tag {
+                if let tag {
                     tags.updateValue(tag, forKey: file)
                     let tagContentReader = ID3TagContentReader(id3Tag: tag)
                     if tagCombined == nil {
                         tagCombined = await TagTyped(file, reader: tagContentReader)
                     } else {
                         await tagCombined!.merge(with: file, reader: tagContentReader)
+                    }
+                } else {
+                    debugPrint("No tag data found for file \(file.name), adding empty tag")
+                    if let newTag = ID3Tag.newTag(for: file) {
+                        tags.updateValue(newTag, forKey: file)
                     }
                 }
             } catch {
@@ -243,7 +248,8 @@ struct TagEditorView: View {
             initialLoadPercentage += 100 / files.count
         }
         // Load data into view
-        if let tagCombined = tagCombined {
+        if let tagCombined {
+            debugPrint("Saving tag data")
             tagData = Tag(from: tagCombined)
         }
     }

@@ -15,14 +15,12 @@
 		E414A5542BA5CC3300C7903E /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A5532BA5CC3300C7903E /* PlaylistView.swift */; };
 		E414A5562BA5CC7300C7903E /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A5552BA5CC7300C7903E /* PlaylistItem.swift */; };
 		E414A55A2BA6E39300C7903E /* MoreMoveToCloudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E414A5592BA6E39300C7903E /* MoreMoveToCloudView.swift */; };
-		E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84582AAF087300D87A5F /* MarqueeText */; };
 		E43C845D2AAF38B600D87A5F /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845C2AAF38B600D87A5F /* MainTabView.swift */; };
 		E43C845F2AAF38D800D87A5F /* TabType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C845E2AAF38D800D87A5F /* TabType.swift */; };
 		E43C84622AAF391200D87A5F /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84612AAF391200D87A5F /* MoreView.swift */; };
 		E43C84702AAF3EE100D87A5F /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C846F2AAF3EE100D87A5F /* NowPlayingView.swift */; };
 		E43C84722AAF708500D87A5F /* MusicProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */; };
 		E43C84742AAF901900D87A5F /* NPQueueTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C84732AAF901900D87A5F /* NPQueueTip.swift */; };
-		E43C84772AB0099F00D87A5F /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84762AB0099F00D87A5F /* ID3TagEditor */; };
 		E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84792AB009B300D87A5F /* ZIPFoundation */; };
 		E43C847C2AB009D600D87A5F /* FileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C847B2AB009D600D87A5F /* FileType.swift */; };
 		E43C847F2AB00EF300D87A5F /* TagEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43C847E2AB00EF300D87A5F /* TagEditorView.swift */; };
@@ -41,6 +39,8 @@
 		E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E447AAB92B771CC7009A3D3E /* Komponents */; };
 		E447AABC2B772312009A3D3E /* RepeatMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E447AABB2B772312009A3D3E /* RepeatMode.swift */; };
 		E447AAC02B773BF8009A3D3E /* DocumentPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */; };
+		E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = E489EF7F2D34932D009AB712 /* ID3TagEditor */; };
+		E489EF832D349388009AB712 /* MarqueeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = E489EF822D349388009AB712 /* MarqueeText.swift */; };
 		E48AE70E2B9D845800DAC2D2 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48AE70D2B9D845800DAC2D2 /* Playlist.swift */; };
 		E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64A2AAEF11F0062D12C /* App.swift */; };
 		E4A4D64D2AAEF11F0062D12C /* FolderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A4D64C2AAEF11F0062D12C /* FolderView.swift */; };
@@ -113,6 +113,7 @@
 		E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAlert.swift; sourceTree = "<group>"; };
 		E447AABB2B772312009A3D3E /* RepeatMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatMode.swift; sourceTree = "<group>"; };
 		E447AABF2B773BF8009A3D3E /* DocumentPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPicker.swift; sourceTree = "<group>"; };
+		E489EF822D349388009AB712 /* MarqueeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeText.swift; sourceTree = "<group>"; };
 		E48AE70D2B9D845800DAC2D2 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		E4A4D6472AAEF11F0062D12C /* Melodee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Melodee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4A4D64A2AAEF11F0062D12C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -160,10 +161,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E43C84592AAF087300D87A5F /* MarqueeText in Frameworks */,
-				E43C84772AB0099F00D87A5F /* ID3TagEditor in Frameworks */,
 				E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
+				E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */,
 				E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */,
 				E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */,
 			);
@@ -335,6 +335,7 @@
 				E4A4D66E2AAEF36D0062D12C /* ListFileRow.swift */,
 				E4A4D6752AAEF4040062D12C /* ListFolderRow.swift */,
 				E43C84942AB0100900D87A5F /* ListInputRow.swift */,
+				E489EF822D349388009AB712 /* MarqueeText.swift */,
 				E43C84712AAF708500D87A5F /* MusicProgressSlider.swift */,
 				E43C849C2AB0188B00D87A5F /* ProgressAlert.swift */,
 			);
@@ -410,12 +411,11 @@
 			);
 			name = Melodee;
 			packageProductDependencies = (
-				E43C84582AAF087300D87A5F /* MarqueeText */,
-				E43C84762AB0099F00D87A5F /* ID3TagEditor */,
 				E43C84792AB009B300D87A5F /* ZIPFoundation */,
 				E4DB2A622AB3FFA800C5810D /* Zoomy */,
 				E4DB2A672AB4032900C5810D /* VariableBlurView */,
 				E447AAB92B771CC7009A3D3E /* Komponents */,
+				E489EF7F2D34932D009AB712 /* ID3TagEditor */,
 			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
@@ -447,12 +447,11 @@
 			);
 			mainGroup = E4A4D63E2AAEF11F0062D12C;
 			packageReferences = (
-				E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */,
-				E43C84752AB0099F00D87A5F /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
 				E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */,
 				E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */,
 				E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */,
+				E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
 			);
 			productRefGroup = E4A4D6482AAEF11F0062D12C /* Products */;
 			projectDirPath = "";
@@ -536,6 +535,7 @@
 				E4A4D64B2AAEF11F0062D12C /* App.swift in Sources */,
 				E43C847C2AB009D600D87A5F /* FileType.swift in Sources */,
 				E4DB2A522AB3445600C5810D /* ImageViewerView.swift in Sources */,
+				E489EF832D349388009AB712 /* MarqueeText.swift in Sources */,
 				E43C84812AB00F0800D87A5F /* FocusedField.swift in Sources */,
 				E4DB2A5E2AB3F34500C5810D /* ID3Tag.swift in Sources */,
 				E4A4D66A2AAEF2BD0062D12C /* HintOverlay.swift in Sources */,
@@ -723,7 +723,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Melodee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -768,7 +768,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Melodee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -804,22 +804,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/joekndy/MarqueeText";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		E43C84752AB0099F00D87A5F /* XCRemoteSwiftPackageReference "ID3TagEditor" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/chicio/ID3TagEditor";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 4.6.0;
-			};
-		};
 		E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
@@ -834,6 +818,14 @@
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/chicio/ID3TagEditor";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.0;
 			};
 		};
 		E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */ = {
@@ -855,16 +847,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E43C84582AAF087300D87A5F /* MarqueeText */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E43C84572AAF087300D87A5F /* XCRemoteSwiftPackageReference "MarqueeText" */;
-			productName = MarqueeText;
-		};
-		E43C84762AB0099F00D87A5F /* ID3TagEditor */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E43C84752AB0099F00D87A5F /* XCRemoteSwiftPackageReference "ID3TagEditor" */;
-			productName = ID3TagEditor;
-		};
 		E43C84792AB009B300D87A5F /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E43C84782AB009B300D87A5F /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
@@ -874,6 +856,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */;
 			productName = Komponents;
+		};
+		E489EF7F2D34932D009AB712 /* ID3TagEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */;
+			productName = ID3TagEditor;
 		};
 		E4DB2A622AB3FFA800C5810D /* Zoomy */ = {
 			isa = XCSwiftPackageProductDependency;

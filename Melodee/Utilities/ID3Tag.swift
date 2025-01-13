@@ -11,6 +11,20 @@ import UIKit
 
 extension ID3Tag {
 
+    static func newTag(for file: FSFile) -> ID3Tag? {
+        debugPrint("Attempting to create new tag...")
+        do {
+            let id3Tag = ID32v3TagBuilder()
+                .title(frame: ID3FrameWithStringContent(content: ""))
+                .build()
+            try ID3TagEditor().write(tag: id3Tag, to: file.path)
+            return id3Tag
+        } catch {
+            debugPrint("Error occurred while initializing tag: \n\(error.localizedDescription)")
+        }
+        return nil
+    }
+
     func initializeTag(for file: FSFile) {
         debugPrint("Attempting to initialize tag...")
         do {

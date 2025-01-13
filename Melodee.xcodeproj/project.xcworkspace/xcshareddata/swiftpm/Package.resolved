@@ -1,13 +1,13 @@
 {
-  "originHash" : "a2d4f763cc952df0685f34c11a3a61cd4e0c761f7377002035ab8e219265556b",
+  "originHash" : "64e7b7efc0280b28a0c2b49cad8915aeaa80eb5a5499784b9566444b6dfdc266",
   "pins" : [
     {
       "identity" : "id3tageditor",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/chicio/ID3TagEditor",
       "state" : {
-        "revision" : "3ccc31eafae0ded1fea8c9acd5e7ef7dfdbf1e8e",
-        "version" : "4.6.0"
+        "revision" : "64f5667df0e779f2f02a08b7084b0cb5bd83ce61",
+        "version" : "5.2.0"
       }
     },
     {
@@ -25,16 +25,7 @@
       "location" : "https://github.com/katagaki/Komponents",
       "state" : {
         "branch" : "main",
-        "revision" : "cb0a6a60bc091627c11e6eca511279414fd1d45e"
-      }
-    },
-    {
-      "identity" : "marqueetext",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/joekndy/MarqueeText",
-      "state" : {
-        "branch" : "master",
-        "revision" : "e18d514455563ad00581e0d825146c6f15b1c6c4"
+        "revision" : "ac1ef7aefb1c4b5a0af65251cb8f14dd42bd1eb6"
       }
     },
     {

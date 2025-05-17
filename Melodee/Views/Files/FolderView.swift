@@ -250,7 +250,7 @@ struct FolderView: View {
             return currentDirectory?.name ??
             NSLocalizedString("Shared.iCloudDrive", comment: "")
         case .local:
-            return currentDirectory?.name ?? 
+            return currentDirectory?.name ??
             NSLocalizedString("Shared.OnMyDevice", comment: "")
         case .external:
             return fileManager.directory?.lastPathComponent ??

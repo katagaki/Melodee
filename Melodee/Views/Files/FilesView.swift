@@ -59,7 +59,7 @@ struct FilesView: View {
                 }
                 #if DEBUG
                 Section {
-                    
+                    //
                 } header: {
                     ListSectionHeader(text: "Shared.RecentFiles")
                 }

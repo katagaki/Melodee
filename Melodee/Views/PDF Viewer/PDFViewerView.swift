@@ -15,10 +15,6 @@ struct PDFViewerView: View {
     var body: some View {
         PDFKitView(file: file)
             .navigationTitle(file.name)
-            .safeAreaInset(edge: .bottom) {
-                Color.clear
-                    .frame(height: 56.0)
-            }
     }
 }
 

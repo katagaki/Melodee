@@ -17,12 +17,6 @@ struct TextViewerView: View {
     var body: some View {
         TextEditor(text: .constant(text))
             .navigationTitle(file.name)
-            .safeAreaInset(edge: .bottom) {
-                if !nowPlayingBarManager.isKeyboardShowing {
-                    Color.clear
-                        .frame(height: 56.0)
-                }
-            }
             .onAppear {
                 do {
                     if let text = try? String(contentsOfFile: file.path, encoding: .shiftJIS) {

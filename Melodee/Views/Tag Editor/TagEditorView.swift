@@ -134,10 +134,7 @@ struct TagEditorView: View {
                 .tint(saveState == .saved ? .green : .accentColor)
                 .clipShape(RoundedRectangle(cornerRadius: 99))
                 .frame(minHeight: 56.0)
-                .padding([.leading, .trailing], 16.0)
-                Color.clear
-                    .frame(height: nowPlayingBarManager.isKeyboardShowing ? 0.0 : 56.0)
-                    .padding(.top)
+                .padding([.leading, .trailing, .bottom], 16.0)
             }
         }
         .disabled(saveState == .saving)

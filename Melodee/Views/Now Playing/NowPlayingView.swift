@@ -19,55 +19,52 @@ struct NowPlayingView: View {
     @State var isClearQueueButtonConfirming: Bool = false
 
     var body: some View {
-        NavigationStack {
-            List {
-                Group {
-                    NPControllerSection(albumArt: $albumArt)
-                        .listRowSeparator(.hidden)
-                        .padding(.top, 28.0)
-                    NPQueueSection()
-                        .alignmentGuide(.listRowSeparatorTrailing) { dimensions in
-                            return dimensions.width
-                        }
-                    if !mediaPlayer.queue.isEmpty {
-                        Section {
-                            HStack(alignment: .center, spacing: 8.0) {
-                                Group {
-                                    ActionButton(text: isClearQueueButtonConfirming ?
-                                                 "Shared.AreYouSure" : "NowPlaying.ClearQueue",
-                                                 icon: "Clear",
-                                                 isPrimary: false) {
-                                        withAnimation(.default.speed(2)) {
-                                            if isClearQueueButtonConfirming {
-                                                mediaPlayer.stop()
-                                            }
-                                            isClearQueueButtonConfirming.toggle()
+        List {
+            Group {
+                NPControllerSection(albumArt: $albumArt)
+                    .listRowSeparator(.hidden)
+                    .padding(.top, 28.0)
+                NPQueueSection()
+                    .alignmentGuide(.listRowSeparatorTrailing) { dimensions in
+                        return dimensions.width
+                    }
+                if !mediaPlayer.queue.isEmpty {
+                    Section {
+                        HStack(alignment: .center, spacing: 8.0) {
+                            Group {
+                                ActionButton(text: isClearQueueButtonConfirming ?
+                                             "Shared.AreYouSure" : "NowPlaying.ClearQueue",
+                                             icon: "Clear",
+                                             isPrimary: false) {
+                                    withAnimation(.default.speed(2)) {
+                                        if isClearQueueButtonConfirming {
+                                            mediaPlayer.stop()
                                         }
+                                        isClearQueueButtonConfirming.toggle()
                                     }
-                                                 .tint(.red)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .disabled(mediaPlayer.queue.isEmpty)
+                                             .tint(.red)
                             }
-                            .listRowSeparator(.hidden)
-                            .buttonStyle(.plain)
                             .frame(maxWidth: .infinity)
+                            .disabled(mediaPlayer.queue.isEmpty)
                         }
+                        .listRowSeparator(.hidden)
+                        .buttonStyle(.plain)
+                        .frame(maxWidth: .infinity)
                     }
                 }
-                .listRowInsets(.init(top: 0.0, leading: 32.0, bottom: 0.0, trailing: 32.0))
-                .listRowBackground(Color.clear)
             }
-            .listStyle(.plain)
-            .listSectionSpacing(.compact)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .onAppear {
-                isClearQueueButtonConfirming = false
-            }
+            .listRowInsets(.init(top: 0.0, leading: 32.0, bottom: 0.0, trailing: 32.0))
             .listRowBackground(Color.clear)
         }
-        .presentationBackground {
+        .listStyle(.plain)
+        .listSectionSpacing(.compact)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .onAppear {
+            isClearQueueButtonConfirming = false
+        }
+        .background {
             ZStack {
                 switch colorScheme {
                 case .light: Color.white

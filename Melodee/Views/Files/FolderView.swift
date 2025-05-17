@@ -144,15 +144,12 @@ struct FolderView: View {
                     .font(.body)
             }
         }
-        .safeAreaInset(edge: .bottom, spacing: 0.0) {
-            Color.clear
-                .frame(height: 62.0)
-        }
         .refreshable {
             refreshFiles()
         }
         .overlay {
             if state.isExtractingZIP {
+                // TODO: ProgressAlert should be on a higher level (cover the entire view, instead of just the view inside the navigation stack
                 ProgressAlert(title: "Alert.ExtractingZIP.Title",
                               message: "Alert.ExtractingZIP.Text",
                               percentage: $state.extractionPercentage) {

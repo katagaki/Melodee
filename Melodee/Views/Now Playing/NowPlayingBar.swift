@@ -66,11 +66,6 @@ struct NowPlayingBar: View {
             .disabled(!mediaPlayer.canStartPlayback())
         }
         .padding(.all, 12.0)
-        .frame(maxWidth: .infinity, minHeight: 62.0, maxHeight: 62.0)
-        .overlay(Rectangle().frame(width: nil,
-                                    height: 1/3,
-                                    alignment: .top).foregroundColor(.primary.opacity(0.3)),
-                 alignment: .top)
         .task {
             if previousQueueID != mediaPlayer.currentlyPlayingID {
                 await setAlbumArt()

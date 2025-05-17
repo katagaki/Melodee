@@ -34,6 +34,7 @@ struct FBTagSection: View {
             }
             .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16))
             .listRowSeparator(.hidden, edges: .bottom)
+            .listRowBackground(Color.clear)
             .buttonStyle(.plain)
             .frame(maxWidth: .infinity)
         }

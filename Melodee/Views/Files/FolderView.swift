@@ -42,6 +42,7 @@ struct FolderView: View {
                 .foregroundColor(.primary)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                .listRowBackground(Color.clear)
                 .textSelection(.enabled)
                 .background {
                     GeometryReader { geometry in
@@ -85,6 +86,7 @@ struct FolderView: View {
                     .disabled(!folderContainsPlayableAudio())
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
+                .listRowBackground(Color.clear)
                 .alignmentGuide(.listRowSeparatorLeading) { _ in
                     return 0.0
                 }
@@ -114,6 +116,7 @@ struct FolderView: View {
                             }
                         }
                     }
+                    .listRowBackground(Color.clear)
                 }
             }
             if folderContainsEditableMP3s() {
@@ -121,6 +124,14 @@ struct FolderView: View {
             }
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(
+            .linearGradient(
+                colors: [.backgroundGradientTop, .backgroundGradientBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 // HACK: Prevent weird animation when going from view to view

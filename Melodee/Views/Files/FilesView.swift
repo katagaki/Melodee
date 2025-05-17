@@ -83,6 +83,14 @@ struct FilesView: View {
                 #endif
             }
             .navigationTitle("ViewTitle.Files")
+            .scrollContentBackground(.hidden)
+            .background(
+                .linearGradient(
+                    colors: [.backgroundGradientTop, .backgroundGradientBottom],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
             .refreshable {
                 forceRefreshFlag.toggle()
             }

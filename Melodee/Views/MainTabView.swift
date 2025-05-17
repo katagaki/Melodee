@@ -26,6 +26,7 @@ struct MainTabView: View {
                 NowPlayingBar()
                     .popoverTip(NPQueueTip(), arrowEdge: .bottom)
             }
+            .popupBarStyle(.floating)
             .popupInteractionStyle(.drag)
             .task {
                 try? Tips.configure([

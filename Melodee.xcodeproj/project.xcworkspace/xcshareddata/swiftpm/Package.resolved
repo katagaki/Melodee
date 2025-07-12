@@ -1,13 +1,13 @@
 {
-  "originHash" : "3e311ecd0dc81530849c820e5d72994a23c04bdbb67ef32bb16a7557c587866c",
+  "originHash" : "276264769e54f7300555195ac6be9d7817e65de1a341323f87af4f3e12fc79c3",
   "pins" : [
     {
       "identity" : "id3tageditor",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/chicio/ID3TagEditor",
       "state" : {
-        "revision" : "64f5667df0e779f2f02a08b7084b0cb5bd83ce61",
-        "version" : "5.2.0"
+        "revision" : "adcebd1680ac1a93f8a95f84c515680cac3c69d6",
+        "version" : "5.4.0"
       }
     },
     {
@@ -25,7 +25,7 @@
       "location" : "https://github.com/katagaki/Komponents",
       "state" : {
         "branch" : "main",
-        "revision" : "ac1ef7aefb1c4b5a0af65251cb8f14dd42bd1eb6"
+        "revision" : "2431ce046638dc3b86fa187ddcab0f1ed00b321d"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNPopupUI",
       "state" : {
-        "revision" : "6d0cfc898421390c1c32211304a18b1d6f0ec4e4",
-        "version" : "2.0.1"
+        "revision" : "aa9c813f2b47d055b648628b738e1b115c5e9fad",
+        "version" : "2.0.2"
       }
     },
     {

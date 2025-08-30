@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct FileStateAlerts: ViewModifier {
+struct FileBrowserAlerts: ViewModifier {
 
     @Environment(\.colorScheme) var colorScheme
     @Environment(FilesystemManager.self) var fileManager
 
-    @State var state: FBState
+    @Binding var state: FBState
     var refreshFiles: () -> Void
 
     func body(content: Content) -> some View {
@@ -67,7 +67,7 @@ struct FileStateAlerts: ViewModifier {
 }
 
 extension View {
-    func fileStateAlerts(state: FBState, refreshFiles: @escaping () -> Void) -> some View {
-        self.modifier(FileStateAlerts(state: state, refreshFiles: refreshFiles))
+    func fileBrowserAlerts(state: Binding<FBState>, refreshFiles: @escaping () -> Void) -> some View {
+        self.modifier(FileBrowserAlerts(state: state, refreshFiles: refreshFiles))
     }
 }

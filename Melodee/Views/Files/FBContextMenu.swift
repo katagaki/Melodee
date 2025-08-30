@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FBContextMenu: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
     @Environment(FilesystemManager.self) var fileManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
@@ -61,9 +60,7 @@ struct FBContextMenu: View {
             }
             // Tag Editor menu items
             if file.extension == "mp3" {
-                Button {
-                    navigationManager.push(ViewPath.tagEditorSingle(file: file), for: .fileManager)
-                } label: {
+                NavigationLink(value: ViewPath.tagEditorSingle(file: file)) {
                     Label("Shared.EditTag.Single", systemImage: "tag")
                 }
                 Divider()

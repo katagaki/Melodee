@@ -9,14 +9,10 @@ import SwiftUI
 
 struct FBTextFileRow: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-
     @State var file: FSFile
 
     var body: some View {
-        Button {
-            navigationManager.push(ViewPath.textViewer(file: file), for: .fileManager)
-        } label: {
+        NavigationLink(value: ViewPath.textViewer(file: file)) {
             ListFileRow(file: .constant(file))
                 .tint(.primary)
         }

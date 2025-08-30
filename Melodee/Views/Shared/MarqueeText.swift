@@ -16,26 +16,26 @@ public struct MarqueeText: View {
     public var rightFade: CGFloat
     public var startDelay: Double
     public var alignment: Alignment
-    
+
     @State private var animate = false
     var isCompact = false
-    
+
     public var body: some View {
         let stringWidth  = text.widthOfString(usingFont: font)
         let stringHeight = text.heightOfString(usingFont: font)
-        
+
         // Create our animations
         let animation = Animation
             .linear(duration: Double(stringWidth) / 30)
             .delay(startDelay)
             .repeatForever(autoreverses: false)
-        
+
         let nullAnimation = Animation.linear(duration: 0)
-        
+
         GeometryReader { geo in
             // Decide if scrolling is needed
             let needsScrolling = (stringWidth > geo.size.width)
-            
+
             ZStack {
                 if needsScrolling {
                     // MARK: - Scrolling (Marquee) version
@@ -88,7 +88,7 @@ public struct MarqueeText: View {
                 if newStringWidth > geo.size.width {
                     // Stop the old animation first
                     self.animate = false
-                    
+
                     // Kick off a new animation on the next runloop
                     DispatchQueue.main.async {
                         self.animate = true
@@ -104,7 +104,7 @@ public struct MarqueeText: View {
             self.animate = false
         }
     }
-    
+
     // MARK: - Marquee pair of texts
     @ViewBuilder
     private func makeMarqueeTexts(
@@ -122,7 +122,7 @@ public struct MarqueeText: View {
                 .offset(x: animate ? -stringWidth - stringHeight * 2 : 0)
                 .animation(animate ? animation : nullAnimation, value: animate)
                 .fixedSize(horizontal: true, vertical: false)
-            
+
             Text(text)
                 .lineLimit(1)
                 .font(.init(font))
@@ -131,37 +131,37 @@ public struct MarqueeText: View {
                 .fixedSize(horizontal: true, vertical: false)
         }
     }
-    
+
     // MARK: - Fade mask
     @ViewBuilder
     private func fadeMask(leftFade: CGFloat, rightFade: CGFloat) -> some View {
         HStack(spacing: 0) {
             Rectangle().frame(width: 2).opacity(0)
-            
+
             LinearGradient(
                 gradient: Gradient(colors: [Color.black.opacity(0), Color.black]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
             .frame(width: leftFade)
-            
+
             LinearGradient(
                 gradient: Gradient(colors: [Color.black, Color.black]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
-            
+
             LinearGradient(
                 gradient: Gradient(colors: [Color.black, Color.black.opacity(0)]),
                 startPoint: .leading,
                 endPoint: .trailing
             )
             .frame(width: rightFade)
-            
+
             Rectangle().frame(width: 2).opacity(0)
         }
     }
-    
+
     // MARK: - Initializer
     public init(
         text: String,
@@ -194,7 +194,7 @@ extension String {
         let size = self.size(withAttributes: fontAttributes)
         return size.width
     }
-    
+
     func heightOfString(usingFont font: UIFont) -> CGFloat {
         let fontAttributes = [NSAttributedString.Key.font: font]
         let size = self.size(withAttributes: fontAttributes)

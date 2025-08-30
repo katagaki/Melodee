@@ -11,7 +11,6 @@ import TipKit
 
 struct FolderView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
     @Environment(FilesystemManager.self) var fileManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
@@ -119,9 +118,6 @@ struct FolderView: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            if folderContainsEditableMP3s() {
-                FBTagSection(files: $files)
-            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -135,7 +131,11 @@ struct FolderView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 // HACK: Prevent weird animation when going from view to view
-                EmptyView()
+                if folderContainsEditableMP3s() {
+                    FBMenu(files: $files)
+                } else {
+                    EmptyView()
+                }
             }
             ToolbarItem(placement: .principal) {
                 Text(viewTitle())
@@ -207,7 +207,7 @@ struct FolderView: View {
             }
             refreshFiles()
         }
-        .fileStateAlerts(state: state, refreshFiles: refreshFiles)
+        .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
     }
 
     func viewTitle() -> String {

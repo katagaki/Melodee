@@ -16,7 +16,7 @@ struct TagTyped {
     var year, track, discNumber: Int?
 
     init() {
-        
+
     }
 
     init(_ file: FSFile, reader tagContentReader: ID3TagContentReader) async {

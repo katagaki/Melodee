@@ -9,16 +9,13 @@ import SwiftUI
 
 struct FBImageFileRow: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-
     @State var file: FSFile
 
     var body: some View {
-        Button {
-            navigationManager.push(ViewPath.imageViewer(file: file), for: .fileManager)
-        } label: {
+        NavigationLink(value: ViewPath.imageViewer(file: file)) {
             ListFileRow(file: .constant(file))
                 .tint(.primary)
         }
+        .navigationLinkIndicatorVisibility(.hidden)
     }
 }

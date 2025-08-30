@@ -19,7 +19,7 @@ struct NowPlayingBar: View {
             albumArt
                 .resizable()
                 .scaledToFit()
-                .frame(height: 40.0)
+                .frame(height: 32.0)
                 .clipShape(RoundedRectangle(cornerRadius: 8.0))
                 .overlay(
                     RoundedRectangle(cornerRadius: 8.0)
@@ -62,10 +62,10 @@ struct NowPlayingBar: View {
                     }
                 }
             }
-            .frame(maxHeight: 40.0)
+            .frame(maxHeight: 32.0)
             .disabled(!mediaPlayer.canStartPlayback())
         }
-        .padding(.all, 12.0)
+        .padding()
         .task {
             if previousQueueID != mediaPlayer.currentlyPlayingID {
                 await setAlbumArt()
@@ -93,6 +93,6 @@ struct NowPlayingBar: View {
             .resizable()
             .scaledToFit()
             .frame(width: 20.0, height: 20.0)
-            .padding()
+            .padding(8.0)
     }
 }

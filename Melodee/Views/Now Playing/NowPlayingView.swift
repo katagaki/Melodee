@@ -30,26 +30,26 @@ struct NowPlayingView: View {
                     }
                 if !mediaPlayer.queue.isEmpty {
                     Section {
-                        HStack(alignment: .center, spacing: 8.0) {
-                            Group {
-                                ActionButton(text: isClearQueueButtonConfirming ?
-                                             "Shared.AreYouSure" : "NowPlaying.ClearQueue",
-                                             icon: "Clear",
-                                             isPrimary: false) {
-                                    withAnimation(.default.speed(2)) {
-                                        if isClearQueueButtonConfirming {
-                                            mediaPlayer.stop()
-                                        }
-                                        isClearQueueButtonConfirming.toggle()
-                                    }
+                        Button {
+                            withAnimation(.default.speed(2)) {
+                                if isClearQueueButtonConfirming {
+                                    mediaPlayer.stop()
                                 }
-                                             .tint(.red)
+                                isClearQueueButtonConfirming.toggle()
                             }
-                            .frame(maxWidth: .infinity)
-                            .disabled(mediaPlayer.queue.isEmpty)
+                        } label: {
+                            Label(
+                                (
+                                    isClearQueueButtonConfirming ?
+                                    String(localized: "Shared.AreYouSure") :
+                                    String(localized: "NowPlaying.ClearQueue")
+                                ),
+                                systemImage: "eraser.line.dashed"
+                            )
                         }
+                        .foregroundStyle(.red)
+                        .disabled(mediaPlayer.queue.isEmpty)
                         .listRowSeparator(.hidden)
-                        .buttonStyle(.plain)
                         .frame(maxWidth: .infinity)
                     }
                 }

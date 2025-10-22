@@ -180,7 +180,6 @@ struct FolderView: View {
                 storageLocation = overrideStorageLocation
             }
             if !state.isInitialLoadCompleted {
-                updateFileManagerDirectory()
                 refreshFiles()
             }
         }
@@ -227,6 +226,7 @@ struct FolderView: View {
     }
 
     func refreshFiles() {
+        updateFileManagerDirectory()
         withAnimation {
             self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
             state.isInitialLoadCompleted = true

@@ -22,7 +22,7 @@ struct FilesView: View {
     @State var forceRefreshFlag: Bool = false
 
     @Namespace var namespace
-
+    
     var body: some View {
         NavigationStack(path: $filesTabPath) {
             Group {
@@ -78,6 +78,8 @@ struct FilesView: View {
                     if isAccessSuccessful {
                         hasSelectedExternalDirectory = true
                         filesTabPath.removeAll()
+                        // Save bookmark for persistence
+                        saveExternalFolderBookmark(url: url)
                         // Trigger refresh by toggling the flag
                         forceRefreshFlag.toggle()
                     } else {
@@ -86,7 +88,49 @@ struct FilesView: View {
                 })
                 .ignoresSafeArea(edges: [.bottom])
             }
+            .onAppear {
+                // Restore external folder on first appearance
+                restoreExternalFolderBookmark()
+            }
             .hasFileBrowserNavigationDestinations()
+        }
+    }
+    
+    func saveExternalFolderBookmark(url: URL) {
+        do {
+            let bookmarkData = try url.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
+            UserDefaults.standard.set(bookmarkData, forKey: "ExternalFolderBookmark")
+        } catch {
+            debugPrint("Failed to create bookmark: \(error)")
+        }
+    }
+    
+    func restoreExternalFolderBookmark() {
+        guard !hasSelectedExternalDirectory,
+              let bookmarkData = UserDefaults.standard.data(forKey: "ExternalFolderBookmark") else {
+            return
+        }
+        
+        do {
+            var isStale = false
+            let url = try URL(resolvingBookmarkData: bookmarkData, options: .withoutUI, relativeTo: nil, bookmarkDataIsStale: &isStale)
+            
+            if isStale {
+                // Bookmark is stale, save a new one
+                saveExternalFolderBookmark(url: url)
+            }
+            
+            let isAccessSuccessful = url.startAccessingSecurityScopedResource()
+            if isAccessSuccessful {
+                fileManager.directory = url
+                fileManager.storageLocation = .external
+                hasSelectedExternalDirectory = true
+                forceRefreshFlag.toggle()
+            }
+        } catch {
+            debugPrint("Failed to resolve bookmark: \(error)")
+            // Clear invalid bookmark
+            UserDefaults.standard.removeObject(forKey: "ExternalFolderBookmark")
         }
     }
 }

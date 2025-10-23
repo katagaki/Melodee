@@ -14,14 +14,15 @@ struct MainTabView: View {
 
     @State var localFilesTabPath: [ViewPath] = []
     @State var cloudFilesTabPath: [ViewPath] = []
+    @AppStorage("SelectedTab") var selectedTab: Int = 0
 
     @Namespace var namespace
 
     var body: some View {
         @Bindable var nowPlayingBarManager = nowPlayingBarManager
 
-        TabView {
-            Tab("Tab.Local", systemImage: "iphone") {
+        TabView(selection: $selectedTab) {
+            Tab("Tab.Local", systemImage: "iphone", value: 0) {
                 NavigationStack(path: $localFilesTabPath) {
                     FolderView(
                         currentDirectory: nil,
@@ -31,7 +32,7 @@ struct MainTabView: View {
                 }
             }
             if FileManager.default.ubiquityIdentityToken != nil {
-                Tab("Tab.Cloud", systemImage: "cloud.fill") {
+                Tab("Tab.Cloud", systemImage: "cloud.fill", value: 1) {
                     NavigationStack(path: $cloudFilesTabPath) {
                         FolderView(
                             currentDirectory: nil,
@@ -41,10 +42,10 @@ struct MainTabView: View {
                     }
                 }
             }
-            Tab("Tab.ExternalFolder", systemImage: "folder.fill") {
+            Tab("Tab.ExternalFolder", systemImage: "folder.fill", value: 2) {
                 FilesView()
             }
-            Tab("Tab.More", systemImage: "ellipsis") {
+            Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()
             }
         }
@@ -60,13 +61,9 @@ struct MainTabView: View {
                 .onTapGesture {
                     self.nowPlayingBarManager.isSheetPresented.toggle()
                 }
-                .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
         }
         .sheet(isPresented: $nowPlayingBarManager.isSheetPresented) {
             NowPlayingView()
-                .navigationTransition(
-                    .zoom(sourceID: "NowPlayingBar", in: namespace)
-                )
         }
     }
 }

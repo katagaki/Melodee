@@ -48,7 +48,7 @@ struct FilesView: View {
                     }
                 }
             }
-            .navigationTitle("ViewTitle.Library")
+            .navigationTitle("ViewTitle.Files")
             .scrollContentBackground(.hidden)
             .background(
                 .linearGradient(
@@ -76,6 +76,7 @@ struct FilesView: View {
                     if isAccessSuccessful {
                         hasSelectedExternalDirectory = true
                         filesTabPath.removeAll()
+                        // TODO: Refresh the file list of the current view
                     } else {
                         url.stopAccessingSecurityScopedResource()
                     }

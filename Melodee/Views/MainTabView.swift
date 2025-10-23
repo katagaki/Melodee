@@ -41,7 +41,7 @@ struct MainTabView: View {
                     }
                 }
             }
-            Tab("Tab.Library", systemImage: "music.note.square.stack.fill") {
+            Tab("Tab.ExternalFolder", systemImage: "folder.fill") {
                 FilesView()
             }
             Tab("Tab.More", systemImage: "ellipsis") {

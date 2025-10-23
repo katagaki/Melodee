@@ -11,23 +11,6 @@
         }
       }
     },
-    "Alert.CreatePlaylist.Title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New Playlist"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "新規再生リスト"
-          }
-        }
-      }
-    },
     "Alert.DeleteFile.Text" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -356,6 +339,23 @@
         }
       }
     },
+    "ImageViewer.Erorr.NotSupported" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This image file is not supported."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画像ファイルを開ませんでした。"
+          }
+        }
+      }
+    },
     "Library.NoFolder.Description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -420,23 +420,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "フォルダーを選択"
-          }
-        }
-      }
-    },
-    "ImageViewer.Erorr.NotSupported" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This image file is not supported."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "画像ファイルを開ませんでした。"
           }
         }
       }
@@ -727,23 +710,6 @@
         }
       }
     },
-    "Shared.Create" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Create"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作成"
-          }
-        }
-      }
-    },
     "Shared.Delete" : {
       "localizations" : {
         "en" : {
@@ -822,22 +788,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "トラック情報を編集"
-          }
-        }
-      }
-    },
-    "Shared.ExternalFolder" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open External Folder..."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "外部フォルダーを開く…"
           }
         }
       }
@@ -922,23 +872,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいファイル名"
-          }
-        }
-      }
-    },
-    "Shared.NewPlaylistName" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playlist Name"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再生リスト名"
           }
         }
       }
@@ -1320,18 +1253,18 @@
         }
       }
     },
-    "Tab.Library" : {
+    "Tab.ExternalFolder" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Library"
+            "value" : "Select Folder..."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ライブラリ"
+            "value" : "フォルダーを選択…"
           }
         }
       }
@@ -1815,22 +1748,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル"
-          }
-        }
-      }
-    },
-    "ViewTitle.Library" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Library"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ライブラリ"
           }
         }
       }

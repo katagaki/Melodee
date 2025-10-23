@@ -14,12 +14,15 @@ struct FilesView: View {
 
     @State var isSelectingExternalDirectory: Bool = false
     @State var hasSelectedExternalDirectory: Bool = false
+    @State var selectedFolderName: String = ""
 
     @State var isCreatingPlaylist: Bool = false
     @State var newPlaylistName: String = ""
 
     @State var filesTabPath: [ViewPath] = []
     @State var forceRefreshFlag: Bool = false
+    
+    @Binding var externalFolderTabTitle: String
 
     @Namespace var namespace
     
@@ -77,6 +80,8 @@ struct FilesView: View {
                     let isAccessSuccessful = url.startAccessingSecurityScopedResource()
                     if isAccessSuccessful {
                         hasSelectedExternalDirectory = true
+                        selectedFolderName = url.lastPathComponent
+                        externalFolderTabTitle = url.lastPathComponent
                         filesTabPath.removeAll()
                         // Save bookmark for persistence
                         saveExternalFolderBookmark(url: url)
@@ -125,6 +130,8 @@ struct FilesView: View {
                 fileManager.directory = url
                 fileManager.storageLocation = .external
                 hasSelectedExternalDirectory = true
+                selectedFolderName = url.lastPathComponent
+                externalFolderTabTitle = url.lastPathComponent
                 forceRefreshFlag.toggle()
             }
         } catch {

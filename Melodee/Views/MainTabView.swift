@@ -15,6 +15,7 @@ struct MainTabView: View {
     @State var localFilesTabPath: [ViewPath] = []
     @State var cloudFilesTabPath: [ViewPath] = []
     @AppStorage("SelectedTab") var selectedTab: Int = 0
+    @State var externalFolderTabTitle: String = ""
 
     @Namespace var namespace
 
@@ -42,8 +43,8 @@ struct MainTabView: View {
                     }
                 }
             }
-            Tab("Tab.ExternalFolder", systemImage: "folder.fill", value: 2) {
-                FilesView()
+            Tab(externalFolderTabTitle.isEmpty ? "Tab.ExternalFolder" : externalFolderTabTitle, systemImage: "folder.fill", value: 2) {
+                FilesView(externalFolderTabTitle: $externalFolderTabTitle)
             }
             Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()
@@ -61,9 +62,13 @@ struct MainTabView: View {
                 .onTapGesture {
                     self.nowPlayingBarManager.isSheetPresented.toggle()
                 }
+                .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
         }
         .sheet(isPresented: $nowPlayingBarManager.isSheetPresented) {
             NowPlayingView()
+                .navigationTransition(
+                    .zoom(sourceID: "NowPlayingBar", in: namespace)
+                )
         }
     }
 }

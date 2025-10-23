@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FilesView: View {
 
-    @Environment(FilesystemManager.self) var fileManager
+    @State var fileManager: FilesystemManager = FilesystemManager()
 
     @State var isSelectingExternalDirectory: Bool = false
     @State var hasSelectedExternalDirectory: Bool = false
@@ -30,8 +30,10 @@ struct FilesView: View {
                     // Show the external folder browser
                     FolderView(
                         currentDirectory: nil,
-                        overrideStorageLocation: .external
+                        overrideStorageLocation: .external,
+                        fileManager: fileManager
                     )
+                    .id(forceRefreshFlag)
                 } else {
                     // Show ContentUnavailableView when no folder is selected
                     ContentUnavailableView {
@@ -76,7 +78,8 @@ struct FilesView: View {
                     if isAccessSuccessful {
                         hasSelectedExternalDirectory = true
                         filesTabPath.removeAll()
-                        // TODO: Refresh the file list of the current view
+                        // Trigger refresh by toggling the flag
+                        forceRefreshFlag.toggle()
                     } else {
                         url.stopAccessingSecurityScopedResource()
                     }

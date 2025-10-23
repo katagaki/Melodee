@@ -11,7 +11,7 @@ import TipKit
 
 struct FolderView: View {
 
-    @Environment(FilesystemManager.self) var fileManager
+    @State var fileManager: FilesystemManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @State var currentDirectory: FSDirectory?
@@ -21,6 +21,14 @@ struct FolderView: View {
     @State var storageLocation: StorageLocation = .local
 
     var overrideStorageLocation: StorageLocation?
+    
+    init(currentDirectory: FSDirectory? = nil, 
+         overrideStorageLocation: StorageLocation? = nil,
+         fileManager: FilesystemManager? = nil) {
+        self.currentDirectory = currentDirectory
+        self.overrideStorageLocation = overrideStorageLocation
+        self._fileManager = State(initialValue: fileManager ?? FilesystemManager())
+    }
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
             .filter {$0.activationState == .foregroundActive }
@@ -174,6 +182,7 @@ struct FolderView: View {
                 }
             }
         }
+        .environment(fileManager)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if let overrideStorageLocation {

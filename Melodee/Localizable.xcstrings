@@ -356,6 +356,74 @@
         }
       }
     },
+    "Library.NoFolder.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select an external folder to browse its contents."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外部フォルダーを選択して、その内容を閲覧できます。"
+          }
+        }
+      }
+    },
+    "Library.NoFolder.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Folder Selected"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダー未選択"
+          }
+        }
+      }
+    },
+    "Library.SelectAnotherFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Another Folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "別のフォルダーを選択"
+          }
+        }
+      }
+    },
+    "Library.SelectFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダーを選択"
+          }
+        }
+      }
+    },
     "ImageViewer.Erorr.NotSupported" : {
       "extractionState" : "manual",
       "localizations" : {

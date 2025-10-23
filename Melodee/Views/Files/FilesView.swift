@@ -13,6 +13,7 @@ struct FilesView: View {
     @Environment(FilesystemManager.self) var fileManager
 
     @State var isSelectingExternalDirectory: Bool = false
+    @State var hasSelectedExternalDirectory: Bool = false
 
     @State var isCreatingPlaylist: Bool = false
     @State var newPlaylistName: String = ""
@@ -24,25 +25,26 @@ struct FilesView: View {
 
     var body: some View {
         NavigationStack(path: $filesTabPath) {
-            List {
-                Section {
-                    Button {
-                        isSelectingExternalDirectory = true
-                    } label: {
-                        Text("Shared.ExternalFolder")
-                    }
-                }
-                Section {
-                    Button {
-                        let documentsUrl = FileManager.default.urls(for: .documentDirectory,
-                                                                    in: .userDomainMask).first!
-                        if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
-                            if UIApplication.shared.canOpenURL(sharedUrl) {
-                                UIApplication.shared.open(sharedUrl, options: [:])
-                            }
+            Group {
+                if hasSelectedExternalDirectory {
+                    // Show the external folder browser
+                    FolderView(
+                        currentDirectory: nil,
+                        overrideStorageLocation: .external
+                    )
+                } else {
+                    // Show ContentUnavailableView when no folder is selected
+                    ContentUnavailableView {
+                        Label("Library.NoFolder.Title", systemImage: "folder.badge.questionmark")
+                    } description: {
+                        Text("Library.NoFolder.Description")
+                    } actions: {
+                        Button {
+                            isSelectingExternalDirectory = true
+                        } label: {
+                            Text("Library.SelectFolder")
                         }
-                    } label: {
-                        ListRow(image: "ListIcon.Files", title: "Shared.OpenFilesApp")
+                        .buttonStyle(.borderedProminent)
                     }
                 }
             }
@@ -55,8 +57,16 @@ struct FilesView: View {
                     endPoint: .bottom
                 )
             )
-            .refreshable {
-                forceRefreshFlag.toggle()
+            .toolbar {
+                if hasSelectedExternalDirectory {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            isSelectingExternalDirectory = true
+                        } label: {
+                            Label("Library.SelectAnotherFolder", systemImage: "folder.badge.plus")
+                        }
+                    }
+                }
             }
             .sheet(isPresented: $isSelectingExternalDirectory) {
                 DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
@@ -64,12 +74,8 @@ struct FilesView: View {
                     fileManager.storageLocation = .external
                     let isAccessSuccessful = url.startAccessingSecurityScopedResource()
                     if isAccessSuccessful {
-                        filesTabPath.append(
-                            ViewPath.fileBrowser(
-                                directory: nil,
-                                storageLocation: .external
-                            )
-                        )
+                        hasSelectedExternalDirectory = true
+                        filesTabPath.removeAll()
                     } else {
                         url.stopAccessingSecurityScopedResource()
                     }

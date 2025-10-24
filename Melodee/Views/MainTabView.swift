@@ -43,8 +43,10 @@ struct MainTabView: View {
                     }
                 }
             }
-            Tab(externalFolderTabTitle.isEmpty ? "Tab.ExternalFolder" : externalFolderTabTitle, systemImage: "folder.fill", value: 2) {
+            Tab(value: 2) {
                 FilesView(externalFolderTabTitle: $externalFolderTabTitle)
+            } label: {
+                Label(externalFolderTabTitle.isEmpty ? "Tab.ExternalFolder" : externalFolderTabTitle, systemImage: "folder.fill")
             }
             Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()

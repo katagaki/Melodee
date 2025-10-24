@@ -46,7 +46,7 @@ struct MainTabView: View {
             Tab(value: 2) {
                 FilesView(externalFolderTabTitle: $externalFolderTabTitle)
             } label: {
-                Label(externalFolderTabTitle.isEmpty ? "Tab.ExternalFolder" : externalFolderTabTitle, systemImage: "folder.fill")
+                Label(externalFolderTabTitle.isEmpty ? NSLocalizedString("Tab.ExternalFolder", comment: "") : externalFolderTabTitle, systemImage: "folder.fill")
             }
             Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()

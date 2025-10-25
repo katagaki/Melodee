@@ -10,8 +10,7 @@
 		E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84792AB009B300D87A5F /* ZIPFoundation */; };
 		E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E447AAB92B771CC7009A3D3E /* Komponents */; };
 		E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = E489EF7F2D34932D009AB712 /* ID3TagEditor */; };
-		E496EB2B2EACA76D008F4787 /* LNPopupUI in Frameworks */ = {isa = PBXBuildFile; productRef = E496EB2A2EACA76D008F4787 /* LNPopupUI */; };
-		E496EB2D2EACA76D008F4787 /* LNPopupUI-Static in Frameworks */ = {isa = PBXBuildFile; productRef = E496EB2C2EACA76D008F4787 /* LNPopupUI-Static */; };
+		E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */ = {isa = PBXBuildFile; productRef = E496EB322EACADE3008F4787 /* LNPopupUI-Static */; };
 		E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A622AB3FFA800C5810D /* Zoomy */; };
 		E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A672AB4032900C5810D /* VariableBlurView */; };
 /* End PBXBuildFile section */
@@ -60,8 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */,
-				E496EB2B2EACA76D008F4787 /* LNPopupUI in Frameworks */,
-				E496EB2D2EACA76D008F4787 /* LNPopupUI-Static in Frameworks */,
+				E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
 				E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */,
 				E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */,
@@ -123,8 +121,7 @@
 				E4DB2A672AB4032900C5810D /* VariableBlurView */,
 				E447AAB92B771CC7009A3D3E /* Komponents */,
 				E489EF7F2D34932D009AB712 /* ID3TagEditor */,
-				E496EB2A2EACA76D008F4787 /* LNPopupUI */,
-				E496EB2C2EACA76D008F4787 /* LNPopupUI-Static */,
+				E496EB322EACADE3008F4787 /* LNPopupUI-Static */,
 			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
@@ -371,7 +368,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -418,7 +415,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -524,12 +521,7 @@
 			package = E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */;
 			productName = ID3TagEditor;
 		};
-		E496EB2A2EACA76D008F4787 /* LNPopupUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */;
-			productName = LNPopupUI;
-		};
-		E496EB2C2EACA76D008F4787 /* LNPopupUI-Static */ = {
+		E496EB322EACADE3008F4787 /* LNPopupUI-Static */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */;
 			productName = "LNPopupUI-Static";

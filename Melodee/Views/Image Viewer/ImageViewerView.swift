@@ -43,7 +43,7 @@ struct ImageViewerView: View {
                         .bold()
                         .padding([.leading, .trailing], 8.0)
                         .padding([.top, .bottom], 4.0)
-                        .glassEffect(.regular, in: .capsule)
+                        .adaptiveGlass()
                 }
             }
             .overlay {

@@ -78,4 +78,16 @@ struct MainTabView: View {
             }
         }
     }
+
+    func externalFolderTabTitleFormatted() -> String {
+        if externalFolderTabTitle.isEmpty {
+            return NSLocalizedString("Tab.ExternalFolder", comment: "")
+        } else {
+            if externalFolderTabTitle.count >= 15 {
+                return NSLocalizedString("Tab.ExternalFolder", comment: "")
+            } else {
+                return externalFolderTabTitle
+            }
+        }
+    }
 }

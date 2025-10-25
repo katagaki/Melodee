@@ -58,19 +58,24 @@ struct MainTabView: View {
                 .datastoreLocation(.applicationDefault)
             ])
         }
-        .tabViewBottomAccessory {
+        .adaptiveTabBottomAccessory(isPopupPresented: $nowPlayingBarManager.isSheetPresented) {
+            // Bar content
             NowPlayingBar()
                 .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 .onTapGesture {
                     self.nowPlayingBarManager.isSheetPresented.toggle()
                 }
                 .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
-        }
-        .sheet(isPresented: $nowPlayingBarManager.isSheetPresented) {
-            NowPlayingView()
-                .navigationTransition(
-                    .zoom(sourceID: "NowPlayingBar", in: namespace)
-                )
+        } popupContent: {
+            // Popup content
+            if #available(iOS 19.0, *) {
+                NowPlayingView()
+                    .navigationTransition(
+                        .zoom(sourceID: "NowPlayingBar", in: namespace)
+                    )
+            } else {
+                NowPlayingView()
+            }
         }
     }
 }

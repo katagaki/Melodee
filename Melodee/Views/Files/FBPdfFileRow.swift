@@ -16,6 +16,7 @@ struct FBPdfFileRow: View {
             ListFileRow(file: .constant(file))
                 .tint(.primary)
         }
+        // WARN: Will crash on iOS 18 if built with Xcode < 26.1
         .navigationLinkIndicatorVisibility(.hidden)
     }
 }

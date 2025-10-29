@@ -28,14 +28,14 @@ extension View {
                 .popup(
                     isBarPresented: .constant(true),
                     isPopupOpen: isPopupPresented,
-                    popupContent: barContent
+                    popupContent: popupContent
                 )
                 .popupBarCustomView(
                     wantsDefaultTapGesture: true,
                     wantsDefaultPanGesture: false,
                     wantsDefaultHighlightGesture: false
                 ) {
-                    popupContent()
+                    barContent()
                 }
         }
     }

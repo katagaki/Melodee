@@ -68,7 +68,7 @@ struct MainTabView: View {
                 .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
         } popupContent: {
             // Popup content
-            if #available(iOS 19.0, *) {
+            if #available(iOS 26.0, *) {
                 NowPlayingView()
                     .navigationTransition(
                         .zoom(sourceID: "NowPlayingBar", in: namespace)

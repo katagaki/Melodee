@@ -38,7 +38,6 @@ struct TagEditorView: View {
             }
             TEAvailableTokensSection()
         }
-        .toolbarBackground(.hidden, for: .navigationBar)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .top) {

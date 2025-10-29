@@ -60,7 +60,6 @@ struct NowPlayingView: View {
         .listStyle(.plain)
         .listSectionSpacing(.compact)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
             isClearQueueButtonConfirming = false
         }

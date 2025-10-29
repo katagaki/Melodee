@@ -129,7 +129,6 @@ struct FolderView: View {
             }
         }
         .listStyle(.plain)
-        .scrollContentBackground(.hidden)
         .background(
             .linearGradient(
                 colors: [.backgroundGradientTop, .backgroundGradientBottom],

@@ -54,7 +54,6 @@ struct FilesView: View {
                 }
             }
             .navigationTitle("ViewTitle.Files")
-            .scrollContentBackground(.hidden)
             .background(
                 .linearGradient(
                     colors: [.backgroundGradientTop, .backgroundGradientBottom],

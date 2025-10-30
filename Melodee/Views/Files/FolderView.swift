@@ -297,10 +297,8 @@ struct FolderView: View {
     func openInFilesApp() {
         guard let directory = fileManager.directory else { return }
         
-        // For iOS, we'll open the Files app using the file:// URL scheme
-        // which will open the Files app and navigate to the specified directory
-        if UIApplication.shared.canOpenURL(directory) {
-            UIApplication.shared.open(directory)
-        }
+        // Open the Files app at the specified directory
+        // For iOS, opening a file:// URL will launch the Files app
+        UIApplication.shared.open(directory)
     }
 }

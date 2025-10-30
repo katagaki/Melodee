@@ -8,22 +8,29 @@
             "state" : "translated",
             "value" : ""
           }
-        }
-      }
-    },
-    "Alert.CreatePlaylist.Title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New Playlist"
+            "value" : ""
           }
         },
-        "ja" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新規再生リスト"
+            "value" : ""
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
           }
         }
       }
@@ -42,6 +49,30 @@
             "state" : "translated",
             "value" : "「%1」を削除してもよろしいですか？"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "'%1'을(를) 삭제하시겠습니까?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có chắc chắn muốn xóa '%1' không?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定要删除'%1'吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定要刪除「%1」嗎？"
+          }
         }
       }
     },
@@ -58,6 +89,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイルを削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 삭제"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xóa tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除檔案"
           }
         }
       }
@@ -76,6 +131,30 @@
             "state" : "translated",
             "value" : "解凍中にエラーが発生しました"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "압축 해제 중 오류 발생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lỗi khi giải nén"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解压缩时出错"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解壓縮時發生錯誤"
+          }
         }
       }
     },
@@ -92,6 +171,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1%"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% 완료"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã hoàn thành %1%"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成 %1%"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成 %1%"
           }
         }
       }
@@ -110,6 +213,30 @@
             "state" : "translated",
             "value" : "解凍中…"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "압축 해제 중"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang giải nén"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在解压缩"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在解壓縮"
+          }
         }
       }
     },
@@ -126,6 +253,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1%"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% 태그 읽는 중..."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang đọc thẻ %1%..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取 %1% 的标签..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在讀取 %1% 的標籤..."
           }
         }
       }
@@ -144,6 +295,30 @@
             "state" : "translated",
             "value" : "トラック情報を読み込み中"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "태그 읽는 중"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang đọc thẻ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在读取标签"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在讀取標籤"
+          }
         }
       }
     },
@@ -160,6 +335,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名称変更"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폴더 이름 변경"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đổi tên thư mục"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名文件夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名資料夾"
           }
         }
       }
@@ -178,6 +377,30 @@
             "state" : "translated",
             "value" : "名称変更"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름 변경"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đổi tên tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名檔案"
+          }
         }
       }
     },
@@ -194,6 +417,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1%"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% 태그 저장 중..."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang lưu thẻ %1%..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在保存 %1% 的标签..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在儲存 %1% 的標籤..."
           }
         }
       }
@@ -212,6 +459,30 @@
             "state" : "translated",
             "value" : "トラック情報を保存中"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "태그 저장 중"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang lưu thẻ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在保存标签"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在儲存標籤"
+          }
         }
       }
     },
@@ -228,6 +499,30 @@
             "state" : "translated",
             "value" : "変更しない"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "유지"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giữ nguyên"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保持不变"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保持不變"
+          }
         }
       }
     },
@@ -243,6 +538,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "複数のファイル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여러 파일"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhiều tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多个文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多個檔案"
           }
         }
       }
@@ -261,6 +580,30 @@
             "state" : "translated",
             "value" : "ファイル"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일이 iCloud Drive에 저장됨"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tệp được lưu trữ trong iCloud Drive"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件存储在 iCloud Drive 中"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案儲存在 iCloud Drive 中"
+          }
         }
       }
     },
@@ -278,6 +621,30 @@
             "state" : "translated",
             "value" : "再生リスト"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생목록이 iCloud Drive에 저장됨"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danh sách phát được lưu trữ trong iCloud Drive"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放列表存储在 iCloud Drive 中"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放清單儲存在 iCloud Drive 中"
+          }
         }
       }
     },
@@ -294,6 +661,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "このフォルダーに対応できるファイルがありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 폴더에는 지원되는 파일이 없습니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thư mục này không chứa tệp được hỗ trợ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此文件夹不包含任何支持的文件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此資料夾不包含任何支援的檔案。"
           }
         }
       }
@@ -336,6 +727,78 @@
               }
             }
           }
+        },
+        "ko" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Melodee에 파일을 추가하려면 파일 앱을 열고 'iPad'로 이동한 후 파일을 Melodee 폴더에 넣으세요."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Melodee에 파일을 추가하려면 파일 앱을 열고 'iPhone'으로 이동한 후 파일을 Melodee 폴더에 넣으세요."
+                }
+              }
+            }
+          }
+        },
+        "vi" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Để thêm tệp vào Melodee, hãy mở ứng dụng Tệp, điều hướng đến 'Trên iPad của tôi' và thả tệp của bạn vào thư mục Melodee."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Để thêm tệp vào Melodee, hãy mở ứng dụng Tệp, điều hướng đến 'Trên iPhone của tôi' và thả tệp của bạn vào thư mục Melodee."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "要向 Melodee 添加文件，请打开「文件」应用，导航到「我的 iPad」，然后将文件放入 Melodee 文件夹中。"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "要向 Melodee 添加文件，请打开「文件」应用，导航到「我的 iPhone」，然后将文件放入 Melodee 文件夹中。"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "要向 Melodee 新增檔案，請開啟「檔案」應用程式，導航至「我的 iPad」，然後將檔案放入 Melodee 資料夾中。"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "要向 Melodee 新增檔案，請開啟「檔案」應用程式，導航至「我的 iPhone」，然後將檔案放入 Melodee 資料夾中。"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -352,6 +815,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "メロディーにファイルを追加する方法"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melodee에 파일 추가"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm tệp vào Melodee"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "向 Melodee 添加文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "向 Melodee 新增檔案"
           }
         }
       }
@@ -370,6 +857,194 @@
             "state" : "translated",
             "value" : "画像ファイルを開ませんでした。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 이미지 파일은 지원되지 않습니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tệp hình ảnh này không được hỗ trợ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不支持此图片文件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不支援此圖片檔案。"
+          }
+        }
+      }
+    },
+    "Library.NoFolder.Description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select an external folder to browse its contents."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外部フォルダーを選択して、その内容を閲覧できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "외부 폴더를 선택하여 내용을 탐색하세요."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn một thư mục bên ngoài để duyệt nội dung của nó."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择外部文件夹以浏览其内容。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇外部資料夾以瀏覽其內容。"
+          }
+        }
+      }
+    },
+    "Library.NoFolder.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Folder Selected"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダー未選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "선택된 폴더 없음"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa chọn thư mục"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择文件夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選擇資料夾"
+          }
+        }
+      }
+    },
+    "Library.SelectAnotherFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Another Folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "別のフォルダーを選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다른 폴더 선택"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn thư mục khác"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择其他文件夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇其他資料夾"
+          }
+        }
+      }
+    },
+    "Library.SelectFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダーを選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폴더 선택"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn thư mục"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇資料夾"
+          }
         }
       }
     },
@@ -386,6 +1061,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "著者権表記"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저작자 표시"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghi công"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "归属"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歸屬"
           }
         }
       }
@@ -404,6 +1103,30 @@
             "state" : "translated",
             "value" : "iCloud同期"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 동기화"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ iCloud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 同步"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 同步"
+          }
         }
       }
     },
@@ -417,6 +1140,30 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일반"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chung"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通用"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "一般"
@@ -438,6 +1185,30 @@
             "state" : "translated",
             "value" : "サポート"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "도움말 및 지원"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trợ giúp & Hỗ trợ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帮助与支持"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "說明與支援"
+          }
         }
       }
     },
@@ -455,6 +1226,30 @@
             "state" : "translated",
             "value" : "メールを送信"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이메일 보내기"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gửi email"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送电子邮件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "發送電子郵件"
+          }
         }
       }
     },
@@ -468,6 +1263,30 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ktgk.public@icloud.com"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ktgk.public@icloud.com"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ktgk.public@icloud.com"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ktgk.public@icloud.com"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "ktgk.public@icloud.com"
@@ -489,6 +1308,30 @@
             "state" : "translated",
             "value" : "ソースコードを閲覧"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "소스 코드 보기"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem mã nguồn"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读源代码"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "閱讀原始碼"
+          }
         }
       }
     },
@@ -502,6 +1345,30 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "katagaki/Melodee"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "katagaki/Melodee"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "katagaki/Melodee"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "katagaki/Melodee"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "katagaki/Melodee"
@@ -523,6 +1390,30 @@
             "state" : "translated",
             "value" : "Xでポスト"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X에 게시"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đăng trên X"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 X 上发布"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 X 上發文"
+          }
         }
       }
     },
@@ -536,6 +1427,30 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@katagaki_"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@katagaki_"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@katagaki_"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "@katagaki_"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "@katagaki_"
@@ -557,6 +1472,30 @@
             "state" : "translated",
             "value" : "再生キューをクリア"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대기열 지우기"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xóa hàng đợi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清空队列"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清空佇列"
+          }
         }
       }
     },
@@ -573,6 +1512,30 @@
             "state" : "translated",
             "value" : "再生キューにファイルを追加するには、ファイルに左か右にスワイプしてください。\n左にスワイプすると、そのファイルが再生キューの最後のファイルの後に再生されます。\n右にスワイプすると、そのファイルが再生中のファイルの後に再生されます。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생을 위해 파일을 대기열에 추가하려면 오디오 파일 행을 왼쪽이나 오른쪽으로 스와이프하세요."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Để thêm tệp vào hàng đợi phát, vuốt sang trái hoặc phải trên hàng tệp âm thanh."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要将文件加入播放队列，请在音频文件行上向左或向右滑动。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要將檔案加入播放佇列，請在音訊檔案列上向左或向右滑動。"
+          }
         }
       }
     },
@@ -588,6 +1551,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生キューを使用する方法"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생을 위한 파일 대기열"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm tệp vào hàng đợi để phát"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将文件加入播放队列"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將檔案加入播放佇列"
           }
         }
       }
@@ -606,6 +1593,30 @@
             "state" : "translated",
             "value" : "ファイルを追加"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 추가"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新增檔案"
+          }
         }
       }
     },
@@ -623,6 +1634,30 @@
             "state" : "translated",
             "value" : "よろしいですか？"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확실합니까?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có chắc không?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确定吗？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確定嗎？"
+          }
         }
       }
     },
@@ -638,6 +1673,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "キャンセル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hủy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
           }
         }
       }
@@ -656,22 +1715,29 @@
             "state" : "translated",
             "value" : "変更"
           }
-        }
-      }
-    },
-    "Shared.Create" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create"
+            "value" : "변경"
           }
         },
-        "ja" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "作成"
+            "value" : "Thay đổi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更改"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "變更"
           }
         }
       }
@@ -689,6 +1755,30 @@
             "state" : "translated",
             "value" : "削除"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "삭제"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xóa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "刪除"
+          }
         }
       }
     },
@@ -704,6 +1794,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完了"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "완료"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xong"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
           }
         }
       }
@@ -722,6 +1836,30 @@
             "state" : "translated",
             "value" : "こちらにファイルを移動してください"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기에 파일을 놓으세요"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thả tệp của bạn vào đây"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将文件放在这里"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將檔案放在這裡"
+          }
         }
       }
     },
@@ -739,6 +1877,30 @@
             "state" : "translated",
             "value" : "トラック情報を一括編集"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 파일의 트랙 정보 편집"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉnh sửa thông tin bản nhạc cho tất cả tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑所有文件的曲目信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯所有檔案的曲目資訊"
+          }
         }
       }
     },
@@ -755,21 +1917,29 @@
             "state" : "translated",
             "value" : "トラック情報を編集"
           }
-        }
-      }
-    },
-    "Shared.ExternalFolder" : {
-      "localizations" : {
-        "en" : {
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open External Folder..."
+            "value" : "트랙 정보 편집"
           }
         },
-        "ja" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "外部フォルダーを開く…"
+            "value" : "Chỉnh sửa thông tin bản nhạc"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑曲目信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編輯曲目資訊"
           }
         }
       }
@@ -788,6 +1958,30 @@
             "state" : "translated",
             "value" : "解凍"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "압축 해제"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giải nén"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解压缩"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "解壓縮"
+          }
         }
       }
     },
@@ -803,6 +1997,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 云盘"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 雲碟"
           }
         }
       }
@@ -821,6 +2039,30 @@
             "state" : "translated",
             "value" : "その他"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더 보기"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多"
+          }
         }
       }
     },
@@ -837,6 +2079,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいフォルダー名"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 폴더 이름"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên thư mục mới"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新文件夹名称"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新資料夾名稱"
           }
         }
       }
@@ -855,22 +2121,29 @@
             "state" : "translated",
             "value" : "新しいファイル名"
           }
-        }
-      }
-    },
-    "Shared.NewPlaylistName" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Playlist Name"
+            "value" : "새 파일 이름"
           }
         },
-        "ja" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "再生リスト名"
+            "value" : "Tên tệp mới"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新文件名"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新檔案名稱"
           }
         }
       }
@@ -889,6 +2162,30 @@
             "state" : "translated",
             "value" : "いいえ"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아니요"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "否"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "否"
+          }
         }
       }
     },
@@ -904,6 +2201,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生停止中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생 중인 파일 없음"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có tệp đang phát"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有正在播放的文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "沒有正在播放的檔案"
           }
         }
       }
@@ -921,6 +2242,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "確認"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -962,6 +2307,78 @@
               }
             }
           }
+        },
+        "ko" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              }
+            }
+          }
+        },
+        "vi" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Trên iPad của tôi"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Trên iPhone của tôi"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "我的 iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "我的 iPhone"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "我的 iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "我的 iPhone"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -978,6 +2395,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "「ファイル」アプリに移動"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 앱 열기"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mở ứng dụng Tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开「文件」应用"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟「檔案」應用程式"
           }
         }
       }
@@ -996,6 +2437,30 @@
             "state" : "translated",
             "value" : "再生"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
+          }
         }
       }
     },
@@ -1012,6 +2477,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내용 재생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát nội dung"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放内容"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放內容"
           }
         }
       }
@@ -1030,6 +2519,30 @@
             "state" : "translated",
             "value" : "再帰的に再生"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "내용을 재귀적으로 재생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát nội dung đệ quy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "递归播放内容"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遞迴播放內容"
+          }
         }
       }
     },
@@ -1046,6 +2559,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最後に再生"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막 재생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát cuối cùng"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最后播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後播放"
           }
         }
       }
@@ -1064,6 +2601,30 @@
             "state" : "translated",
             "value" : "次に再生"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "다음 재생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát tiếp theo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一个播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下一個播放"
+          }
         }
       }
     },
@@ -1080,6 +2641,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放"
           }
         }
       }
@@ -1098,6 +2683,30 @@
             "state" : "translated",
             "value" : "再生リスト"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "재생목록"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danh sách phát"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放列表"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "播放清單"
+          }
         }
       }
     },
@@ -1114,6 +2723,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再生キュー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대기열"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng đợi"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "队列"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "佇列"
           }
         }
       }
@@ -1132,6 +2765,30 @@
             "state" : "translated",
             "value" : "最近再生したファイル"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최근 파일"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tệp gần đây"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近使用的檔案"
+          }
         }
       }
     },
@@ -1148,6 +2805,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "名称変更"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이름 변경"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đổi tên"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重命名"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新命名"
           }
         }
       }
@@ -1166,6 +2847,30 @@
             "state" : "translated",
             "value" : "保存"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存"
+          }
         }
       }
     },
@@ -1182,6 +2887,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "「写真」アプリに保存"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사진에 저장"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu vào Ảnh"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存到照片"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存到照片"
           }
         }
       }
@@ -1200,6 +2929,30 @@
             "state" : "translated",
             "value" : "シャッフル"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "셔플"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trộn"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "随机播放"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隨機播放"
+          }
         }
       }
     },
@@ -1215,6 +2968,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "アーティスト名なし"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알 수 없는 아티스트"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nghệ sĩ không xác định"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知艺术家"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未知藝人"
           }
         }
       }
@@ -1233,6 +3010,30 @@
             "state" : "translated",
             "value" : "はい"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "예"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Có"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "是"
+          }
         }
       }
     },
@@ -1249,21 +3050,110 @@
             "state" : "translated",
             "value" : "クラウド上"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "클라우드"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đám mây"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "云"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "雲端"
+          }
         }
       }
     },
-    "Tab.Library" : {
+    "Tab.ExternalFolder" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Library"
+            "value" : "Folder"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ライブラリ"
+            "value" : "フォルダー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폴더"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thư mục"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件夹"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "資料夾"
+          }
+        }
+      }
+    },
+    "Tab.ExternalFolder.Select" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Folder..."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フォルダーを選択…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "폴더 선택..."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn thư mục..."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件夹..."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇資料夾..."
           }
         }
       }
@@ -1329,6 +3219,78 @@
               }
             }
           }
+        },
+        "ko" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              }
+            }
+          }
+        },
+        "vi" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hant" : {
+          "variations" : {
+            "device" : {
+              "ipad" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPad"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "iPhone"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1344,6 +3306,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "その他"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "더 보기"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多"
           }
         }
       }
@@ -1362,6 +3348,30 @@
             "state" : "translated",
             "value" : "アルバム"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앨범"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "专辑"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "專輯"
+          }
         }
       }
     },
@@ -1378,6 +3388,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "アルバムアーティスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앨범 아티스트"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nghệ sĩ album"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "专辑艺术家"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "專輯藝人"
           }
         }
       }
@@ -1396,6 +3430,30 @@
             "state" : "translated",
             "value" : "アーティスト"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아티스트"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nghệ sĩ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "艺术家"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "藝人"
+          }
         }
       }
     },
@@ -1409,6 +3467,30 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作曲家"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "작곡가"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhà soạn nhạc"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作曲家"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "作曲家"
@@ -1430,6 +3512,30 @@
             "state" : "translated",
             "value" : "ディスク番号"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "디스크 번호"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Số đĩa"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "光盘编号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "光碟編號"
+          }
         }
       }
     },
@@ -1446,6 +3552,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ジャンル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "장르"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thể loại"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "流派"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "類型"
           }
         }
       }
@@ -1464,6 +3594,30 @@
             "state" : "translated",
             "value" : "タイトル"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "제목"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiêu đề"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标题"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "標題"
+          }
         }
       }
     },
@@ -1480,6 +3634,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "トラック番号"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "트랙 번호"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Số bản nhạc"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曲目编号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曲目編號"
           }
         }
       }
@@ -1498,6 +3676,30 @@
             "state" : "translated",
             "value" : "年"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연도"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年份"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年份"
+          }
         }
       }
     },
@@ -1514,6 +3716,30 @@
             "state" : "translated",
             "value" : "アルバムカバーを選択"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "앨범 아트 선택"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn ảnh bìa album"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择专辑封面"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇專輯封面"
+          }
         }
       }
     },
@@ -1529,6 +3755,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "「ファイル」アプリから選択"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 앱에서 선택"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn từ ứng dụng Tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从「文件」应用中选择"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從「檔案」應用程式中選擇"
           }
         }
       }
@@ -1547,6 +3797,30 @@
             "state" : "translated",
             "value" : "トラック情報"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "트랙 정보"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thông tin bản nhạc"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曲目信息"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "曲目資訊"
+          }
         }
       }
     },
@@ -1563,6 +3837,30 @@
             "state" : "translated",
             "value" : "変換トークンを利用すると、ファイル名など既存の情報を利用し、より速くトラック情報を記入することができます。\n下にスクロールすると、利用できるトークンがご覧になれます。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "트랙 이름이나 트랙 번호와 같은 기존 정보를 활용하기 위해 다양한 토큰을 사용할 수 있습니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể sử dụng các token khác nhau để tận dụng thông tin hiện có (chẳng hạn như tên bản nhạc hoặc số bản nhạc)."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您可以使用各种标记来利用现有信息（例如曲目名称或曲目编号）。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您可以使用各種變換符號來利用現有資訊（例如曲目名稱或曲目編號）。"
+          }
         }
       }
     },
@@ -1578,6 +3876,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "より速く編集する方法"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "토큰 사용"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sử dụng token"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用标记"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用變換符號"
           }
         }
       }
@@ -1596,6 +3918,30 @@
             "state" : "translated",
             "value" : "ファイル名にある「-」の後ろのテキストに変換します。\n例えば、「さユり - 花の塔.mp3」の場合、「花の塔」になります。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름에서 '-'(대시) 기호 뒤의 텍스트를 나타냅니다.\n예를 들어 \"Never Gonna Give You Up - Rick Astley.mp3\"는 \"Rick Astley\"가 됩니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho văn bản trong tên tệp sau ký hiệu '-' (dấu gạch ngang).\nVí dụ: \"Never Gonna Give You Up - Rick Astley.mp3\" sẽ thành \"Rick Astley\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示文件名中\"-\"（破折号）符号之后的文本。\n例如，\"Never Gonna Give You Up - Rick Astley.mp3\"将变为\"Rick Astley\"。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示檔案名稱中「-」（破折號）符號之後的文字。\n例如，「Never Gonna Give You Up - Rick Astley.mp3」將變為「Rick Astley」。"
+          }
         }
       }
     },
@@ -1612,6 +3958,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル名にある「-」の前のテキストに変換します。\n例えば、「さユり - 花の塔.mp3」の場合、「さユり」になります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름에서 '-'(대시) 기호 앞의 텍스트를 나타냅니다.\n예를 들어 \"Never Gonna Give You Up - Rick Astley.mp3\"는 \"Never Gonna Give You Up\"가 됩니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho văn bản trong tên tệp trước ký hiệu '-' (dấu gạch ngang).\nVí dụ: \"Never Gonna Give You Up - Rick Astley.mp3\" sẽ thành \"Never Gonna Give You Up\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示文件名中\"-\"（破折号）符号之前的文本。\n例如，\"Never Gonna Give You Up - Rick Astley.mp3\"将变为\"Never Gonna Give You Up\"。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示檔案名稱中「-」（破折號）符號之前的文字。\n例如，「Never Gonna Give You Up - Rick Astley.mp3」將變為「Never Gonna Give You Up」。"
           }
         }
       }
@@ -1630,6 +4000,30 @@
             "state" : "translated",
             "value" : "ファイル名にある「.」の後ろのテキストに変換します。\n例えば、「1. 花の塔.mp3」の場合、「花の塔」になります。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름에서 '.'(점) 기호 뒤의 텍스트를 나타냅니다.\n예를 들어 \"1. Never Gonna Give You Up.mp3\"는 \"Never Gonna Give You Up\"가 됩니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho văn bản trong tên tệp sau ký hiệu '.' (dấu chấm).\nVí dụ: \"1. Never Gonna Give You Up.mp3\" sẽ thành \"Never Gonna Give You Up\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示文件名中\".\"（点）符号之后的文本。\n例如，\"1. Never Gonna Give You Up.mp3\"将变为\"Never Gonna Give You Up\"。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示檔案名稱中「.」（點）符號之後的文字。\n例如，「1. Never Gonna Give You Up.mp3」將變為「Never Gonna Give You Up」。"
+          }
         }
       }
     },
@@ -1646,6 +4040,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル名にある「.」の前のテキストに変換します。\n例えば、「1. 花の塔.mp3」の場合、「1」になります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름에서 '.'(점) 기호 앞의 텍스트를 나타냅니다.\n예를 들어 \"1. Never Gonna Give You Up.mp3\"는 \"1\"가 됩니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho văn bản trong tên tệp trước ký hiệu '.' (dấu chấm).\nVí dụ: \"1. Never Gonna Give You Up.mp3\" sẽ thành \"1\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示文件名中\".\"（点）符号之前的文本。\n例如，\"1. Never Gonna Give You Up.mp3\"将变为\"1\"。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示檔案名稱中「.」（點）符號之前的文字。\n例如，「1. Never Gonna Give You Up.mp3」將變為「1」。"
           }
         }
       }
@@ -1664,6 +4082,30 @@
             "state" : "translated",
             "value" : "拡張子なしのファイル名に変換します。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확장자가 없는 파일 이름을 나타냅니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho tên tệp không có phần mở rộng."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示不带扩展名的文件名。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示不含副檔名的檔案名稱。"
+          }
         }
       }
     },
@@ -1680,6 +4122,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "内包しているフォルダーの名前に変換します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "포함 폴더의 이름을 나타냅니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho tên của thư mục chứa."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示包含文件夹的名称。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示包含資料夾的名稱。"
           }
         }
       }
@@ -1698,6 +4164,30 @@
             "state" : "translated",
             "value" : "変換トークン"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "사용 가능한 토큰"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token khả dụng"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用标记"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用的變換符號"
+          }
         }
       }
     },
@@ -1714,6 +4204,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ファイル名にあるトラック番号"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름의 트랙 번호"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Số bản nhạc trong tên tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件名中的曲目编号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案名稱中的曲目編號"
           }
         }
       }
@@ -1732,6 +4246,30 @@
             "state" : "translated",
             "value" : "ファイル名の最前にあるトラック番号に変換します。\n例えば、「【１】花の塔.mp3」の場合、「1」になります。"
           }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파일 이름 시작 부분의 트랙 번호를 나타냅니다.\n예를 들어 \"1. Never Gonna Give You Up.mp3\"는 \"1\"이 됩니다."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại diện cho số bản nhạc ở đầu tên tệp.\nVí dụ: \"1. Never Gonna Give You Up.mp3\" sẽ thành \"1\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示文件名开头的曲目编号。\n例如，\"1. Never Gonna Give You Up.mp3\"将变为\"1\"。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示檔案名稱開頭的曲目編號。\n例如，「【１】花の塔.mp3」的情況下，會變成「1」。"
+          }
         }
       }
     },
@@ -1748,21 +4286,29 @@
             "state" : "translated",
             "value" : "ファイル"
           }
-        }
-      }
-    },
-    "ViewTitle.Library" : {
-      "localizations" : {
-        "en" : {
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Library"
+            "value" : "파일"
           }
         },
-        "ja" : {
+        "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ライブラリ"
+            "value" : "Tệp"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "檔案"
           }
         }
       }

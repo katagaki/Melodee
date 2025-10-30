@@ -11,15 +11,26 @@ import TipKit
 
 struct FolderView: View {
 
-    @Environment(FilesystemManager.self) var fileManager
+    @State var fileManager: FilesystemManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
     @State var isSelectingExternalDirectory = false
+    @State var storageLocation: StorageLocation = .local
 
     var overrideStorageLocation: StorageLocation?
+
+    init(
+        currentDirectory: FSDirectory? = nil,
+        overrideStorageLocation: StorageLocation? = nil,
+        fileManager: FilesystemManager? = nil
+    ) {
+        self.currentDirectory = currentDirectory
+        self.overrideStorageLocation = overrideStorageLocation
+        self._fileManager = State(initialValue: fileManager ?? FilesystemManager())
+    }
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
             .filter {$0.activationState == .foregroundActive }
@@ -96,7 +107,7 @@ struct FolderView: View {
                 ForEach($files, id: \.path) { $file in
                     Group {
                         if let directory = file as? FSDirectory {
-                            FBDirectoryRow(directory: directory)
+                            FBDirectoryRow(directory: directory, storageLocation: storageLocation)
                         } else if let file = file as? FSFile {
                             switch file.type {
                             case .audio: FBAudioFileRow(file: file)
@@ -173,10 +184,11 @@ struct FolderView: View {
                 }
             }
         }
+        .environment(fileManager)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if let overrideStorageLocation {
-                fileManager.storageLocation = overrideStorageLocation
+                storageLocation = overrideStorageLocation
             }
             if !state.isInitialLoadCompleted {
                 refreshFiles()
@@ -196,22 +208,22 @@ struct FolderView: View {
                 state.newDirectoryName = ""
             }
         }
-        .onChange(of: fileManager.storageLocation) { _, newValue in
-            switch newValue {
-            case .local:
-                fileManager.directory = fileManager.documentsDirectoryURL
-            case .cloud:
-                fileManager.directory = fileManager.cloudDocumentsDirectoryURL
-            case .external:
-                debugPrint("DocumentPicker's responsibility has been fulfilled")
-            }
-            refreshFiles()
-        }
         .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
     }
 
+    func updateFileManagerDirectory() {
+        switch storageLocation {
+        case .local:
+            fileManager.directory = fileManager.documentsDirectoryURL
+        case .cloud:
+            fileManager.directory = fileManager.cloudDocumentsDirectoryURL
+        case .external:
+            debugPrint("External directory already set")
+        }
+    }
+
     func viewTitle() -> String {
-        switch fileManager.storageLocation {
+        switch storageLocation {
         case .cloud:
             return currentDirectory?.name ??
             NSLocalizedString("Shared.iCloudDrive", comment: "")
@@ -225,6 +237,7 @@ struct FolderView: View {
     }
 
     func refreshFiles() {
+        updateFileManagerDirectory()
         withAnimation {
             self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
             state.isInitialLoadCompleted = true

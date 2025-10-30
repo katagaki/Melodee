@@ -14,14 +14,16 @@ struct MainTabView: View {
 
     @State var localFilesTabPath: [ViewPath] = []
     @State var cloudFilesTabPath: [ViewPath] = []
+    @AppStorage("SelectedTab") var selectedTab: Int = 0
+    @State var externalFolderTabTitle: String = ""
 
     @Namespace var namespace
 
     var body: some View {
         @Bindable var nowPlayingBarManager = nowPlayingBarManager
 
-        TabView {
-            Tab("Tab.Local", systemImage: "iphone") {
+        TabView(selection: $selectedTab) {
+            Tab("Tab.Local", systemImage: "iphone", value: 0) {
                 NavigationStack(path: $localFilesTabPath) {
                     FolderView(
                         currentDirectory: nil,
@@ -31,7 +33,7 @@ struct MainTabView: View {
                 }
             }
             if FileManager.default.ubiquityIdentityToken != nil {
-                Tab("Tab.Cloud", systemImage: "cloud.fill") {
+                Tab("Tab.Cloud", systemImage: "cloud.fill", value: 1) {
                     NavigationStack(path: $cloudFilesTabPath) {
                         FolderView(
                             currentDirectory: nil,
@@ -41,10 +43,12 @@ struct MainTabView: View {
                     }
                 }
             }
-            Tab("Tab.Library", systemImage: "music.note.square.stack.fill") {
-                FilesView()
+            Tab(value: 2) {
+                FilesView(externalFolderTabTitle: $externalFolderTabTitle)
+            } label: {
+                Label(externalFolderTabTitleFormatted(), systemImage: "folder.fill")
             }
-            Tab("Tab.More", systemImage: "ellipsis") {
+            Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()
             }
         }
@@ -54,19 +58,36 @@ struct MainTabView: View {
                 .datastoreLocation(.applicationDefault)
             ])
         }
-        .tabViewBottomAccessory {
+        .adaptiveTabBottomAccessory(isPopupPresented: $nowPlayingBarManager.isSheetPresented) {
+            // Bar content
             NowPlayingBar()
                 .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 .onTapGesture {
                     self.nowPlayingBarManager.isSheetPresented.toggle()
                 }
                 .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
+        } popupContent: {
+            // Popup content
+            if #available(iOS 26.0, *) {
+                NowPlayingView()
+                    .navigationTransition(
+                        .zoom(sourceID: "NowPlayingBar", in: namespace)
+                    )
+            } else {
+                NowPlayingView()
+            }
         }
-        .sheet(isPresented: $nowPlayingBarManager.isSheetPresented) {
-            NowPlayingView()
-                .navigationTransition(
-                    .zoom(sourceID: "NowPlayingBar", in: namespace)
-                )
+    }
+
+    func externalFolderTabTitleFormatted() -> String {
+        if externalFolderTabTitle.isEmpty {
+            return NSLocalizedString("Tab.ExternalFolder.Select", comment: "")
+        } else {
+            if externalFolderTabTitle.count >= 15 {
+                return NSLocalizedString("Tab.ExternalFolder", comment: "")
+            } else {
+                return externalFolderTabTitle
+            }
         }
     }
 }

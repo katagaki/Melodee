@@ -159,5 +159,7 @@ struct FilesView: View {
             // If path is empty, use the root folder name
             externalFolderTabTitle = selectedFolderName
         }
+        // Note: If viewing a file (not navigating to a directory), we intentionally
+        // don't update the title to preserve the parent directory context
     }
 }

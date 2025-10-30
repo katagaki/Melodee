@@ -97,6 +97,10 @@ struct FilesView: View {
                 // Restore external folder on first appearance
                 restoreExternalFolderBookmark()
             }
+            .onChange(of: filesTabPath) { _, newPath in
+                // Update tab title based on current navigation path
+                updateExternalFolderTabTitle(path: newPath)
+            }
             .hasFileBrowserNavigationDestinations()
         }
     }
@@ -142,6 +146,18 @@ struct FilesView: View {
         } catch {
             debugPrint("Failed to resolve bookmark: \(error)")
             UserDefaults.standard.removeObject(forKey: "ExternalFolderBookmark")
+        }
+    }
+
+    func updateExternalFolderTabTitle(path: [ViewPath]) {
+        // Get the last directory in the navigation path
+        if let lastPath = path.last {
+            if case .fileBrowser(let directory, _) = lastPath, let directory = directory {
+                externalFolderTabTitle = directory.name
+            }
+        } else {
+            // If path is empty, use the root folder name
+            externalFolderTabTitle = selectedFolderName
         }
     }
 }

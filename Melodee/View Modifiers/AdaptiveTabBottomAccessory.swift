@@ -20,7 +20,7 @@ extension View {
                 .tabViewBottomAccessory {
                     barContent()
                 }
-                .sheet(isPresented: isPopupPresented) {
+                .fullScreenCover(isPresented: isPopupPresented) {
                     popupContent()
                 }
         } else {

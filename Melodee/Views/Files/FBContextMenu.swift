@@ -40,6 +40,12 @@ struct FBContextMenu: View {
                 } label: {
                     Label("Shared.Play.Last", systemImage: "text.line.last.and.arrowtriangle.forward")
                 }
+                Button {
+                    state.fileBeingConverted = file
+                    state.isSelectingConversionFormat = true
+                } label: {
+                    Label("Shared.Convert", systemImage: "arrow.triangle.2.circlepath")
+                }
                 Divider()
             } else if file.type == .image {
                 if let image = UIImage(contentsOfFile: file.path) {

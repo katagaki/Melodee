@@ -14,6 +14,7 @@ struct FileBrowserAlerts: ViewModifier {
 
     @Binding var state: FBState
     var refreshFiles: () -> Void
+    var convertAudio: (AudioFormat) -> Void
 
     func body(content: Content) -> some View {
         content
@@ -63,11 +64,31 @@ struct FileBrowserAlerts: ViewModifier {
                 Text(NSLocalizedString("Alert.DeleteFile.Text", comment: "")
                     .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
             })
+            .confirmationDialog("Alert.ConvertAudio.Title", 
+                              isPresented: $state.isSelectingConversionFormat,
+                              titleVisibility: .visible) {
+                ForEach(AudioFormat.allCases, id: \.self) { format in
+                    if format.fileExtension != state.fileBeingConverted?.extension {
+                        Button(format.displayName) {
+                            convertAudio(format)
+                        }
+                    }
+                }
+                Button("Shared.Cancel", role: .cancel) {
+                    state.fileBeingConverted = nil
+                }
+            } message: {
+                Text("Alert.ConvertAudio.Text")
+            }
     }
 }
 
 extension View {
-    func fileBrowserAlerts(state: Binding<FBState>, refreshFiles: @escaping () -> Void) -> some View {
-        self.modifier(FileBrowserAlerts(state: state, refreshFiles: refreshFiles))
+    func fileBrowserAlerts(state: Binding<FBState>, 
+                          refreshFiles: @escaping () -> Void,
+                          convertAudio: @escaping (AudioFormat) -> Void) -> some View {
+        self.modifier(FileBrowserAlerts(state: state, 
+                                       refreshFiles: refreshFiles,
+                                       convertAudio: convertAudio))
     }
 }

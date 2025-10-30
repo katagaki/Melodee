@@ -13,6 +13,7 @@ struct FolderView: View {
 
     @State var fileManager: FilesystemManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
+    @State var audioConverter = AudioConverter()
 
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
@@ -183,6 +184,29 @@ struct FolderView: View {
                     }
                 }
             }
+            if state.isConvertingAudio {
+                ZStack(alignment: .center) {
+                    Color.black.opacity(0.3)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    VStack(alignment: .center, spacing: 10.0) {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(1.5)
+                        Text("Alert.ConvertingAudio.Title")
+                            .bold()
+                            .padding(.top, 20)
+                        Text("Alert.ConvertingAudio.Text")
+                            .font(.subheadline)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    .padding(30)
+                    .background(.thickMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 16.0))
+                    .padding(.all, 32.0)
+                }
+                .transition(AnyTransition.opacity)
+            }
         }
         .environment(fileManager)
         .navigationBarTitleDisplayMode(.inline)
@@ -208,7 +232,7 @@ struct FolderView: View {
                 state.newDirectoryName = ""
             }
         }
-        .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
+        .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles, convertAudio: convertAudio)
     }
 
     func updateFileManagerDirectory() {
@@ -276,5 +300,37 @@ struct FolderView: View {
 
     func folderContainsEditableMP3s() -> Bool {
         files.contains { ($0 as? FSFile)?.extension == "mp3" }
+    }
+    
+    func convertAudio(to format: AudioFormat) {
+        guard let fileToConvert = state.fileBeingConverted else { return }
+        
+        withAnimation(.easeOut.speed(2)) {
+            state.isConvertingAudio = true
+        }
+        
+        audioConverter.convert(inputFile: fileToConvert, outputFormat: format) { result in
+            withAnimation(.easeOut.speed(2)) {
+                state.isConvertingAudio = false
+            }
+            
+            switch result {
+            case .success:
+                // Show success message
+                state.errorText = NSLocalizedString("Alert.ConversionComplete.Text", comment: "")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    state.isErrorAlertPresenting = true
+                }
+                refreshFiles()
+            case .failure(let error):
+                // Show error message
+                state.errorText = error.localizedDescription
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    state.isErrorAlertPresenting = true
+                }
+            }
+            
+            state.fileBeingConverted = nil
+        }
     }
 }

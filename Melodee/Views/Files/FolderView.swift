@@ -11,16 +11,26 @@ import TipKit
 
 struct FolderView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-    @Environment(FilesystemManager.self) var fileManager
+    @State var fileManager: FilesystemManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
     @State var isSelectingExternalDirectory = false
+    @State var storageLocation: StorageLocation = .local
 
     var overrideStorageLocation: StorageLocation?
+
+    init(
+        currentDirectory: FSDirectory? = nil,
+        overrideStorageLocation: StorageLocation? = nil,
+        fileManager: FilesystemManager? = nil
+    ) {
+        self.currentDirectory = currentDirectory
+        self.overrideStorageLocation = overrideStorageLocation
+        self._fileManager = State(initialValue: fileManager ?? FilesystemManager())
+    }
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
             .filter {$0.activationState == .foregroundActive }
@@ -97,7 +107,7 @@ struct FolderView: View {
                 ForEach($files, id: \.path) { $file in
                     Group {
                         if let directory = file as? FSDirectory {
-                            FBDirectoryRow(directory: directory)
+                            FBDirectoryRow(directory: directory, storageLocation: storageLocation)
                         } else if let file = file as? FSFile {
                             switch file.type {
                             case .audio: FBAudioFileRow(file: file)
@@ -119,9 +129,6 @@ struct FolderView: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            if folderContainsEditableMP3s() {
-                FBTagSection(files: $files)
-            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -135,7 +142,11 @@ struct FolderView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 // HACK: Prevent weird animation when going from view to view
-                HStack { }
+                if folderContainsEditableMP3s() {
+                    FBMenu(files: $files)
+                } else {
+                    EmptyView()
+                }
             }
             ToolbarItem(placement: .principal) {
                 Text(viewTitle())
@@ -173,56 +184,11 @@ struct FolderView: View {
                 }
             }
         }
-        .alert("Alert.RenameFile.Title", isPresented: $state.isRenamingFile, actions: {
-            TextField("Shared.NewFileName", text: $state.newFileName)
-            Button("Shared.Change") {
-                if let fileBeingRenamed = state.fileBeingRenamed {
-                    fileManager.rename(file: fileBeingRenamed, newName: state.newFileName)
-                    refreshFiles()
-                }
-            }
-            .disabled(state.newFileName == "")
-            Button("Shared.Cancel", role: .cancel) {
-                state.fileBeingRenamed = nil
-            }
-        })
-        .alert("Alert.RenameDirectory.Title", isPresented: $state.isRenamingDirectory, actions: {
-            TextField("Shared.NewDirectoryName", text: $state.newDirectoryName)
-            Button("Shared.Change") {
-                if let directoryBeingRenamed = state.directoryBeingRenamed {
-                    fileManager.rename(directory: directoryBeingRenamed,
-                                                newName: state.newDirectoryName)
-                    refreshFiles()
-                }
-            }
-            .disabled(state.newDirectoryName == "")
-            Button("Shared.Cancel", role: .cancel) {
-                state.directoryBeingRenamed = nil
-            }
-        })
-        .alert("Alert.ExtractingZIP.Error.Title", isPresented: $state.isErrorAlertPresenting, actions: {
-            Button("Shared.OK", role: .cancel) { }
-        }, message: {
-            Text(verbatim: state.errorText)
-        })
-        .alert("Alert.DeleteFile.Title", isPresented: $state.isDeletingFileOrDirectory, actions: {
-            Button("Shared.Yes", role: .destructive) {
-                if let fileOrDirectoryBeingDeleted = state.fileOrDirectoryBeingDeleted {
-                    fileManager.delete(fileOrDirectoryBeingDeleted)
-                    refreshFiles()
-                }
-            }
-            Button("Shared.No", role: .cancel) {
-                state.fileOrDirectoryBeingDeleted = nil
-            }
-        }, message: {
-            Text(NSLocalizedString("Alert.DeleteFile.Text", comment: "")
-                .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
-        })
+        .environment(fileManager)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if let overrideStorageLocation {
-                fileManager.storageLocation = overrideStorageLocation
+                storageLocation = overrideStorageLocation
             }
             if !state.isInitialLoadCompleted {
                 refreshFiles()
@@ -242,21 +208,22 @@ struct FolderView: View {
                 state.newDirectoryName = ""
             }
         }
-        .onChange(of: fileManager.storageLocation) { _, newValue in
-            switch newValue {
-            case .local:
-                fileManager.directory = fileManager.documentsDirectoryURL
-            case .cloud:
-                fileManager.directory = fileManager.cloudDocumentsDirectoryURL
-            case .external:
-                debugPrint("DocumentPicker's responsibility has been fulfilled")
-            }
-            refreshFiles()
+        .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
+    }
+
+    func updateFileManagerDirectory() {
+        switch storageLocation {
+        case .local:
+            fileManager.directory = fileManager.documentsDirectoryURL
+        case .cloud:
+            fileManager.directory = fileManager.cloudDocumentsDirectoryURL
+        case .external:
+            debugPrint("External directory already set")
         }
     }
 
     func viewTitle() -> String {
-        switch fileManager.storageLocation {
+        switch storageLocation {
         case .cloud:
             return currentDirectory?.name ??
             NSLocalizedString("Shared.iCloudDrive", comment: "")
@@ -270,6 +237,7 @@ struct FolderView: View {
     }
 
     func refreshFiles() {
+        updateFileManagerDirectory()
         withAnimation {
             self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
             state.isInitialLoadCompleted = true

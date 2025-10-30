@@ -9,16 +9,14 @@ import SwiftUI
 
 struct FBPdfFileRow: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-
     @State var file: FSFile
 
     var body: some View {
-        Button {
-            navigationManager.push(ViewPath.pdfViewer(file: file), for: .fileManager)
-        } label: {
+        NavigationLink(value: ViewPath.pdfViewer(file: file)) {
             ListFileRow(file: .constant(file))
                 .tint(.primary)
         }
+        // WARN: Will crash on iOS 18 if built with Xcode < 26.1
+        .navigationLinkIndicatorVisibility(.hidden)
     }
 }

@@ -10,77 +10,48 @@ import SwiftUI
 
 struct FilesView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
-    @Environment(FilesystemManager.self) var fileManager
-    @Environment(PlaylistManager.self) var playlistManager
-    @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
+    @State var fileManager: FilesystemManager = FilesystemManager()
 
-    @State var isPresentingMoreSheet: Bool = false
     @State var isSelectingExternalDirectory: Bool = false
+    @State var hasSelectedExternalDirectory: Bool = false
+    @State var selectedFolderName: String = ""
 
     @State var isCreatingPlaylist: Bool = false
     @State var newPlaylistName: String = ""
 
+    @State var filesTabPath: [ViewPath] = []
     @State var forceRefreshFlag: Bool = false
 
+    @Binding var externalFolderTabTitle: String
+
+    @Namespace var namespace
+
     var body: some View {
-        @Bindable var playlistManager = playlistManager
-        NavigationStack(path: $navigationManager.filesTabPath) {
-            List {
-                Section {
-                    if FileManager.default.ubiquityIdentityToken != nil {
-                        NavigationLink(value: ViewPath.fileBrowser(directory: nil, storageLocation: .cloud)) {
-                            ListRow(image: "ListIcon.iCloud", title: "Shared.iCloudDrive")
-                        }
-                    }
-                    NavigationLink(value: ViewPath.fileBrowser(directory: nil, storageLocation: .local)) {
-                        ListRow(image: "ListIcon.OnMyDevice", title: "Shared.OnMyDevice")
-                    }
-                    Button {
-                        isSelectingExternalDirectory = true
-                    } label: {
-                        Text("Shared.ExternalFolder")
-                    }
-                } header: {
-                    ListSectionHeader(text: "Shared.StorageLocations")
-                }
-                Section {
-                    Button {
-                        let documentsUrl = FileManager.default.urls(for: .documentDirectory,
-                                                                    in: .userDomainMask).first!
-                        if let sharedUrl = URL(string: "shareddocuments://\(documentsUrl.path)") {
-                            if UIApplication.shared.canOpenURL(sharedUrl) {
-                                UIApplication.shared.open(sharedUrl, options: [:])
-                            }
-                        }
-                    } label: {
-                        ListRow(image: "ListIcon.Files", title: "Shared.OpenFilesApp")
-                    }
-                }
-                #if DEBUG
-                Section {
-                    //
-                } header: {
-                    ListSectionHeader(text: "Shared.RecentFiles")
-                }
-                Section {
-                    ForEach(playlistManager.playlists, id: \.id) { playlist in
-                        NavigationLink(value: ViewPath.playlist(playlist: playlist)) {
-                            Label(playlist.name, systemImage: "music.note.list")
-                        }
-                    }
-                } header: {
-                    HStack(alignment: .center, spacing: 8.0) {
-                        ListSectionHeader(text: "Shared.Playlists")
-                        Spacer()
+        NavigationStack(path: $filesTabPath) {
+            Group {
+                if hasSelectedExternalDirectory {
+                    // Show the external folder browser
+                    FolderView(
+                        currentDirectory: nil,
+                        overrideStorageLocation: .external,
+                        fileManager: fileManager
+                    )
+                    .id(forceRefreshFlag)
+                } else {
+                    // Show ContentUnavailableView when no folder is selected
+                    ContentUnavailableView {
+                        Label("Library.NoFolder.Title", systemImage: "folder.badge.questionmark")
+                    } description: {
+                        Text("Library.NoFolder.Description")
+                    } actions: {
                         Button {
-                            isCreatingPlaylist = true
+                            isSelectingExternalDirectory = true
                         } label: {
-                            Image(systemName: "plus")
+                            Text("Library.SelectFolder")
                         }
+                        .buttonStyle(.borderedProminent)
                     }
                 }
-                #endif
             }
             .navigationTitle("ViewTitle.Files")
             .scrollContentBackground(.hidden)
@@ -91,26 +62,16 @@ struct FilesView: View {
                     endPoint: .bottom
                 )
             )
-            .refreshable {
-                forceRefreshFlag.toggle()
-            }
-            .navigationDestination(for: ViewPath.self, destination: { viewPath in
-                switch viewPath {
-                case .fileBrowser(let directory, let storageLocation):
-                    FolderView(currentDirectory: directory, overrideStorageLocation: storageLocation)
-                case .imageViewer(let file): ImageViewerView(file: file)
-                case .textViewer(let file): TextViewerView(file: file)
-                case .pdfViewer(let file): PDFViewerView(file: file)
-                case .tagEditorSingle(let file): TagEditorView(files: [file])
-                case .tagEditorMultiple(let files): TagEditorView(files: files)
-                case .playlist(let playlist): PlaylistView(playlist: playlist)
-                default: Color.clear
+            .toolbar {
+                if hasSelectedExternalDirectory {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            isSelectingExternalDirectory = true
+                        } label: {
+                            Text("Library.SelectAnotherFolder")
+                        }
+                    }
                 }
-            })
-            .sheet(isPresented: $isPresentingMoreSheet) {
-                MoreView()
-                    .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $isSelectingExternalDirectory) {
                 DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
@@ -118,41 +79,69 @@ struct FilesView: View {
                     fileManager.storageLocation = .external
                     let isAccessSuccessful = url.startAccessingSecurityScopedResource()
                     if isAccessSuccessful {
-                        navigationManager.push(ViewPath.fileBrowser(directory: nil, storageLocation: .external),
-                                               for: .fileManager)
+                        hasSelectedExternalDirectory = true
+                        selectedFolderName = url.lastPathComponent
+                        externalFolderTabTitle = url.lastPathComponent
+                        filesTabPath.removeAll()
+                        // Save bookmark for persistence
+                        saveExternalFolderBookmark(url: url)
+                        // Trigger refresh by toggling the flag
+                        forceRefreshFlag.toggle()
                     } else {
                         url.stopAccessingSecurityScopedResource()
                     }
                 })
                 .ignoresSafeArea(edges: [.bottom])
             }
-            .alert("Alert.CreatePlaylist.Title", isPresented: $isCreatingPlaylist, actions: {
-                TextField("Shared.NewPlaylistName", text: $newPlaylistName)
-                Button("Shared.Create") {
-                    isCreatingPlaylist = false
-                }
-                .disabled(newPlaylistName == "")
-                Button("Shared.Cancel", role: .cancel) {
-                    newPlaylistName = ""
-                }
-            })
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isPresentingMoreSheet = true
-                    } label: {
-                        Label("Shared.More", systemImage: "ellipsis.circle")
-                    }
-                }
+            .onAppear {
+                // Restore external folder on first appearance
+                restoreExternalFolderBookmark()
             }
-            .onChange(of: isCreatingPlaylist) { oldValue, newValue in
-                if oldValue && !newValue {
-                    if newPlaylistName != "" {
-                        playlistManager.create(newPlaylistName)
-                        newPlaylistName = ""
-                    }
-                }
+            .hasFileBrowserNavigationDestinations()
+        }
+    }
+
+    func saveExternalFolderBookmark(url: URL) {
+        do {
+            let bookmarkData = try url.bookmarkData(
+                options: .minimalBookmark,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )
+            UserDefaults.standard.set(bookmarkData, forKey: "ExternalFolderBookmark")
+        } catch {
+            debugPrint("Failed to create bookmark: \(error)")
+        }
+    }
+
+    func restoreExternalFolderBookmark() {
+        guard !hasSelectedExternalDirectory,
+              let bookmarkData = UserDefaults.standard.data(forKey: "ExternalFolderBookmark") else {
+            return
+        }
+        do {
+            var isStale = false
+            let url = try URL(
+                resolvingBookmarkData: bookmarkData,
+                options: .withoutUI,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale
+            )
+            if isStale {
+                saveExternalFolderBookmark(url: url)
             }
+            let isAccessSuccessful = url.startAccessingSecurityScopedResource()
+            if isAccessSuccessful {
+                fileManager.directory = url
+                fileManager.storageLocation = .external
+                hasSelectedExternalDirectory = true
+                selectedFolderName = url.lastPathComponent
+                externalFolderTabTitle = url.lastPathComponent
+                forceRefreshFlag.toggle()
+            }
+        } catch {
+            debugPrint("Failed to resolve bookmark: \(error)")
+            UserDefaults.standard.removeObject(forKey: "ExternalFolderBookmark")
         }
     }
 }

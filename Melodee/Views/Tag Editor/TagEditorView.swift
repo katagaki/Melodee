@@ -13,7 +13,6 @@ import TipKit
 // swiftlint:disable type_body_length
 struct TagEditorView: View {
 
-    @EnvironmentObject var navigationManager: NavigationManager
     @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
 
     let id3TagEditor = ID3TagEditor()

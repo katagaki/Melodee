@@ -43,8 +43,7 @@ struct ImageViewerView: View {
                         .bold()
                         .padding([.leading, .trailing], 8.0)
                         .padding([.top, .bottom], 4.0)
-                        .background(Material.thin)
-                        .clipShape(RoundedRectangle(cornerRadius: 99))
+                        .adaptiveGlass()
                 }
             }
             .overlay {

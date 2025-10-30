@@ -10,16 +10,14 @@ import SwiftUI
 
 struct MoreView: View {
 
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var navigationManager: NavigationManager
-
     @AppStorage(wrappedValue: false, "CloudStoresPlaylists") var storePlaylistsInCloud: Bool
     @AppStorage(wrappedValue: false, "CloudStoresFiles") var storeFilesInCloud: Bool
 
+    @State var moreTabPath: [ViewPath] = []
     @State var isPendingMoveToiCloudPrompt: Bool = false
 
     var body: some View {
-        NavigationStack(path: $navigationManager.moreTabPath) {
+        NavigationStack(path: $moreTabPath) {
             MoreList(repoName: "katagaki/Melodee", viewPath: ViewPath.moreAttributions) {
                 // TODO: Implement playlists
                 if false && FileManager.default.ubiquityIdentityToken != nil {
@@ -39,7 +37,6 @@ struct MoreView: View {
                     }
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isPendingMoveToiCloudPrompt) {
                 MoreMoveToCloudView(storeFilesInCloud: $storeFilesInCloud)
                     .interactiveDismissDisabled()
@@ -142,7 +139,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """),
-    License(libraryName: "LNPopupUI", text: """
+    License(libraryName: "LNPopupUI", text:
+"""
 MIT License
 
 Copyright (c) 2020 Leo Natan
@@ -238,13 +236,6 @@ THE SOFTWARE.
                 default: Color.clear
                 }
             })
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    CloseButton {
-                        dismiss()
-                    }
-                }
-            }
             .onChange(of: storeFilesInCloud) { oldValue, newValue in
                 if !oldValue && newValue {
                     isPendingMoveToiCloudPrompt = true

@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/chicio/ID3TagEditor",
       "state" : {
-        "revision" : "64f5667df0e779f2f02a08b7084b0cb5bd83ce61",
-        "version" : "5.2.0"
+        "revision" : "adcebd1680ac1a93f8a95f84c515680cac3c69d6",
+        "version" : "5.4.0"
       }
     },
     {
@@ -25,7 +25,7 @@
       "location" : "https://github.com/katagaki/Komponents",
       "state" : {
         "branch" : "main",
-        "revision" : "ac1ef7aefb1c4b5a0af65251cb8f14dd42bd1eb6"
+        "revision" : "2431ce046638dc3b86fa187ddcab0f1ed00b321d"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNPopupController.git",
       "state" : {
-        "revision" : "e14712b8077f9d25c2b70d23241e922537673338",
-        "version" : "3.0.7"
+        "revision" : "d1206aeab8c5c53a63408e7e18c3b0569732e6f6",
+        "version" : "4.3.4"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNPopupUI",
       "state" : {
-        "revision" : "6d0cfc898421390c1c32211304a18b1d6f0ec4e4",
-        "version" : "2.0.1"
+        "revision" : "1d44156e1acc5e218770ee8df93faa42ae9175c9",
+        "version" : "2.6.0"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LeoNatan/LNSwiftUIUtils.git",
       "state" : {
-        "revision" : "7be14fd7942f6b215f4b1912315f9e67266cb082",
-        "version" : "1.1.2"
+        "revision" : "6681938f1f2c591736a912789ea80451200d1484",
+        "version" : "1.1.4"
       }
     },
     {
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
-        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
-        "version" : "0.9.19"
+        "revision" : "22787ffb59de99e5dc1fbfe80b19c97a904ad48d",
+        "version" : "0.9.20"
       }
     },
     {

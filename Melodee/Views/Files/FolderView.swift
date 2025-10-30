@@ -158,9 +158,25 @@ struct FolderView: View {
             }
         }
         .overlay {
-            if files.count == 0 && currentDirectory == nil {
-                TipView(FBNoFilesTip())
-                    .padding(20.0)
+            if files.count == 0 && currentDirectory == nil && state.isInitialLoadCompleted {
+                // Show ContentUnavailableView with button for root directories
+                if storageLocation == .local || storageLocation == .cloud {
+                    ContentUnavailableView {
+                        Label("FileBrowser.Tip.NoFiles.Title", systemImage: "questionmark.folder.fill")
+                    } description: {
+                        Text("FileBrowser.Tip.NoFiles.Text")
+                    } actions: {
+                        Button {
+                            openInFilesApp()
+                        } label: {
+                            Text("FileBrowser.OpenInFiles")
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                } else {
+                    TipView(FBNoFilesTip())
+                        .padding(20.0)
+                }
             } else if files.count == 0 && state.isInitialLoadCompleted {
                 ContentUnavailableView("FileBrowser.Hint", systemImage: "questionmark.folder")
                     .font(.body)
@@ -276,5 +292,15 @@ struct FolderView: View {
 
     func folderContainsEditableMP3s() -> Bool {
         files.contains { ($0 as? FSFile)?.extension == "mp3" }
+    }
+    
+    func openInFilesApp() {
+        guard let directory = fileManager.directory else { return }
+        
+        // For iOS, we'll open the Files app using the file:// URL scheme
+        // which will open the Files app and navigate to the specified directory
+        if UIApplication.shared.canOpenURL(directory) {
+            UIApplication.shared.open(directory)
+        }
     }
 }

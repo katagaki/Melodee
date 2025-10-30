@@ -173,9 +173,6 @@ struct FolderView: View {
                         }
                         .buttonStyle(.borderedProminent)
                     }
-                } else {
-                    TipView(FBNoFilesTip())
-                        .padding(20.0)
                 }
             } else if files.count == 0 && state.isInitialLoadCompleted {
                 ContentUnavailableView("FileBrowser.Hint", systemImage: "questionmark.folder")
@@ -293,7 +290,7 @@ struct FolderView: View {
     func folderContainsEditableMP3s() -> Bool {
         files.contains { ($0 as? FSFile)?.extension == "mp3" }
     }
-    
+
     func openInFilesApp() {
         let filesUrl: URL = FileManager.default.urls(
             for: .documentDirectory,

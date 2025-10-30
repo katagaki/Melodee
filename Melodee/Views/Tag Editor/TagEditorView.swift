@@ -137,6 +137,7 @@ struct TagEditorView: View {
             }
         }
         .disabled(saveState == .saving)
+        .scrollDismissesKeyboard(.interactively)
         .sheet(isPresented: $isSelectingFile) {
             DocumentPicker(allowedUTIs: [.image], onDocumentPicked: { url in
                 let isAccessSuccessful = url.startAccessingSecurityScopedResource()
@@ -161,22 +162,6 @@ struct TagEditorView: View {
                 ProgressAlert(title: "Alert.SavingTags.Title",
                               message: "Alert.SavingTags.Text",
                               percentage: $savePercentage)
-            }
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                if focusedField == .trackNumber {
-                    Button("TagEditor.Tokens.TrackNumber") {
-                        tagData.track = "%TRACKNUMBER%"
-                    }
-                    .buttonStyle(.bordered)
-                    .clipShape(RoundedRectangle(cornerRadius: 99))
-                }
-                Spacer()
-                Button("Shared.Done") {
-                    focusedField = nil
-                }
-                .bold()
             }
         }
         .task {

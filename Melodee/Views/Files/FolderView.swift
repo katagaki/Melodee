@@ -299,6 +299,10 @@ struct FolderView: View {
         
         // Open the Files app at the specified directory
         // For iOS, opening a file:// URL will launch the Files app
-        UIApplication.shared.open(directory)
+        UIApplication.shared.open(directory) { success in
+            if !success {
+                debugPrint("Failed to open Files app at directory: \(directory)")
+            }
+        }
     }
 }

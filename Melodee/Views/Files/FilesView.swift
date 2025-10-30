@@ -151,11 +151,11 @@ struct FilesView: View {
 
     func updateExternalFolderTabTitle(path: [ViewPath]) {
         // Get the last directory in the navigation path
-        if let lastPath = path.last {
-            if case .fileBrowser(let directory, _) = lastPath, let directory = directory {
-                externalFolderTabTitle = directory.name
-            }
-        } else {
+        if let lastPath = path.last,
+           case .fileBrowser(let directory, _) = lastPath,
+           let directory = directory {
+            externalFolderTabTitle = directory.name
+        } else if path.isEmpty {
             // If path is empty, use the root folder name
             externalFolderTabTitle = selectedFolderName
         }

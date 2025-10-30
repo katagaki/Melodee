@@ -295,14 +295,17 @@ struct FolderView: View {
     }
     
     func openInFilesApp() {
-        guard let directory = fileManager.directory else { return }
-        
-        // Open the Files app at the specified directory
-        // For iOS, opening a file:// URL will launch the Files app
-        UIApplication.shared.open(directory) { success in
-            if !success {
-                debugPrint("Failed to open Files app at directory: \(directory)")
-            }
+        let filesUrl: URL = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first!
+        let sharedDocumentsUrlString: String = filesUrl.absoluteString.replacingOccurrences(
+            of: "file://",
+            with: "shareddocuments://"
+        )
+        let sharedDocumentsUrl: URL = URL(string: sharedDocumentsUrlString)!
+        if UIApplication.shared.canOpenURL(sharedDocumentsUrl) {
+            UIApplication.shared.open(sharedDocumentsUrl, options: [:])
         }
     }
 }

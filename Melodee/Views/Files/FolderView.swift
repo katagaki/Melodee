@@ -158,9 +158,22 @@ struct FolderView: View {
             }
         }
         .overlay {
-            if files.count == 0 && currentDirectory == nil {
-                TipView(FBNoFilesTip())
-                    .padding(20.0)
+            if files.count == 0 && currentDirectory == nil && state.isInitialLoadCompleted {
+                // Show ContentUnavailableView with button for root directories
+                if storageLocation == .local || storageLocation == .cloud {
+                    ContentUnavailableView {
+                        Label("FileBrowser.Tip.NoFiles.Title", systemImage: "questionmark.folder.fill")
+                    } description: {
+                        Text("FileBrowser.Tip.NoFiles.Text")
+                    } actions: {
+                        Button {
+                            openInFilesApp()
+                        } label: {
+                            Text("FileBrowser.OpenInFiles")
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
             } else if files.count == 0 && state.isInitialLoadCompleted {
                 ContentUnavailableView("FileBrowser.Hint", systemImage: "questionmark.folder")
                     .font(.body)
@@ -276,5 +289,20 @@ struct FolderView: View {
 
     func folderContainsEditableMP3s() -> Bool {
         files.contains { ($0 as? FSFile)?.extension == "mp3" }
+    }
+
+    func openInFilesApp() {
+        let filesUrl: URL = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        ).first!
+        let sharedDocumentsUrlString: String = filesUrl.absoluteString.replacingOccurrences(
+            of: "file://",
+            with: "shareddocuments://"
+        )
+        let sharedDocumentsUrl: URL = URL(string: sharedDocumentsUrlString)!
+        if UIApplication.shared.canOpenURL(sharedDocumentsUrl) {
+            UIApplication.shared.open(sharedDocumentsUrl, options: [:])
+        }
     }
 }

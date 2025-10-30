@@ -41,7 +41,7 @@ struct TagEditorView: View {
         .toolbarBackground(.hidden, for: .navigationBar)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .top) {
+        .safeAreaInset(edge: .top, spacing: 0.0) {
             VStack {
                 HStack(alignment: .top, spacing: 16.0) {
                     Group {

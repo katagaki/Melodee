@@ -231,7 +231,7 @@ struct FolderView: View {
             return currentDirectory?.name ??
             NSLocalizedString("Shared.OnMyDevice", comment: "")
         case .external:
-            return fileManager.directory?.lastPathComponent ??
+            return currentDirectory?.name ?? fileManager.directory?.lastPathComponent ??
             NSLocalizedString("ViewTitle.Files", comment: "")
         }
     }

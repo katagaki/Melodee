@@ -107,7 +107,7 @@ class AudioConverter {
         let assetWriter = try AVAssetWriter(outputURL: outputURL, 
                                            fileType: outputFormat.outputFileType)
         
-        let writerSettings = getWriterSettings(for: outputFormat, from: audioTrack)
+        let writerSettings = getWriterSettings(for: outputFormat)
         let assetWriterInput = AVAssetWriterInput(mediaType: .audio, 
                                                   outputSettings: writerSettings)
         assetWriterInput.expectsMediaDataInRealTime = false
@@ -153,7 +153,7 @@ class AudioConverter {
         }
     }
     
-    private func getWriterSettings(for format: AudioFormat, from track: AVAssetTrack) -> [String: Any] {
+    private func getWriterSettings(for format: AudioFormat) -> [String: Any] {
         switch format {
         case .mp3:
             return [

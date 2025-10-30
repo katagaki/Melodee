@@ -316,10 +316,9 @@ struct FolderView: View {
             
             switch result {
             case .success:
-                // Show success message
-                state.errorText = NSLocalizedString("Alert.ConversionComplete.Text", comment: "")
+                // Show success alert
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    state.isErrorAlertPresenting = true
+                    state.isConversionSuccessAlertPresenting = true
                 }
                 refreshFiles()
             case .failure(let error):

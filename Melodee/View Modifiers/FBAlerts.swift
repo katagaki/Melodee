@@ -80,6 +80,11 @@ struct FileBrowserAlerts: ViewModifier {
             } message: {
                 Text("Alert.ConvertAudio.Text")
             }
+            .alert("Alert.ConversionComplete.Title", isPresented: $state.isConversionSuccessAlertPresenting, actions: {
+                Button("Shared.OK", role: .cancel) { }
+            }, message: {
+                Text("Alert.ConversionComplete.Text")
+            })
     }
 }
 

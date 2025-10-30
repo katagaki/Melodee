@@ -36,4 +36,5 @@ struct FBState {
     var isConvertingAudio: Bool = false
     var fileBeingConverted: FSFile?
     var isSelectingConversionFormat: Bool = false
+    var isConversionSuccessAlertPresenting: Bool = false
 }

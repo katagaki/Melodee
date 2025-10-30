@@ -65,14 +65,14 @@ struct MainTabView: View {
                 .onTapGesture {
                     self.nowPlayingBarManager.isSheetPresented.toggle()
                 }
-                .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
+//                .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
         } popupContent: {
             // Popup content
             if #available(iOS 26.0, *) {
                 NowPlayingView()
-                    .navigationTransition(
-                        .zoom(sourceID: "NowPlayingBar", in: namespace)
-                    )
+//                    .navigationTransition(
+//                        .zoom(sourceID: "NowPlayingBar", in: namespace)
+//                    )
             } else {
                 NowPlayingView()
             }

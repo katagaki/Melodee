@@ -28,8 +28,6 @@ struct FileBrowserNavigationDestinations: ViewModifier {
                     TagEditorView(files: [file])
                 case .tagEditorMultiple(let files):
                     TagEditorView(files: files)
-                case .playlist(let playlist):
-                    PlaylistView(playlist: playlist)
                 default: Color.clear
                 }
             })

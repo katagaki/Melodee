@@ -46,7 +46,7 @@ struct MainTabView: View {
             Tab(value: 2) {
                 FilesView(externalFolderTabTitle: $externalFolderTabTitle)
             } label: {
-                Label(externalFolderTabTitle.isEmpty ? NSLocalizedString("Tab.ExternalFolder", comment: "") : externalFolderTabTitle, systemImage: "folder.fill")
+                Label(externalFolderTabTitleFormatted(), systemImage: "folder.fill")
             }
             Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()
@@ -81,7 +81,7 @@ struct MainTabView: View {
 
     func externalFolderTabTitleFormatted() -> String {
         if externalFolderTabTitle.isEmpty {
-            return NSLocalizedString("Tab.ExternalFolder", comment: "")
+            return NSLocalizedString("Tab.ExternalFolder.Select", comment: "")
         } else {
             if externalFolderTabTitle.count >= 15 {
                 return NSLocalizedString("Tab.ExternalFolder", comment: "")

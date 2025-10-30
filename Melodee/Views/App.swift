@@ -11,7 +11,6 @@ import SwiftUI
 struct MelodeeApp: App {
 
     @State var fileManager: FilesystemManager = FilesystemManager()
-    @State var playlistManager: PlaylistManager = PlaylistManager()
     @State var mediaPlayerManager: MediaPlayerManager = MediaPlayerManager()
     @State var nowPlayingBarManager: NowPlayingBarManager = NowPlayingBarManager()
 
@@ -23,7 +22,6 @@ struct MelodeeApp: App {
                     fileManager.createPlaceholders()
                 }
                 .environment(fileManager)
-                .environment(playlistManager)
                 .environment(mediaPlayerManager)
                 .environment(nowPlayingBarManager)
         }

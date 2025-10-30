@@ -21,10 +21,12 @@ struct FolderView: View {
     @State var storageLocation: StorageLocation = .local
 
     var overrideStorageLocation: StorageLocation?
-    
-    init(currentDirectory: FSDirectory? = nil, 
-         overrideStorageLocation: StorageLocation? = nil,
-         fileManager: FilesystemManager? = nil) {
+
+    init(
+        currentDirectory: FSDirectory? = nil,
+        overrideStorageLocation: StorageLocation? = nil,
+        fileManager: FilesystemManager? = nil
+    ) {
         self.currentDirectory = currentDirectory
         self.overrideStorageLocation = overrideStorageLocation
         self._fileManager = State(initialValue: fileManager ?? FilesystemManager())

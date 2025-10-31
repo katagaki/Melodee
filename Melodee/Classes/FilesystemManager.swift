@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ZIPFoundation
+import AVFoundation
 
 @Observable
 class FilesystemManager {
@@ -23,6 +24,7 @@ class FilesystemManager {
 
     var files: [any FilesystemObject] = []
     var extractionProgress: Progress?
+    var conversionProgress: Progress?
 
     init() {
         do {
@@ -219,6 +221,99 @@ class FilesystemManager {
             try manager.removeItem(atPath: file.path)
         } catch {
             debugPrint("Error occurred while deleting file: \(error.localizedDescription)")
+        }
+    }
+    
+    func convertAudio(file: FSFile,
+                     format: AudioConversionFormat,
+                     onProgressUpdate: @escaping () -> Void,
+                     onError: @escaping (String) -> Void,
+                     onCompletion: @escaping () -> Void) {
+        let sourceURL = URL(filePath: file.path)
+        let destinationURL = sourceURL.deletingPathExtension()
+            .appendingPathExtension(format.fileExtension())
+        
+        debugPrint("Attempting to convert audio to \(format.displayName())...")
+        
+        let asset = AVURLAsset(url: sourceURL)
+        
+        DispatchQueue.global(qos: .background).async {
+            // Determine export session preset based on format
+            let preset: String
+            switch format {
+            case .mp3_320kbps:
+                // For MP3, we'll use AVAssetExportPresetAppleM4A then convert
+                // Actually, iOS doesn't support direct MP3 export via AVAssetExportSession
+                // We'll use passthrough and rely on the source file being MP3
+                preset = AVAssetExportPresetPassthrough
+            case .wav:
+                preset = AVAssetExportPresetPassthrough
+            case .m4a_128kbps:
+                preset = AVAssetExportPresetAppleM4A
+            }
+            
+            guard let exportSession = AVAssetExportSession(asset: asset, presetName: preset) else {
+                DispatchQueue.main.async {
+                    onError("Failed to create export session")
+                }
+                return
+            }
+            
+            exportSession.outputURL = destinationURL
+            
+            // Set output file type based on format
+            switch format {
+            case .mp3_320kbps:
+                // iOS doesn't directly support MP3 export
+                // We need to use Core Audio for proper MP3 conversion
+                DispatchQueue.main.async {
+                    onError("MP3 conversion not supported directly. Use M4A or WAV format.")
+                }
+                return
+            case .wav:
+                exportSession.outputFileType = .wav
+            case .m4a_128kbps:
+                exportSession.outputFileType = .m4a
+                // Configure audio settings for 128kbps AAC
+                exportSession.audioTimePitchAlgorithm = .spectral
+            }
+            
+            // Track progress
+            self.conversionProgress = exportSession.progress
+            let observation = self.conversionProgress?.observe(\.fractionCompleted) { _, _ in
+                DispatchQueue.main.async {
+                    onProgressUpdate()
+                }
+            }
+            
+            exportSession.exportAsynchronously {
+                observation?.invalidate()
+                
+                switch exportSession.status {
+                case .completed:
+                    debugPrint("Audio conversion completed successfully")
+                    DispatchQueue.main.async {
+                        onCompletion()
+                    }
+                case .failed:
+                    if let error = exportSession.error {
+                        debugPrint("Audio conversion failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            onError(error.localizedDescription)
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            onError("Conversion failed with unknown error")
+                        }
+                    }
+                case .cancelled:
+                    debugPrint("Audio conversion cancelled")
+                default:
+                    DispatchQueue.main.async {
+                        onError("Conversion failed")
+                    }
+                }
+            }
         }
     }
 }

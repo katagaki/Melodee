@@ -4313,6 +4313,83 @@
           }
         }
       }
+    },
+    "Alert.ConvertingAudio.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Converting Audio"
+          }
+        }
+      }
+    },
+    "Alert.ConvertingAudio.Text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1% Complete"
+          }
+        }
+      }
+    },
+    "Alert.ConvertingAudio.Error.Title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conversion Error"
+          }
+        }
+      }
+    },
+    "Shared.Convert" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convert"
+          }
+        }
+      }
+    },
+    "Shared.ConvertTo.MP3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convert to MP3 320kbps"
+          }
+        }
+      }
+    },
+    "Shared.ConvertTo.WAV" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convert to WAV"
+          }
+        }
+      }
+    },
+    "Shared.ConvertTo.M4A" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convert to M4A 128kbps"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

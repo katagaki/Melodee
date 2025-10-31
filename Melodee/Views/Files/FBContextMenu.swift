@@ -15,7 +15,7 @@ struct FBContextMenu: View {
     @Binding var state: FBState
     var file: any FilesystemObject
     var extractZIPAction: () -> Void
-    var convertAudioAction: ((AudioConversionFormat) -> Void)?
+    var convertAudioAction: (AudioConversionFormat) -> Void
 
     var body: some View {
         if let file = file as? FSFile {
@@ -60,7 +60,7 @@ struct FBContextMenu: View {
                 Divider()
             }
             // Audio conversion menu items
-            if file.type == .audio, let convertAudioAction = convertAudioAction {
+            if file.type == .audio {
                 Menu {
                     Button {
                         convertAudioAction(.m4a)

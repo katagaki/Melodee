@@ -261,8 +261,8 @@ class FilesystemManager {
                 // Use highest quality M4A preset
                 preset = AVAssetExportPresetAppleM4A
             case .wav:
-                // For WAV, we need to use a preset that can output uncompressed audio
-                // We'll use AVAssetReader/AVAssetWriter approach for proper WAV conversion
+                // AVAssetExportSession doesn't properly support WAV output from non-WAV sources
+                // We use AVAssetReader/AVAssetWriter for proper PCM conversion
                 self.convertToWAV(sourceURL: sourceURL, 
                                 destinationURL: destinationURL,
                                 asset: asset,
@@ -334,8 +334,9 @@ class FilesystemManager {
                              onProgressUpdate: @escaping () -> Void,
                              onError: @escaping (String) -> Void,
                              onCompletion: @escaping () -> Void) {
-        // Constants for progress tracking
-        let millisecondsPerSecond: Double = 1000.0
+        // Constants for progress tracking - using deciseconds for good balance
+        // between precision and avoiding potential overflow with very long files
+        let precisionMultiplier: Double = 10.0  // Deciseconds (0.1 second precision)
         let progressUpdateInterval: TimeInterval = 0.1
         
         // Use AVAssetReader and AVAssetWriter for WAV conversion
@@ -394,8 +395,8 @@ class FilesystemManager {
                 return
             }
             
-            // Use millisecond precision for smooth progress updates
-            self.conversionProgress = Progress(totalUnitCount: Int64(duration * millisecondsPerSecond))
+            // Use decisecond precision for smooth progress without overflow risk
+            self.conversionProgress = Progress(totalUnitCount: Int64(duration * precisionMultiplier))
             var lastProgressUpdate = Date()
             
             writerInput.requestMediaDataWhenReady(on: DispatchQueue.global(qos: .background)) {
@@ -411,8 +412,8 @@ class FilesystemManager {
                     if Date().timeIntervalSince(lastProgressUpdate) > progressUpdateInterval {
                         let currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
                         
-                        // Update existing progress object with millisecond precision
-                        self.conversionProgress?.completedUnitCount = Int64(currentTime * millisecondsPerSecond)
+                        // Update progress with decisecond precision
+                        self.conversionProgress?.completedUnitCount = Int64(currentTime * precisionMultiplier)
                         
                         DispatchQueue.main.async {
                             onProgressUpdate()

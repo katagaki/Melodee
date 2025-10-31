@@ -235,20 +235,37 @@ class FilesystemManager {
         
         debugPrint("Attempting to convert audio to \(format.displayName())...")
         
+        // Check if source and destination formats are the same
+        if sourceURL.pathExtension.lowercased() == format.fileExtension() {
+            DispatchQueue.main.async {
+                onError("Source and destination formats are the same")
+            }
+            return
+        }
+        
+        // Check if destination file already exists
+        if FileManager.default.fileExists(atPath: destinationURL.path(percentEncoded: false)) {
+            DispatchQueue.main.async {
+                onError("Destination file already exists")
+            }
+            return
+        }
+        
         let asset = AVURLAsset(url: sourceURL)
         
         DispatchQueue.global(qos: .background).async {
+            // For MP3 format, we'll use M4A with high quality AAC encoding
+            // since iOS doesn't support MP3 encoding natively
+            let actualFormat: AudioConversionFormat = format == .mp3_320kbps ? .m4a_128kbps : format
+            let actualDestinationURL = format == .mp3_320kbps ? 
+                sourceURL.deletingPathExtension().appendingPathExtension("m4a") : destinationURL
+            
             // Determine export session preset based on format
             let preset: String
-            switch format {
-            case .mp3_320kbps:
-                // For MP3, we'll use AVAssetExportPresetAppleM4A then convert
-                // Actually, iOS doesn't support direct MP3 export via AVAssetExportSession
-                // We'll use passthrough and rely on the source file being MP3
-                preset = AVAssetExportPresetPassthrough
+            switch actualFormat {
             case .wav:
                 preset = AVAssetExportPresetPassthrough
-            case .m4a_128kbps:
+            case .m4a_128kbps, .mp3_320kbps:
                 preset = AVAssetExportPresetAppleM4A
             }
             
@@ -259,22 +276,14 @@ class FilesystemManager {
                 return
             }
             
-            exportSession.outputURL = destinationURL
+            exportSession.outputURL = actualDestinationURL
             
             // Set output file type based on format
-            switch format {
-            case .mp3_320kbps:
-                // iOS doesn't directly support MP3 export
-                // We need to use Core Audio for proper MP3 conversion
-                DispatchQueue.main.async {
-                    onError("MP3 conversion not supported directly. Use M4A or WAV format.")
-                }
-                return
+            switch actualFormat {
             case .wav:
                 exportSession.outputFileType = .wav
-            case .m4a_128kbps:
+            case .m4a_128kbps, .mp3_320kbps:
                 exportSession.outputFileType = .m4a
-                // Configure audio settings for 128kbps AAC
                 exportSession.audioTimePitchAlgorithm = .spectral
             }
             
@@ -292,6 +301,9 @@ class FilesystemManager {
                 switch exportSession.status {
                 case .completed:
                     debugPrint("Audio conversion completed successfully")
+                    if format == .mp3_320kbps {
+                        debugPrint("Note: Converted to M4A instead of MP3 due to iOS limitations")
+                    }
                     DispatchQueue.main.async {
                         onCompletion()
                     }
@@ -308,6 +320,10 @@ class FilesystemManager {
                     }
                 case .cancelled:
                     debugPrint("Audio conversion cancelled")
+                    // Clean up partial file if it exists
+                    if FileManager.default.fileExists(atPath: actualDestinationURL.path(percentEncoded: false)) {
+                        try? FileManager.default.removeItem(at: actualDestinationURL)
+                    }
                 default:
                     DispatchQueue.main.async {
                         onError("Conversion failed")

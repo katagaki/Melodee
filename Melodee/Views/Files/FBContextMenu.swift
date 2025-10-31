@@ -15,6 +15,7 @@ struct FBContextMenu: View {
     @Binding var state: FBState
     var file: any FilesystemObject
     var extractZIPAction: () -> Void
+    var convertAudioAction: (AudioConversionFormat) -> Void
 
     var body: some View {
         if let file = file as? FSFile {
@@ -55,6 +56,24 @@ struct FBContextMenu: View {
                     extractZIPAction()
                 } label: {
                     Label("Shared.Extract", systemImage: "archivebox")
+                }
+                Divider()
+            }
+            // Audio conversion menu items
+            if file.type == .audio {
+                Menu {
+                    Button {
+                        convertAudioAction(.m4a)
+                    } label: {
+                        Label("Shared.ConvertTo.M4A", systemImage: "waveform")
+                    }
+                    Button {
+                        convertAudioAction(.wav)
+                    } label: {
+                        Label("Shared.ConvertTo.WAV", systemImage: "waveform")
+                    }
+                } label: {
+                    Label("Shared.Convert", systemImage: "arrow.triangle.2.circlepath")
                 }
                 Divider()
             }

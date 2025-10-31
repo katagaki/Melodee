@@ -124,6 +124,10 @@ struct FolderView: View {
                             if let file = file as? FSFile {
                                 extractZIP(file: file)
                             }
+                        } convertAudioAction: { format in
+                            if let file = file as? FSFile {
+                                convertAudio(file: file, format: format)
+                            }
                         }
                     }
                     .listRowBackground(Color.clear)
@@ -193,6 +197,18 @@ struct FolderView: View {
                         fileManager.extractionProgress?.cancel()
                         state.extractionPercentage = 0
                         state.isExtractingZIP = false
+                    }
+                }
+            }
+            if state.isConvertingAudio {
+                ProgressAlert(title: "Alert.ConvertingAudio.Title",
+                              message: "Alert.ConvertingAudio.Text",
+                              percentage: $state.conversionPercentage) {
+                    withAnimation(.easeOut.speed(2)) {
+                        state.isConversionCancelling = true
+                        fileManager.conversionProgress?.cancel()
+                        state.conversionPercentage = 0
+                        state.isConvertingAudio = false
                     }
                 }
             }
@@ -278,6 +294,32 @@ struct FolderView: View {
             UIApplication.shared.isIdleTimerDisabled = false
             withAnimation(.easeOut.speed(2)) {
                 state.isExtractingZIP = false
+            }
+            refreshFiles()
+        }
+    }
+    
+    func convertAudio(file: FSFile, format: AudioConversionFormat) {
+        withAnimation(.easeOut.speed(2)) {
+            state.isConvertingAudio = true
+        }
+        UIApplication.shared.isIdleTimerDisabled = true
+        fileManager.convertAudio(file: file, format: format) {
+            state.conversionPercentage =
+                Int((fileManager.conversionProgress?.fractionCompleted ?? 0) * 100)
+        } onError: { error in
+            UIApplication.shared.isIdleTimerDisabled = false
+            withAnimation(.easeOut.speed(2)) {
+                state.isConvertingAudio = false
+                state.errorText = error
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                state.isErrorAlertPresenting = true
+            }
+        } onCompletion: {
+            UIApplication.shared.isIdleTimerDisabled = false
+            withAnimation(.easeOut.speed(2)) {
+                state.isConvertingAudio = false
             }
             refreshFiles()
         }

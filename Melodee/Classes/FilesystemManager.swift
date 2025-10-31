@@ -340,66 +340,70 @@ class FilesystemManager {
         let progressUpdateInterval: TimeInterval = 0.1
         
         // Use AVAssetReader and AVAssetWriter for WAV conversion
-        do {
-            guard let assetTrack = asset.tracks(withMediaType: .audio).first else {
-                DispatchQueue.main.async {
-                    onError("No audio track found in source file")
+        Task {
+            do {
+                // Load audio tracks asynchronously
+                let audioTracks = try await asset.loadTracks(withMediaType: .audio)
+                guard let assetTrack = audioTracks.first else {
+                    DispatchQueue.main.async {
+                        onError("No audio track found in source file")
+                    }
+                    return
                 }
-                return
-            }
-            
-            let reader = try AVAssetReader(asset: asset)
-            let writer = try AVAssetWriter(outputURL: destinationURL, fileType: .wav)
-            
-            // Configure reader
-            let readerOutput = AVAssetReaderTrackOutput(
-                track: assetTrack,
-                outputSettings: [
-                    AVFormatIDKey: kAudioFormatLinearPCM,
-                    AVLinearPCMBitDepthKey: 16,
-                    AVLinearPCMIsFloatKey: false,
-                    AVLinearPCMIsBigEndianKey: false,
-                    AVLinearPCMIsNonInterleaved: false
-                ]
-            )
-            reader.add(readerOutput)
-            
-            // Configure writer
-            let writerInput = AVAssetWriterInput(
-                mediaType: .audio,
-                outputSettings: [
-                    AVFormatIDKey: kAudioFormatLinearPCM,
-                    AVLinearPCMBitDepthKey: 16,
-                    AVLinearPCMIsFloatKey: false,
-                    AVLinearPCMIsBigEndianKey: false,
-                    AVLinearPCMIsNonInterleaved: false
-                ]
-            )
-            writer.add(writerInput)
-            
-            // Start conversion
-            reader.startReading()
-            writer.startWriting()
-            writer.startSession(atSourceTime: .zero)
-            
-            // Track progress manually since AVAssetWriter doesn't provide progress
-            // Create progress object once before conversion loop
-            let duration = asset.duration.seconds
-            
-            // Guard against invalid duration
-            guard duration > 0 else {
-                DispatchQueue.main.async {
-                    onError("Invalid audio duration")
+                
+                let reader = try AVAssetReader(asset: asset)
+                let writer = try AVAssetWriter(outputURL: destinationURL, fileType: .wav)
+                
+                // Configure reader
+                let readerOutput = AVAssetReaderTrackOutput(
+                    track: assetTrack,
+                    outputSettings: [
+                        AVFormatIDKey: kAudioFormatLinearPCM,
+                        AVLinearPCMBitDepthKey: 16,
+                        AVLinearPCMIsFloatKey: false,
+                        AVLinearPCMIsBigEndianKey: false,
+                        AVLinearPCMIsNonInterleaved: false
+                    ]
+                )
+                reader.add(readerOutput)
+                
+                // Configure writer
+                let writerInput = AVAssetWriterInput(
+                    mediaType: .audio,
+                    outputSettings: [
+                        AVFormatIDKey: kAudioFormatLinearPCM,
+                        AVLinearPCMBitDepthKey: 16,
+                        AVLinearPCMIsFloatKey: false,
+                        AVLinearPCMIsBigEndianKey: false,
+                        AVLinearPCMIsNonInterleaved: false
+                    ]
+                )
+                writer.add(writerInput)
+                
+                // Start conversion
+                reader.startReading()
+                writer.startWriting()
+                writer.startSession(atSourceTime: .zero)
+                
+                // Track progress manually since AVAssetWriter doesn't provide progress
+                // Create progress object once before conversion loop
+                let duration = try await asset.load(.duration)
+                let durationSeconds = duration.seconds
+                
+                // Guard against invalid duration
+                guard durationSeconds > 0 else {
+                    DispatchQueue.main.async {
+                        onError("Invalid audio duration")
+                    }
+                    try? FileManager.default.removeItem(at: destinationURL)
+                    return
                 }
-                try? FileManager.default.removeItem(at: destinationURL)
-                return
-            }
-            
-            // Use decisecond precision for smooth progress without overflow risk
-            self.conversionProgress = Progress(totalUnitCount: Int64(duration * precisionMultiplier))
-            var lastProgressUpdate = Date()
-            
-            writerInput.requestMediaDataWhenReady(on: DispatchQueue.global(qos: .background)) {
+                
+                // Use decisecond precision for smooth progress without overflow risk
+                self.conversionProgress = Progress(totalUnitCount: Int64(durationSeconds * precisionMultiplier))
+                var lastProgressUpdate = Date()
+                
+                writerInput.requestMediaDataWhenReady(on: DispatchQueue.global(qos: .background)) {
                 while writerInput.isReadyForMoreMediaData {
                     guard let sampleBuffer = readerOutput.copyNextSampleBuffer() else {
                         writerInput.markAsFinished()
@@ -444,10 +448,11 @@ class FilesystemManager {
                     }
                 }
             }
-        } catch {
-            debugPrint("Error setting up WAV conversion: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                onError(error.localizedDescription)
+            } catch {
+                debugPrint("Error setting up WAV conversion: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    onError(error.localizedDescription)
+                }
             }
         }
     }

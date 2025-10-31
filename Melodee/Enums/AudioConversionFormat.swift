@@ -8,23 +8,20 @@
 import Foundation
 
 enum AudioConversionFormat {
-    case m4a_high_quality
+    case m4a
     case wav
-    case m4a_128kbps
     
     func fileExtension() -> String {
         switch self {
-        case .m4a_high_quality: return "m4a"
+        case .m4a: return "m4a"
         case .wav: return "wav"
-        case .m4a_128kbps: return "m4a"
         }
     }
     
     func displayName() -> String {
         switch self {
-        case .m4a_high_quality: return "M4A High Quality"
-        case .wav: return "WAV"
-        case .m4a_128kbps: return "M4A 128kbps"
+        case .m4a: return "M4A (AAC)"
+        case .wav: return "WAV (Lossless)"
         }
     }
 }

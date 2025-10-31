@@ -19,4 +19,4 @@ A basic audio file player built for iOS.
 - Using tokens to fill out ID3 tags using existing data (such as the track name or track number)
 - Viewing image, text, and PDF files
 - Extracting ZIP files
-- Converting audio files (M4A High Quality, WAV, M4A 128kbps)
+- Converting audio files (M4A AAC, WAV Lossless)

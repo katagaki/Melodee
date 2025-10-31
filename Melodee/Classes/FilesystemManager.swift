@@ -257,12 +257,11 @@ class FilesystemManager {
             // Determine export session preset based on format
             let preset: String
             switch format {
-            case .m4a_high_quality:
+            case .m4a:
                 // Use highest quality M4A preset
                 preset = AVAssetExportPresetAppleM4A
             case .wav:
                 // For WAV, we need to use a preset that can output uncompressed audio
-                // AVAssetExportPresetPassthrough won't work if source isn't WAV
                 // We'll use AVAssetReader/AVAssetWriter approach for proper WAV conversion
                 self.convertToWAV(sourceURL: sourceURL, 
                                 destinationURL: destinationURL,
@@ -271,8 +270,6 @@ class FilesystemManager {
                                 onError: onError,
                                 onCompletion: onCompletion)
                 return
-            case .m4a_128kbps:
-                preset = AVAssetExportPresetAppleM4A
             }
             
             guard let exportSession = AVAssetExportSession(asset: asset, presetName: preset) else {
@@ -286,26 +283,7 @@ class FilesystemManager {
             exportSession.outputFileType = .m4a
             exportSession.audioTimePitchAlgorithm = .spectral
             
-            // Configure audio quality settings based on format
-            // Note: AVAssetExportSession doesn't expose direct bitrate control,
-            // but we can use different presets and settings to influence quality
-            switch format {
-            case .m4a_high_quality:
-                // For high quality, we use the standard preset which typically
-                // produces AAC at 256-320kbps depending on source
-                // AVAssetExportPresetAppleM4A automatically uses high quality settings
-                debugPrint("Using high-quality AAC encoding (approx 256-320kbps)")
-            case .m4a_128kbps:
-                // For 128kbps, we'd ideally set explicit audio settings
-                // However, AVAssetExportSession with AVAssetExportPresetAppleM4A
-                // doesn't provide direct bitrate control. The preset typically
-                // produces good quality AAC, often at variable bitrate
-                // In practice, both will use similar encoding, with quality
-                // determined primarily by source material
-                debugPrint("Using standard AAC encoding (approx 128-256kbps)")
-            default:
-                break
-            }
+            debugPrint("Using AAC encoding with M4A format")
             
             // Track progress
             self.conversionProgress = exportSession.progress
@@ -401,8 +379,18 @@ class FilesystemManager {
             
             // Track progress manually since AVAssetWriter doesn't provide progress
             // Create progress object once before conversion loop
-            self.conversionProgress = Progress(totalUnitCount: 100)
             let duration = asset.duration.seconds
+            
+            // Guard against invalid duration
+            guard duration > 0 else {
+                DispatchQueue.main.async {
+                    onError("Invalid audio duration")
+                }
+                try? FileManager.default.removeItem(at: destinationURL)
+                return
+            }
+            
+            self.conversionProgress = Progress(totalUnitCount: Int64(duration * 1000))
             var lastProgressUpdate = Date()
             
             writerInput.requestMediaDataWhenReady(on: DispatchQueue.global(qos: .background)) {
@@ -417,10 +405,9 @@ class FilesystemManager {
                     // Update progress periodically
                     if Date().timeIntervalSince(lastProgressUpdate) > 0.1 {
                         let currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
-                        let progress = Float(currentTime / duration)
                         
-                        // Update existing progress object
-                        self.conversionProgress?.completedUnitCount = Int64(progress * 100)
+                        // Update existing progress object with millisecond precision
+                        self.conversionProgress?.completedUnitCount = Int64(currentTime * 1000)
                         
                         DispatchQueue.main.async {
                             onProgressUpdate()

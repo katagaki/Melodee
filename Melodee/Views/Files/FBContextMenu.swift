@@ -63,19 +63,14 @@ struct FBContextMenu: View {
             if file.type == .audio, let convertAudioAction = convertAudioAction {
                 Menu {
                     Button {
-                        convertAudioAction(.m4a_high_quality)
+                        convertAudioAction(.m4a)
                     } label: {
-                        Label("Shared.ConvertTo.M4A.HighQuality", systemImage: "waveform")
+                        Label("Shared.ConvertTo.M4A", systemImage: "waveform")
                     }
                     Button {
                         convertAudioAction(.wav)
                     } label: {
                         Label("Shared.ConvertTo.WAV", systemImage: "waveform")
-                    }
-                    Button {
-                        convertAudioAction(.m4a_128kbps)
-                    } label: {
-                        Label("Shared.ConvertTo.M4A", systemImage: "waveform")
                     }
                 } label: {
                     Label("Shared.Convert", systemImage: "arrow.triangle.2.circlepath")

@@ -4358,13 +4358,13 @@
         }
       }
     },
-    "Shared.ConvertTo.M4A.HighQuality" : {
+    "Shared.ConvertTo.M4A" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Convert to M4A (High Quality)"
+            "value" : "Convert to M4A (AAC)"
           }
         }
       }
@@ -4375,18 +4375,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Convert to WAV"
-          }
-        }
-      }
-    },
-    "Shared.ConvertTo.M4A" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Convert to M4A 128kbps"
+            "value" : "Convert to WAV (Lossless)"
           }
         }
       }

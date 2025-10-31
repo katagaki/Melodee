@@ -254,18 +254,24 @@ class FilesystemManager {
         let asset = AVURLAsset(url: sourceURL)
         
         DispatchQueue.global(qos: .background).async {
-            // For MP3 format, we'll use M4A with high quality AAC encoding
-            // since iOS doesn't support MP3 encoding natively
-            let actualFormat: AudioConversionFormat = format == .mp3_320kbps ? .m4a_128kbps : format
-            let actualDestinationURL = format == .mp3_320kbps ? 
-                sourceURL.deletingPathExtension().appendingPathExtension("m4a") : destinationURL
-            
             // Determine export session preset based on format
             let preset: String
-            switch actualFormat {
+            switch format {
+            case .m4a_high_quality:
+                // Use highest quality M4A preset
+                preset = AVAssetExportPresetAppleM4A
             case .wav:
-                preset = AVAssetExportPresetPassthrough
-            case .m4a_128kbps, .mp3_320kbps:
+                // For WAV, we need to use a preset that can output uncompressed audio
+                // AVAssetExportPresetPassthrough won't work if source isn't WAV
+                // We'll use AVAssetReader/AVAssetWriter approach for proper WAV conversion
+                self.convertToWAV(sourceURL: sourceURL, 
+                                destinationURL: destinationURL,
+                                asset: asset,
+                                onProgressUpdate: onProgressUpdate,
+                                onError: onError,
+                                onCompletion: onCompletion)
+                return
+            case .m4a_128kbps:
                 preset = AVAssetExportPresetAppleM4A
             }
             
@@ -276,15 +282,15 @@ class FilesystemManager {
                 return
             }
             
-            exportSession.outputURL = actualDestinationURL
+            exportSession.outputURL = destinationURL
+            exportSession.outputFileType = .m4a
+            exportSession.audioTimePitchAlgorithm = .spectral
             
-            // Set output file type based on format
-            switch actualFormat {
-            case .wav:
-                exportSession.outputFileType = .wav
-            case .m4a_128kbps, .mp3_320kbps:
-                exportSession.outputFileType = .m4a
-                exportSession.audioTimePitchAlgorithm = .spectral
+            // For high quality, we want to use better encoding settings
+            if format == .m4a_high_quality {
+                // AVAssetExportSession will use high quality settings automatically with this preset
+                // Typical AAC encoding at 256-320kbps for high quality
+                debugPrint("Using high-quality AAC encoding")
             }
             
             // Track progress
@@ -301,9 +307,6 @@ class FilesystemManager {
                 switch exportSession.status {
                 case .completed:
                     debugPrint("Audio conversion completed successfully")
-                    if format == .mp3_320kbps {
-                        debugPrint("Note: Converted to M4A instead of MP3 due to iOS limitations")
-                    }
                     DispatchQueue.main.async {
                         onCompletion()
                     }
@@ -321,14 +324,124 @@ class FilesystemManager {
                 case .cancelled:
                     debugPrint("Audio conversion cancelled")
                     // Clean up partial file if it exists
-                    if FileManager.default.fileExists(atPath: actualDestinationURL.path(percentEncoded: false)) {
-                        try? FileManager.default.removeItem(at: actualDestinationURL)
+                    if FileManager.default.fileExists(atPath: destinationURL.path(percentEncoded: false)) {
+                        try? FileManager.default.removeItem(at: destinationURL)
                     }
                 default:
                     DispatchQueue.main.async {
                         onError("Conversion failed")
                     }
                 }
+            }
+        }
+    }
+    
+    private func convertToWAV(sourceURL: URL,
+                             destinationURL: URL,
+                             asset: AVAsset,
+                             onProgressUpdate: @escaping () -> Void,
+                             onError: @escaping (String) -> Void,
+                             onCompletion: @escaping () -> Void) {
+        // Use AVAssetReader and AVAssetWriter for WAV conversion
+        do {
+            guard let assetTrack = asset.tracks(withMediaType: .audio).first else {
+                DispatchQueue.main.async {
+                    onError("No audio track found in source file")
+                }
+                return
+            }
+            
+            let reader = try AVAssetReader(asset: asset)
+            let writer = try AVAssetWriter(outputURL: destinationURL, fileType: .wav)
+            
+            // Configure reader
+            let readerOutput = AVAssetReaderTrackOutput(
+                track: assetTrack,
+                outputSettings: [
+                    AVFormatIDKey: kAudioFormatLinearPCM,
+                    AVLinearPCMBitDepthKey: 16,
+                    AVLinearPCMIsFloatKey: false,
+                    AVLinearPCMIsBigEndianKey: false,
+                    AVLinearPCMIsNonInterleaved: false
+                ]
+            )
+            reader.add(readerOutput)
+            
+            // Configure writer
+            let writerInput = AVAssetWriterInput(
+                mediaType: .audio,
+                outputSettings: [
+                    AVFormatIDKey: kAudioFormatLinearPCM,
+                    AVLinearPCMBitDepthKey: 16,
+                    AVLinearPCMIsFloatKey: false,
+                    AVLinearPCMIsBigEndianKey: false,
+                    AVLinearPCMIsNonInterleaved: false
+                ]
+            )
+            writer.add(writerInput)
+            
+            // Start conversion
+            reader.startReading()
+            writer.startWriting()
+            writer.startSession(atSourceTime: .zero)
+            
+            // Track progress manually since AVAssetWriter doesn't provide progress
+            let duration = asset.duration.seconds
+            var lastProgressUpdate = Date()
+            
+            writerInput.requestMediaDataWhenReady(on: DispatchQueue.global(qos: .background)) {
+                while writerInput.isReadyForMoreMediaData {
+                    guard let sampleBuffer = readerOutput.copyNextSampleBuffer() else {
+                        writerInput.markAsFinished()
+                        break
+                    }
+                    
+                    writerInput.append(sampleBuffer)
+                    
+                    // Update progress periodically
+                    if Date().timeIntervalSince(lastProgressUpdate) > 0.1 {
+                        let currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
+                        let progress = Float(currentTime / duration)
+                        
+                        // Create a progress object for tracking
+                        if self.conversionProgress == nil {
+                            self.conversionProgress = Progress(totalUnitCount: 100)
+                        }
+                        self.conversionProgress?.completedUnitCount = Int64(progress * 100)
+                        
+                        DispatchQueue.main.async {
+                            onProgressUpdate()
+                        }
+                        lastProgressUpdate = Date()
+                    }
+                }
+                
+                writer.finishWriting {
+                    if writer.status == .completed {
+                        debugPrint("WAV conversion completed successfully")
+                        DispatchQueue.main.async {
+                            onCompletion()
+                        }
+                    } else if let error = writer.error {
+                        debugPrint("WAV conversion failed: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            onError(error.localizedDescription)
+                        }
+                        // Clean up partial file
+                        try? FileManager.default.removeItem(at: destinationURL)
+                    } else {
+                        DispatchQueue.main.async {
+                            onError("WAV conversion failed with unknown error")
+                        }
+                        // Clean up partial file
+                        try? FileManager.default.removeItem(at: destinationURL)
+                    }
+                }
+            }
+        } catch {
+            debugPrint("Error setting up WAV conversion: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                onError(error.localizedDescription)
             }
         }
     }

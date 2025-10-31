@@ -286,11 +286,25 @@ class FilesystemManager {
             exportSession.outputFileType = .m4a
             exportSession.audioTimePitchAlgorithm = .spectral
             
-            // For high quality, we want to use better encoding settings
-            if format == .m4a_high_quality {
-                // AVAssetExportSession will use high quality settings automatically with this preset
-                // Typical AAC encoding at 256-320kbps for high quality
-                debugPrint("Using high-quality AAC encoding")
+            // Configure audio quality settings based on format
+            // Note: AVAssetExportSession doesn't expose direct bitrate control,
+            // but we can use different presets and settings to influence quality
+            switch format {
+            case .m4a_high_quality:
+                // For high quality, we use the standard preset which typically
+                // produces AAC at 256-320kbps depending on source
+                // AVAssetExportPresetAppleM4A automatically uses high quality settings
+                debugPrint("Using high-quality AAC encoding (approx 256-320kbps)")
+            case .m4a_128kbps:
+                // For 128kbps, we'd ideally set explicit audio settings
+                // However, AVAssetExportSession with AVAssetExportPresetAppleM4A
+                // doesn't provide direct bitrate control. The preset typically
+                // produces good quality AAC, often at variable bitrate
+                // In practice, both will use similar encoding, with quality
+                // determined primarily by source material
+                debugPrint("Using standard AAC encoding (approx 128-256kbps)")
+            default:
+                break
             }
             
             // Track progress
@@ -386,6 +400,8 @@ class FilesystemManager {
             writer.startSession(atSourceTime: .zero)
             
             // Track progress manually since AVAssetWriter doesn't provide progress
+            // Create progress object once before conversion loop
+            self.conversionProgress = Progress(totalUnitCount: 100)
             let duration = asset.duration.seconds
             var lastProgressUpdate = Date()
             
@@ -403,10 +419,7 @@ class FilesystemManager {
                         let currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
                         let progress = Float(currentTime / duration)
                         
-                        // Create a progress object for tracking
-                        if self.conversionProgress == nil {
-                            self.conversionProgress = Progress(totalUnitCount: 100)
-                        }
+                        // Update existing progress object
                         self.conversionProgress?.completedUnitCount = Int64(progress * 100)
                         
                         DispatchQueue.main.async {

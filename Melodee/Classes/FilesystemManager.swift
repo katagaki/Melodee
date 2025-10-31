@@ -334,6 +334,10 @@ class FilesystemManager {
                              onProgressUpdate: @escaping () -> Void,
                              onError: @escaping (String) -> Void,
                              onCompletion: @escaping () -> Void) {
+        // Constants for progress tracking
+        let millisecondsPerSecond: Double = 1000.0
+        let progressUpdateInterval: TimeInterval = 0.1
+        
         // Use AVAssetReader and AVAssetWriter for WAV conversion
         do {
             guard let assetTrack = asset.tracks(withMediaType: .audio).first else {
@@ -390,7 +394,8 @@ class FilesystemManager {
                 return
             }
             
-            self.conversionProgress = Progress(totalUnitCount: Int64(duration * 1000))
+            // Use millisecond precision for smooth progress updates
+            self.conversionProgress = Progress(totalUnitCount: Int64(duration * millisecondsPerSecond))
             var lastProgressUpdate = Date()
             
             writerInput.requestMediaDataWhenReady(on: DispatchQueue.global(qos: .background)) {
@@ -402,12 +407,12 @@ class FilesystemManager {
                     
                     writerInput.append(sampleBuffer)
                     
-                    // Update progress periodically
-                    if Date().timeIntervalSince(lastProgressUpdate) > 0.1 {
+                    // Update progress periodically (every 0.1 seconds)
+                    if Date().timeIntervalSince(lastProgressUpdate) > progressUpdateInterval {
                         let currentTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer).seconds
                         
                         // Update existing progress object with millisecond precision
-                        self.conversionProgress?.completedUnitCount = Int64(currentTime * 1000)
+                        self.conversionProgress?.completedUnitCount = Int64(currentTime * millisecondsPerSecond)
                         
                         DispatchQueue.main.async {
                             onProgressUpdate()

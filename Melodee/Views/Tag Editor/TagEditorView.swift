@@ -10,7 +10,6 @@ import PhotosUI
 import SwiftUI
 import TipKit
 
-// swiftlint:disable type_body_length
 struct TagEditorView: View {
 
     @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
@@ -261,4 +260,3 @@ struct TagEditorView: View {
     }
 
 }
-// swiftlint:enable type_body_length

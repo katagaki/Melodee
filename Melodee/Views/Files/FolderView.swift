@@ -184,7 +184,6 @@ struct FolderView: View {
         }
         .overlay {
             if state.isExtractingZIP {
-                // TODO: ProgressAlert should be on a higher level (cover the entire view, instead of just the view inside the navigation stack
                 ProgressAlert(title: "Alert.ExtractingZIP.Title",
                               message: "Alert.ExtractingZIP.Text",
                               percentage: $state.extractionPercentage) {

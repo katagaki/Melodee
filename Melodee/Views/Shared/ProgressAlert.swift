@@ -20,8 +20,9 @@ struct ProgressAlert: View {
             Color.black.opacity(colorScheme == .dark ? 0.5 : 0.2)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             VStack(alignment: .center, spacing: 0.0) {
-                VStack(alignment: .center, spacing: 10.0) {
+                VStack(alignment: .leading, spacing: 10.0) {
                     Text(NSLocalizedString(title, comment: ""))
+                        .font(.title3)
                         .bold()
                     ProgressView(value: min(Float(percentage), 100.0), total: 100.0)
                         .progressViewStyle(.linear)
@@ -40,7 +41,7 @@ struct ProgressAlert: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderless)
-                    .padding([.top, .bottom], 12.0)
+                    .padding([.top, .bottom], 16.0)
                 }
             }
             .background(.thickMaterial)
@@ -48,5 +49,6 @@ struct ProgressAlert: View {
             .padding(.all, 32.0)
         }
         .transition(AnyTransition.opacity)
+        .ignoresSafeArea()
     }
 }

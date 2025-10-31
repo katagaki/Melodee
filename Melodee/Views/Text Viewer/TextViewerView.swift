@@ -22,7 +22,7 @@ struct TextViewerView: View {
                     if let text = try? String(contentsOfFile: file.path, encoding: .shiftJIS) {
                         self.text = text
                     } else {
-                        self.text = try String(contentsOfFile: file.path)
+                        self.text = try String(contentsOfFile: file.path, encoding: .utf8)
                     }
                 } catch {
                     debugPrint(error.localizedDescription)

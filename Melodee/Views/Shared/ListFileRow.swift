@@ -57,24 +57,30 @@ struct ListFileRow: View {
         }
         .task {
             if !isThumbnailFetchCompleted {
+                let file = file
                 Task.detached {
+                    let coordinator = NSFileCoordinator()
                     let fileURL: URL = URL(filePath: file.path)
                     if file.extension == "mp3" {
-                        NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
+                        coordinator.coordinate(readingItemAt: fileURL, error: .none) { url in
                             Task {
                                 let albumArt = await albumArt(at: url)
-                                withAnimation(.default.speed(2)) {
-                                    self.thumbnail = albumArt
+                                await MainActor.run {
+                                    withAnimation(.default.speed(2)) {
+                                        self.thumbnail = albumArt
+                                    }
                                 }
                             }
                         }
                     } else if file.type == .image {
-                        NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
+                        coordinator.coordinate(readingItemAt: fileURL, error: .none) { url in
                             Task {
                                 if let thumbnail = await UIImage(contentsOfFile: url.path(percentEncoded: false))?
                                     .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
-                                    withAnimation(.default.speed(2)) {
-                                        self.thumbnail = thumbnail
+                                    await MainActor.run {
+                                        withAnimation(.default.speed(2)) {
+                                            self.thumbnail = thumbnail
+                                        }
                                     }
                                 }
                             }

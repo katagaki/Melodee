@@ -285,16 +285,24 @@ class FilesystemManager {
             
             debugPrint("Using AAC encoding with M4A format")
             
-            // Track progress
-            self.conversionProgress = exportSession.progress
-            let observation = self.conversionProgress?.observe(\.fractionCompleted) { _, _ in
+            // Track progress manually by polling
+            self.conversionProgress = Progress(totalUnitCount: 100)
+            
+            // Start a timer to poll export progress
+            let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global(qos: .background))
+            timer.schedule(deadline: .now(), repeating: .milliseconds(100))
+            timer.setEventHandler { [weak self] in
+                guard let self = self else { return }
+                let progress = Int64(exportSession.progress * 100)
+                self.conversionProgress?.completedUnitCount = progress
                 DispatchQueue.main.async {
                     onProgressUpdate()
                 }
             }
+            timer.resume()
             
             exportSession.exportAsynchronously {
-                observation?.invalidate()
+                timer.cancel()
                 
                 switch exportSession.status {
                 case .completed:

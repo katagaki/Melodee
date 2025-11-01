@@ -17,8 +17,6 @@ struct MainTabView: View {
     @AppStorage("SelectedTab") var selectedTab: Int = 0
     @State var externalFolderTabTitle: String = ""
 
-    @Namespace var namespace
-
     var body: some View {
         @Bindable var nowPlayingBarManager = nowPlayingBarManager
 
@@ -58,24 +56,16 @@ struct MainTabView: View {
                 .datastoreLocation(.applicationDefault)
             ])
         }
-        .adaptiveTabBottomAccessory(isPopupPresented: $nowPlayingBarManager.isSheetPresented) {
-            // Bar content
+        .adaptiveTabBottomAccessory(
+            isPopupPresented: $nowPlayingBarManager.isSheetPresented
+        ) {
             NowPlayingBar()
                 .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 .onTapGesture {
                     self.nowPlayingBarManager.isSheetPresented.toggle()
                 }
-//                .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
         } popupContent: {
-            // Popup content
-            if #available(iOS 26.0, *) {
-                NowPlayingView()
-//                    .navigationTransition(
-//                        .zoom(sourceID: "NowPlayingBar", in: namespace)
-//                    )
-            } else {
-                NowPlayingView()
-            }
+            NowPlayingView()
         }
     }
 

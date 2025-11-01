@@ -8,26 +8,35 @@
 import SwiftUI
 import LNPopupUI
 
-extension View {
-    @ViewBuilder
-    func adaptiveTabBottomAccessory<BarContent: View, PopupContent: View>(
-        isPopupPresented: Binding<Bool>,
-        @ViewBuilder barContent: @escaping () -> BarContent,
-        @ViewBuilder popupContent: @escaping () -> PopupContent
-    ) -> some View {
+struct AdaptiveTabBottomAccessory<BarContent: View, PopupContent: View>: ViewModifier {
+
+    @Binding var isPopupPresented: Bool
+
+    var barContent: () -> BarContent
+    var popupContent: () -> PopupContent
+
+    @Namespace private var namespace
+
+    func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
-            self
+            content
+                .tabBarMinimizeBehavior(.onScrollDown)
                 .tabViewBottomAccessory {
                     barContent()
+                        .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
                 }
-                .sheet(isPresented: isPopupPresented) {
+                .sheet(isPresented: $isPopupPresented) {
                     popupContent()
+                        // TODO: Navigation transition broken in iOS 26.1
+                        .navigationTransition(
+                            .zoom(sourceID: "NowPlayingBar", in: namespace)
+                        )
                 }
         } else {
-            self
+            content
                 .popup(
                     isBarPresented: .constant(true),
-                    isPopupOpen: isPopupPresented,
+                    isPopupOpen: $isPopupPresented,
                     popupContent: popupContent
                 )
                 .popupBarCustomView(
@@ -38,5 +47,19 @@ extension View {
                     barContent()
                 }
         }
+    }
+}
+
+extension View {
+    func adaptiveTabBottomAccessory<BarContent: View, PopupContent: View>(
+        isPopupPresented: Binding<Bool>,
+        barContent: @escaping () -> BarContent,
+        popupContent: @escaping () -> PopupContent
+    ) -> some View {
+        self.modifier(AdaptiveTabBottomAccessory(
+            isPopupPresented: isPopupPresented,
+            barContent: barContent,
+            popupContent: popupContent
+        ))
     }
 }

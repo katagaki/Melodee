@@ -7,14 +7,19 @@
 
 import SwiftUI
 
-extension View {
-    @ViewBuilder
-    func adaptiveGlass() -> some View {
+struct AdaptiveGlass: ViewModifier {
+    func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
-            self
+            content
                 .glassEffect(.regular, in: .capsule)
         } else {
-            self
+            content
         }
+    }
+}
+
+extension View {
+    func adaptiveGlass() -> some View {
+        self.modifier(AdaptiveGlass())
     }
 }

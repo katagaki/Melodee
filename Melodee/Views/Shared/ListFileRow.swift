@@ -54,6 +54,17 @@ struct ListFileRow: View {
                     .truncationMode(.middle)
                     .foregroundStyle(.secondary)
             }
+            Spacer()
+            if file.type == .audio {
+                Text(file.extension.uppercased())
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 6.0)
+                    .padding(.vertical, 3.0)
+                    .background(.tertiary)
+                    .clipShape(RoundedRectangle(cornerRadius: 4.0))
+            }
         }
         .task {
             if !isThumbnailFetchCompleted {

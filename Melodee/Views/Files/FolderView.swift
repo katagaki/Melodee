@@ -132,6 +132,7 @@ struct FolderView: View {
                 }
             }
         }
+        .navigationTitle(viewTitle())
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(

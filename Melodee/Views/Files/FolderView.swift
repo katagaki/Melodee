@@ -142,7 +142,7 @@ struct FolderView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 // HACK: Prevent weird animation when going from view to view
-                if folderContainsEditableMP3s() {
+                if folderContainsTaggableFiles() {
                     FBMenu(files: $files)
                 } else {
                     EmptyView()
@@ -287,8 +287,8 @@ struct FolderView: View {
         files.contains { ($0 as? FSFile)?.type == .audio }
     }
 
-    func folderContainsEditableMP3s() -> Bool {
-        files.contains { ($0 as? FSFile)?.extension == "mp3" }
+    func folderContainsTaggableFiles() -> Bool {
+        files.contains { ($0 as? FSFile)?.isTaggableAudio() ?? false }
     }
 
     func openInFilesApp() {

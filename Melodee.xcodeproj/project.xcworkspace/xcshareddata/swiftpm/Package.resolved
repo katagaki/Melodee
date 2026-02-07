@@ -1,15 +1,6 @@
 {
-  "originHash" : "a8a24e0047722e8c9cd4f28bced9529df623246bac07ccea664081a3f5e7516b",
+  "originHash" : "394793d835fb8e27c26f93458378e50acf98527ba603bd5a782bbbc4e6569481",
   "pins" : [
-    {
-      "identity" : "id3tageditor",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/chicio/ID3TagEditor",
-      "state" : {
-        "revision" : "e08dd0118d4418900ac3b8f621a6b3d24ae5416f",
-        "version" : "5.5.0"
-      }
-    },
     {
       "identity" : "injectableloggers",
       "kind" : "remoteSourceControl",

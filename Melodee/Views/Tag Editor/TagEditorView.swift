@@ -5,9 +5,9 @@
 //  Created by シン・ジャスティン on 2023/09/12.
 //
 
-import ID3TagEditor
 import PhotosUI
 import SwiftUI
+import SwiftTagger
 import TipKit
 
 // swiftlint:disable type_body_length
@@ -15,9 +15,8 @@ struct TagEditorView: View {
 
     @Environment(NowPlayingBarManager.self) var nowPlayingBarManager: NowPlayingBarManager
 
-    let id3TagEditor = ID3TagEditor()
     @State var files: [FSFile]
-    @State var tags: [FSFile: ID3Tag] = [:]
+    @State var audioFiles: [FSFile: AudioFile] = [:]
     @State var tagData = Tag()
     @State var selectedPhoto: PhotosPickerItem?
     @State var isSelectingFile: Bool = false
@@ -208,23 +207,21 @@ struct TagEditorView: View {
         for file in files {
             debugPrint("Attempting to read tag data for file \(file.name)...")
             do {
-                let tag = try id3TagEditor.read(from: file.path)
-                if let tag {
-                    tags.updateValue(tag, forKey: file)
-                    let tagContentReader = ID3TagContentReader(id3Tag: tag)
-                    if tagCombined == nil {
-                        tagCombined = await TagTyped(file, reader: tagContentReader)
-                    } else {
-                        await tagCombined!.merge(with: file, reader: tagContentReader)
-                    }
+                let fileURL = URL(fileURLWithPath: file.path)
+                let audioFile = try AudioFile(location: fileURL)
+                audioFiles.updateValue(audioFile, forKey: file)
+
+                if tagCombined == nil {
+                    tagCombined = await TagTyped(file, audioFile: audioFile)
                 } else {
-                    debugPrint("No tag data found for file \(file.name), adding empty tag")
-                    if let newTag = ID3Tag.newTag(for: file) {
-                        tags.updateValue(newTag, forKey: file)
-                    }
+                    await tagCombined!.merge(with: file, audioFile: audioFile)
                 }
             } catch {
                 debugPrint("Error occurred while reading tags: \n\(error.localizedDescription)")
+                // Try to create new tag
+                if let newAudioFile = AudioFile.newTag(for: file) {
+                    audioFiles.updateValue(newAudioFile, forKey: file)
+                }
             }
             initialLoadPercentage += 100 / files.count
         }
@@ -238,15 +235,15 @@ struct TagEditorView: View {
     func saveAllTagData() async {
         savePercentage = 0
         _ = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for (file, tag) in tags {
+            for (file, var audioFile) in audioFiles {
                 group.addTask {
-                    return await tag.saveTagData(to: file, tagData: tagData)
+                    return await audioFile.saveTagData(to: file, tagData: tagData)
                 }
             }
             var saveStates: [Bool] = []
             for await result in group {
                 DispatchQueue.main.async {
-                    savePercentage += 100 / tags.count
+                    savePercentage += 100 / audioFiles.count
                 }
                 saveStates.append(result)
             }

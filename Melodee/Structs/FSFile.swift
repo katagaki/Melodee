@@ -45,4 +45,9 @@ struct FSFile: FilesystemObject {
         }
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
     }
+
+    /// Returns true if this file is a taggable audio file (MP3 or M4A)
+    func isTaggableAudio() -> Bool {
+        return self.extension == "mp3" || self.extension == "m4a"
+    }
 }

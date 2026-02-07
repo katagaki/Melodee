@@ -25,7 +25,7 @@ struct FBMenu: View {
         .task {
             validFiles.removeAll()
             for file in files {
-                if let file = file as? FSFile, file.extension == "mp3" {
+                if let file = file as? FSFile, file.isTaggableAudio() {
                     validFiles.append(file)
                 }
             }

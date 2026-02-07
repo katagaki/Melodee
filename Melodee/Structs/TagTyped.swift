@@ -7,7 +7,7 @@
 
 import AVFoundation
 import Foundation
-import ID3TagEditor
+import SwiftTagger
 
 struct TagTyped {
 
@@ -19,76 +19,65 @@ struct TagTyped {
 
     }
 
-    init(_ file: FSFile, reader tagContentReader: ID3TagContentReader) async {
-        title = tagContentReader.title() ?? ""
-        artist = tagContentReader.artist() ?? ""
-        album = tagContentReader.album() ?? ""
-        albumArtist = tagContentReader.albumArtist() ?? ""
-        if let yearFromTag = tagContentReader.recordingYear() {
-            year = yearFromTag
-        }
-        if let trackFromTag = tagContentReader.trackPosition()?.position {
-            track = trackFromTag
-        }
-        genre = tagContentReader.genre()?.description ?? ""
-        composer = tagContentReader.composer() ?? ""
-        if let discNumberFromTag = tagContentReader.discPosition()?.position {
-            discNumber = discNumberFromTag
-        }
-        if let albumArtFromTag = tagContentReader.attachedPictures()
-                .first(where: { $0.type == .frontCover }) {
-            albumArt = albumArtFromTag.picture
-        } else if let albumArtFromTag = tagContentReader.attachedPictures().first {
-            albumArt = albumArtFromTag.picture
+    init(_ file: FSFile, audioFile: AudioFile) async {
+        title = audioFile.title ?? ""
+        artist = audioFile.artist ?? ""
+        album = audioFile.album ?? ""
+        albumArtist = audioFile.albumArtist ?? ""
+        year = audioFile.year
+        track = audioFile.trackNumber.index != 0 ? audioFile.trackNumber.index : nil
+        genre = audioFile.genreCustom ?? ""
+        composer = audioFile.composer ?? ""
+        discNumber = audioFile.discNumber.index != 0 ? audioFile.discNumber.index : nil
+
+        if let coverArtImage = audioFile.coverArt {
+            albumArt = coverArtImage.pngData() ?? coverArtImage.jpegData(compressionQuality: 1.0)
         } else {
             albumArt = await albumArtUsingAVPlayer(file: file)
         }
     }
 
     // swiftlint:disable cyclomatic_complexity function_body_length
-    mutating func merge(with file: FSFile, reader tagContentReader: ID3TagContentReader) async {
-        if title != tagContentReader.title() ?? "" {
+    mutating func merge(with file: FSFile, audioFile: AudioFile) async {
+        if title != audioFile.title ?? "" {
             title = nil
         }
-        if artist != tagContentReader.artist() ?? "" {
+        if artist != audioFile.artist ?? "" {
             artist = nil
         }
-        if album != tagContentReader.album() ?? "" {
+        if album != audioFile.album ?? "" {
             album = nil
         }
-        if albumArtist != tagContentReader.albumArtist() ?? "" {
+        if albumArtist != audioFile.albumArtist ?? "" {
             albumArtist = nil
         }
-        if let yearFromTag = tagContentReader.recordingYear(), year != yearFromTag {
+        if let yearFromTag = audioFile.year, year != yearFromTag {
             year = nil
-        } else if tagContentReader.recordingYear() == nil && year != nil {
+        } else if audioFile.year == nil && year != nil {
             year = nil
         }
-        if let trackFromTag = tagContentReader.trackPosition()?.position, track != trackFromTag {
+        let trackFromTag = audioFile.trackNumber.index != 0 ? audioFile.trackNumber.index : nil
+        if let trackValue = trackFromTag, track != trackValue {
             track = nil
-        } else if tagContentReader.trackPosition()?.position == nil && track != nil {
+        } else if trackFromTag == nil && track != nil {
             track = nil
         }
-        if genre != tagContentReader.genre()?.description ?? "" {
+        if genre != audioFile.genreCustom ?? "" {
             genre = nil
         }
-        if composer != tagContentReader.composer() ?? "" {
+        if composer != audioFile.composer ?? "" {
             composer = nil
         }
-        if let discNumberFromTag = tagContentReader.discPosition()?.position,
-           discNumber != discNumberFromTag {
+        let discNumberFromTag = audioFile.discNumber.index != 0 ? audioFile.discNumber.index : nil
+        if let discValue = discNumberFromTag,
+           discNumber != discValue {
             discNumber = nil
-        } else if tagContentReader.discPosition()?.position == nil && discNumber != nil {
+        } else if discNumberFromTag == nil && discNumber != nil {
             discNumber = nil
         }
-        if let albumArtFromTag = tagContentReader.attachedPictures().first(where: { picture in
-            picture.type == .frontCover
-        }) {
-            if albumArt != albumArtFromTag.picture {
-                albumArt = nil
-            }
-        } else if let albumArtFromTag = tagContentReader.attachedPictures().first {
-            if albumArt != albumArtFromTag.picture {
+        if let coverArtImage = audioFile.coverArt,
+           let albumArtFromTag = coverArtImage.pngData() ?? coverArtImage.jpegData(compressionQuality: 1.0) {
+            if albumArt != albumArtFromTag {
                 albumArt = nil
             }
         } else if let albumArtFromTag = await albumArtUsingAVPlayer(file: file) {

@@ -17,7 +17,7 @@ struct AdaptiveTabBottomAccessory: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
             content
-                .tabBarMinimizeBehavior(.onScrollDown)
+                .tabBarMinimizeBehavior(.automatic)
                 .tabViewBottomAccessory {
                     Button {
                         isPopupPresented.toggle()

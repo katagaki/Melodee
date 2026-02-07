@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84792AB009B300D87A5F /* ZIPFoundation */; };
 		E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E447AAB92B771CC7009A3D3E /* Komponents */; };
-		E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = E489EF7F2D34932D009AB712 /* ID3TagEditor */; };
 		E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */ = {isa = PBXBuildFile; productRef = E496EB322EACADE3008F4787 /* LNPopupUI-Static */; };
 		E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A622AB3FFA800C5810D /* Zoomy */; };
 		E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A672AB4032900C5810D /* VariableBlurView */; };
@@ -63,7 +62,6 @@
 				E4F735E72F3704C400A203FE /* SwiftTagger in Frameworks */,
 				E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
-				E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */,
 				E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */,
 				E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */,
 			);
@@ -122,7 +120,6 @@
 				E4DB2A622AB3FFA800C5810D /* Zoomy */,
 				E4DB2A672AB4032900C5810D /* VariableBlurView */,
 				E447AAB92B771CC7009A3D3E /* Komponents */,
-				E489EF7F2D34932D009AB712 /* ID3TagEditor */,
 				E496EB322EACADE3008F4787 /* LNPopupUI-Static */,
 				E4F735E62F3704C400A203FE /* SwiftTagger */,
 			);
@@ -163,7 +160,6 @@
 				E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */,
 				E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */,
 				E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */,
-				E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
 				E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */,
 				E4F735E52F3704C400A203FE /* XCRemoteSwiftPackageReference "SwiftTagger" */,
 			);
@@ -376,7 +372,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Melodee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -423,7 +419,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 1.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.Melodee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -475,14 +471,6 @@
 				kind = branch;
 			};
 		};
-		E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/chicio/ID3TagEditor";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.2.0;
-			};
-		};
 		E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LNPopupUI";
@@ -527,11 +515,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */;
 			productName = Komponents;
-		};
-		E489EF7F2D34932D009AB712 /* ID3TagEditor */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */;
-			productName = ID3TagEditor;
 		};
 		E496EB322EACADE3008F4787 /* LNPopupUI-Static */ = {
 			isa = XCSwiftPackageProductDependency;

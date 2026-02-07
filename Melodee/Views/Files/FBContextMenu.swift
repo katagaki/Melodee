@@ -59,7 +59,7 @@ struct FBContextMenu: View {
                 Divider()
             }
             // Tag Editor menu items
-            if file.extension == "mp3" {
+            if file.isTaggableAudio() {
                 NavigationLink(value: ViewPath.tagEditorSingle(file: file)) {
                     Label("Shared.EditTag.Single", systemImage: "tag")
                 }

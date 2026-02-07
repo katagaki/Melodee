@@ -7,7 +7,7 @@
 
 import AVFAudio
 import Foundation
-import ID3TagEditor
+import SwiftTagger
 import MediaPlayer
 
 // swiftlint:disable type_body_length
@@ -66,12 +66,11 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     func currentlyPlayingTitle() -> String? {
         if audioPlayer != nil, let file = currentlyPlayingFile() {
-            if file.extension == "mp3" {
+            if file.isTaggableAudio() {
                 do {
-                    if let tag = try ID3TagEditor().read(from: file.path) {
-                        let contentReader = ID3TagContentReader(id3Tag: tag)
-                        return contentReader.title() ?? file.name
-                    }
+                    let fileURL = URL(fileURLWithPath: file.path)
+                    let audioFile = try AudioFile(location: fileURL)
+                    return audioFile.title ?? file.name
                 } catch {
                     debugPrint(error.localizedDescription)
                 }
@@ -84,12 +83,11 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     func currentlyPlayingArtistName() -> String? {
         if audioPlayer != nil, let file = currentlyPlayingFile() {
-            if file.extension == "mp3" {
+            if file.isTaggableAudio() {
                 do {
-                    if let tag = try ID3TagEditor().read(from: file.path) {
-                        let contentReader = ID3TagContentReader(id3Tag: tag)
-                        return contentReader.artist() ?? NSLocalizedString("Shared.UnknownArtist", comment: "")
-                    }
+                    let fileURL = URL(fileURLWithPath: file.path)
+                    let audioFile = try AudioFile(location: fileURL)
+                    return audioFile.artist ?? NSLocalizedString("Shared.UnknownArtist", comment: "")
                 } catch {
                     debugPrint(error.localizedDescription)
                 }
@@ -102,12 +100,11 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     func currentlyPlayingAlbumName() -> String? {
         if audioPlayer != nil, let file = currentlyPlayingFile() {
-            if file.extension == "mp3" {
+            if file.isTaggableAudio() {
                 do {
-                    if let tag = try ID3TagEditor().read(from: file.path) {
-                        let contentReader = ID3TagContentReader(id3Tag: tag)
-                        return contentReader.album() ?? file.containingFolderName()
-                    }
+                    let fileURL = URL(fileURLWithPath: file.path)
+                    let audioFile = try AudioFile(location: fileURL)
+                    return audioFile.album ?? file.containingFolderName()
                 } catch {
                     debugPrint(error.localizedDescription)
                 }

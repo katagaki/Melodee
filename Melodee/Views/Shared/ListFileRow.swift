@@ -18,7 +18,7 @@ struct ListFileRow: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 16.0) {
-            if file.extension == "mp3" || file.type == .image,
+            if file.isTaggableAudio() || file.type == .image,
                let thumbnail = thumbnail {
                 Image(uiImage: thumbnail)
                     .resizable()
@@ -59,7 +59,7 @@ struct ListFileRow: View {
             if !isThumbnailFetchCompleted {
                 Task.detached {
                     let fileURL: URL = URL(filePath: file.path)
-                    if file.extension == "mp3" {
+                    if file.isTaggableAudio() {
                         NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
                             Task {
                                 let albumArt = await albumArt(at: url)

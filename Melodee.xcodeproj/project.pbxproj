@@ -13,6 +13,7 @@
 		E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */ = {isa = PBXBuildFile; productRef = E496EB322EACADE3008F4787 /* LNPopupUI-Static */; };
 		E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A622AB3FFA800C5810D /* Zoomy */; };
 		E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A672AB4032900C5810D /* VariableBlurView */; };
+		E4F735E72F3704C400A203FE /* SwiftTagger in Frameworks */ = {isa = PBXBuildFile; productRef = E4F735E62F3704C400A203FE /* SwiftTagger */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */,
+				E4F735E72F3704C400A203FE /* SwiftTagger in Frameworks */,
 				E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
 				E489EF802D34932D009AB712 /* ID3TagEditor in Frameworks */,
@@ -122,6 +124,7 @@
 				E447AAB92B771CC7009A3D3E /* Komponents */,
 				E489EF7F2D34932D009AB712 /* ID3TagEditor */,
 				E496EB322EACADE3008F4787 /* LNPopupUI-Static */,
+				E4F735E62F3704C400A203FE /* SwiftTagger */,
 			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
@@ -162,6 +165,7 @@
 				E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */,
 				E489EF7E2D34932D009AB712 /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
 				E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */,
+				E4F735E52F3704C400A203FE /* XCRemoteSwiftPackageReference "SwiftTagger" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E4A4D6482AAEF11F0062D12C /* Products */;
@@ -503,6 +507,14 @@
 				minimumVersion = 1.0.2;
 			};
 		};
+		E4F735E52F3704C400A203FE /* XCRemoteSwiftPackageReference "SwiftTagger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NCrusher74/SwiftTagger";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -535,6 +547,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */;
 			productName = VariableBlurView;
+		};
+		E4F735E62F3704C400A203FE /* SwiftTagger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4F735E52F3704C400A203FE /* XCRemoteSwiftPackageReference "SwiftTagger" */;
+			productName = SwiftTagger;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

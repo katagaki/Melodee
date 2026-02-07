@@ -7,36 +7,55 @@
 
 import SwiftUI
 import LNPopupUI
+import TipKit
 
-extension View {
-    @ViewBuilder
-    func adaptiveTabBottomAccessory<BarContent: View, PopupContent: View>(
-        isPopupPresented: Binding<Bool>,
-        @ViewBuilder barContent: @escaping () -> BarContent,
-        @ViewBuilder popupContent: @escaping () -> PopupContent
-    ) -> some View {
+struct AdaptiveTabBottomAccessory: ViewModifier {
+
+    @State var isPopupPresented: Bool = false
+    @Namespace var namespace
+
+    func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
-            self
+            content
+                .tabBarMinimizeBehavior(.onScrollDown)
                 .tabViewBottomAccessory {
-                    barContent()
+                    Button {
+                        isPopupPresented.toggle()
+                    } label: {
+                        NowPlayingBar()
+                            .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                    .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 }
-                .sheet(isPresented: isPopupPresented) {
-                    popupContent()
+                .sheet(isPresented: $isPopupPresented) {
+                    NowPlayingView()
+                        .navigationTransition(
+                            .zoom(sourceID: "NowPlayingBar", in: namespace)
+                        )
                 }
         } else {
-            self
+            content
                 .popup(
                     isBarPresented: .constant(true),
-                    isPopupOpen: isPopupPresented,
-                    popupContent: popupContent
+                    isPopupOpen: $isPopupPresented,
+                    popupContent: { NowPlayingView() }
                 )
                 .popupBarCustomView(
                     wantsDefaultTapGesture: true,
                     wantsDefaultPanGesture: false,
                     wantsDefaultHighlightGesture: false
                 ) {
-                    barContent()
+                    NowPlayingBar()
+                        .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 }
         }
+    }
+}
+
+extension View {
+    func adaptiveTabBottomAccessory() -> some View {
+        self.modifier(AdaptiveTabBottomAccessory())
     }
 }

@@ -11,5 +11,4 @@ import Foundation
 class NowPlayingBarManager {
     var isKeyboardShowing: Bool = false
     var isBarPresented: Bool = true
-    var isSheetPresented: Bool = false
 }

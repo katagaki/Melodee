@@ -44,11 +44,19 @@ class FilesystemManager {
         debugPrint("Enumerating files in '\(url == nil ? directory?.absoluteString ?? "": url?.absoluteString ?? "")'.")
         do {
             if let directory = (url == nil ? directory : url), directoryOrFileExists(at: directory) {
+                // Determine if we're at the root directory
+                let isRootDirectory = (url == nil || url?.path == directory.path)
+                
                 // Get contents of directory
                 let filesStaged: [any FilesystemObject] = try manager
                     .contentsOfDirectory(at: directory,
                                          includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey],
                                          options: []).compactMap { url in
+                        // Hide .Trash directory when at root
+                        if isRootDirectory && url.hasDirectoryPath && url.lastPathComponent == ".Trash" {
+                            return nil
+                        }
+                        
                         if url.hasDirectoryPath {
                             return FSDirectory(name: url.lastPathComponent,
                                                path: url.path,

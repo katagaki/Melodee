@@ -1,5 +1,5 @@
 {
-  "originHash" : "394793d835fb8e27c26f93458378e50acf98527ba603bd5a782bbbc4e6569481",
+  "originHash" : "22822789ba3e55ee34872c688839e22374c33e161e8acdfc38eee96bcf9b6f7e",
   "pins" : [
     {
       "identity" : "injectableloggers",
@@ -26,6 +26,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "93f484d6f2cef9c179387fcca2b2048413f9f0a6"
+      }
+    },
+    {
+      "identity" : "lame-xcframework",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/BB9z/LAME-xcframework",
+      "state" : {
+        "revision" : "3f906714cf8a8cf2a82a8cf5bc760e639febf7b2",
+        "version" : "3.100.3"
       }
     },
     {

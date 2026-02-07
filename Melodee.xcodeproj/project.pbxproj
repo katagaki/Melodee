@@ -13,6 +13,7 @@
 		E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A622AB3FFA800C5810D /* Zoomy */; };
 		E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A672AB4032900C5810D /* VariableBlurView */; };
 		E4F735E72F3704C400A203FE /* SwiftTagger in Frameworks */ = {isa = PBXBuildFile; productRef = E4F735E62F3704C400A203FE /* SwiftTagger */; };
+		E4F7368C2F37193F00A203FE /* LAME in Frameworks */ = {isa = PBXBuildFile; productRef = E4F7368B2F37193F00A203FE /* LAME */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4F7368C2F37193F00A203FE /* LAME in Frameworks */,
 				E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */,
 				E4F735E72F3704C400A203FE /* SwiftTagger in Frameworks */,
 				E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */,
@@ -122,6 +124,7 @@
 				E447AAB92B771CC7009A3D3E /* Komponents */,
 				E496EB322EACADE3008F4787 /* LNPopupUI-Static */,
 				E4F735E62F3704C400A203FE /* SwiftTagger */,
+				E4F7368B2F37193F00A203FE /* LAME */,
 			);
 			productName = Melodee;
 			productReference = E4A4D6472AAEF11F0062D12C /* Melodee.app */;
@@ -162,6 +165,7 @@
 				E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */,
 				E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */,
 				E4F735E52F3704C400A203FE /* XCRemoteSwiftPackageReference "SwiftTagger" */,
+				E4F7368A2F37193F00A203FE /* XCRemoteSwiftPackageReference "LAME-xcframework" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E4A4D6482AAEF11F0062D12C /* Products */;
@@ -503,6 +507,14 @@
 				minimumVersion = 1.7.0;
 			};
 		};
+		E4F7368A2F37193F00A203FE /* XCRemoteSwiftPackageReference "LAME-xcframework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/BB9z/LAME-xcframework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.100.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -535,6 +547,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E4F735E52F3704C400A203FE /* XCRemoteSwiftPackageReference "SwiftTagger" */;
 			productName = SwiftTagger;
+		};
+		E4F7368B2F37193F00A203FE /* LAME */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4F7368A2F37193F00A203FE /* XCRemoteSwiftPackageReference "LAME-xcframework" */;
+			productName = LAME;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

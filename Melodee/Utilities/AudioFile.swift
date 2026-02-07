@@ -20,7 +20,7 @@ extension AudioFile {
             try audioFile.write(outputLocation: fileURL)
             return audioFile
         } catch {
-            debugPrint("Error occurred while initializing tag: \n\(error.localizedDescription)")
+            debugPrint("Error occurred while initializing tag: \n\(error)\n\(error.localizedDescription)")
         }
         return nil
     }
@@ -32,7 +32,7 @@ extension AudioFile {
             self.title = ""
             try self.write(outputLocation: fileURL)
         } catch {
-            debugPrint("Error occurred while initializing tag: \n\(error.localizedDescription)")
+            debugPrint("Error occurred while initializing tag: \n\(error)\n\(error.localizedDescription)")
         }
     }
 

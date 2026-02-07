@@ -120,11 +120,13 @@ struct FolderView: View {
                         }
                     }
                     .contextMenu {
-                        FBContextMenu(state: $state, file: file) {
+                        FBContextMenu(state: $state, file: file, extractZIPAction: {
                             if let file = file as? FSFile {
                                 extractZIP(file: file)
                             }
-                        }
+                        }, refreshFilesAction: {
+                            refreshFiles()
+                        })
                     }
                     .listRowBackground(Color.clear)
                 }

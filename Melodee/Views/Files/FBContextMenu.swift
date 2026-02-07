@@ -15,6 +15,7 @@ struct FBContextMenu: View {
     @Binding var state: FBState
     var file: any FilesystemObject
     var extractZIPAction: () -> Void
+    var refreshFilesAction: () -> Void
 
     var body: some View {
         if let file = file as? FSFile {
@@ -64,6 +65,24 @@ struct FBContextMenu: View {
                     Label("Shared.EditTag.Single", systemImage: "tag")
                 }
                 Divider()
+            }
+            // Audio conversion menu items
+            if file.isConvertibleAudio() {
+                let availableFormats = file.availableConversionFormats()
+                if !availableFormats.isEmpty {
+                    Menu {
+                        ForEach(availableFormats, id: \.self) { format in
+                            Button {
+                                convertAudio(file: file, to: format)
+                            } label: {
+                                Text(format.uppercased())
+                            }
+                        }
+                    } label: {
+                        Label("Shared.Convert", systemImage: "arrow.triangle.2.circlepath")
+                    }
+                    Divider()
+                }
             }
             // Default item for all files
             Button {
@@ -160,6 +179,43 @@ struct FBContextMenu: View {
                     if let directory = content as? FSDirectory {
                         addToQueue(directory: directory, recursively: isRecursiveAdd)
                     }
+                }
+            }
+        }
+    }
+
+    func convertAudio(file: FSFile, to format: String) {
+        state.fileBeingConverted = file
+        state.targetConversionFormat = format
+        state.conversionProgress = 0.0
+        state.isConvertingAudio = true
+
+        Task {
+            do {
+                _ = try await AudioConverter.convert(
+                    file,
+                    to: format,
+                    deleteOriginal: false,
+                    progressHandler: { progress in
+                        DispatchQueue.main.async {
+                            state.conversionProgress = progress
+                        }
+                    }
+                )
+
+                DispatchQueue.main.async {
+                    state.isConvertingAudio = false
+                    state.fileBeingConverted = nil
+                    state.conversionProgress = 0.0
+                    refreshFilesAction()
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    state.isConvertingAudio = false
+                    state.fileBeingConverted = nil
+                    state.conversionProgress = 0.0
+                    state.isErrorAlertPresenting = true
+                    state.errorText = error.localizedDescription
                 }
             }
         }

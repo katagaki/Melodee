@@ -63,6 +63,20 @@ struct FileBrowserAlerts: ViewModifier {
                 Text(NSLocalizedString("Alert.DeleteFile.Text", comment: "")
                     .replacingOccurrences(of: "%1", with: state.fileOrDirectoryBeingDeleted?.name ?? ""))
             })
+            .overlay {
+                if state.isConvertingAudio {
+                    ProgressAlert(
+                        title: "Alert.ConvertingAudio.Title",
+                        message: "Alert.ConvertingAudio.Text",
+                        percentage: Binding(
+                            get: { Int(state.conversionProgress * 100) },
+                            set: { _ in }
+                        ),
+                        onCancel: nil
+                    )
+                    .transition(.opacity)
+                }
+            }
     }
 }
 

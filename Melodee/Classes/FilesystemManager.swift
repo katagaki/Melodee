@@ -46,7 +46,7 @@ class FilesystemManager {
             if let directory = (url == nil ? directory : url), directoryOrFileExists(at: directory) {
                 // Determine if we're at the root directory
                 let isRootDirectory = (url == nil || url?.path == directory.path)
-                
+
                 // Get contents of directory
                 let filesStaged: [any FilesystemObject] = try manager
                     .contentsOfDirectory(at: directory,
@@ -56,7 +56,7 @@ class FilesystemManager {
                         if isRootDirectory && url.hasDirectoryPath && url.lastPathComponent == ".Trash" {
                             return nil
                         }
-                        
+
                         if url.hasDirectoryPath {
                             return FSDirectory(name: url.lastPathComponent,
                                                path: url.path,

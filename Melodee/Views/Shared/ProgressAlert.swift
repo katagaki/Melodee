@@ -19,6 +19,7 @@ struct ProgressAlert: View {
         ZStack(alignment: .center) {
             Color.black.opacity(colorScheme == .dark ? 0.5 : 0.2)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea()
             VStack(alignment: .center, spacing: 0.0) {
                 VStack(alignment: .center, spacing: 10.0) {
                     Text(NSLocalizedString(title, comment: ""))
@@ -43,8 +44,15 @@ struct ProgressAlert: View {
                     .padding([.top, .bottom], 12.0)
                 }
             }
-            .background(.thickMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 16.0))
+            .background {
+                if #available(iOS 26.0, *) {
+                    RoundedRectangle(cornerRadius: 24.0)
+                        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 24.0))
+                } else {
+                    RoundedRectangle(cornerRadius: 16.0)
+                        .fill(.thickMaterial)
+                }
+            }
             .padding(.all, 32.0)
         }
         .transition(AnyTransition.opacity)

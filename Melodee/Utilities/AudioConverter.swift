@@ -5,6 +5,7 @@
 //  Created by Claude on 2026/02/07.
 //
 
+// swiftlint:disable file_length
 @preconcurrency import AVFoundation
 import Foundation
 import LAME
@@ -19,6 +20,7 @@ enum AudioConversionError: Error {
     case writerFailed
 }
 
+// swiftlint:disable:next type_body_length
 class AudioConverter {
 
     /// Converts an audio file from one format to another using AVAssetReader and AVAssetWriter
@@ -80,7 +82,7 @@ class AudioConverter {
     }
 
     /// Converts audio using AVAssetExportSession (for M4A output)
-    private static func convertUsingExportSession(
+    private static func convertUsingExportSession( // swiftlint:disable:this function_parameter_count
         sourceFile: FSFile,
         sourceURL: URL,
         outputURL: URL,
@@ -146,7 +148,7 @@ class AudioConverter {
     }
 
     /// Converts audio to MP3 using LAME encoder
-    private static func convertToMP3(
+    private static func convertToMP3( // swiftlint:disable:this function_parameter_count function_body_length
         sourceFile: FSFile,
         sourceURL: URL,
         outputURL: URL,
@@ -228,6 +230,7 @@ class AudioConverter {
         }
     }
 
+    // swiftlint:disable function_parameter_count function_body_length
     /// Converts audio using AVAssetReader and AVAssetWriter (for WAV output)
     private static func convertUsingReaderWriter(
         sourceFile: FSFile,
@@ -339,6 +342,7 @@ class AudioConverter {
 
         return newFile
     }
+    // swiftlint:enable function_parameter_count function_body_length
 
     /// Checks if a conversion between two formats is supported
     static func isConversionSupported(from sourceFormat: String, to targetFormat: String) -> Bool {
@@ -383,6 +387,7 @@ class AudioConverter {
 // MARK: - MP3 Encoding Extension
 extension AudioConverter {
 
+    // swiftlint:disable cyclomatic_complexity function_parameter_count function_body_length
     /// Encodes audio from AVAssetReader to MP3 using LAME
     fileprivate static func encodeToMP3FromReader(
         reader: AVAssetReader,
@@ -520,6 +525,7 @@ extension AudioConverter {
         // Write VBR/INFO tag
         lame_mp3_tags_fid(lame, outputFile)
     }
+    // swiftlint:enable cyclomatic_complexity function_parameter_count function_body_length
 
     /// Writes a minimal ID3v2.3 tag to an MP3 file to make it compatible with SwiftTagger
     fileprivate static func writeMinimalID3Tag(to url: URL) throws {

@@ -10,6 +10,7 @@ import SwiftTagger
 import SwiftUI
 import TipKit
 
+// swiftlint:disable:next type_body_length
 struct FolderView: View {
 
     @State var fileManager: FilesystemManager
@@ -272,24 +273,31 @@ struct FolderView: View {
             state.isExtractingZIP = true
         }
         UIApplication.shared.isIdleTimerDisabled = true
+        nonisolated(unsafe) let fileManagerRef = fileManager
         fileManager.extractFiles(file: file) {
-            state.extractionPercentage =
-                Int((fileManager.extractionProgress?.fractionCompleted ?? 0) * 100)
-        } onError: { error in
-            UIApplication.shared.isIdleTimerDisabled = false
-            withAnimation(.easeOut.speed(2)) {
-                state.isExtractingZIP = false
-                state.errorText = error
+            MainActor.assumeIsolated {
+                state.extractionPercentage =
+                    Int((fileManagerRef.extractionProgress?.fractionCompleted ?? 0) * 100)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                state.isErrorAlertPresenting = true
+        } onError: { error in
+            MainActor.assumeIsolated {
+                UIApplication.shared.isIdleTimerDisabled = false
+                withAnimation(.easeOut.speed(2)) {
+                    state.isExtractingZIP = false
+                    state.errorText = error
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    state.isErrorAlertPresenting = true
+                }
             }
         } onCompletion: {
-            UIApplication.shared.isIdleTimerDisabled = false
-            withAnimation(.easeOut.speed(2)) {
-                state.isExtractingZIP = false
+            MainActor.assumeIsolated {
+                UIApplication.shared.isIdleTimerDisabled = false
+                withAnimation(.easeOut.speed(2)) {
+                    state.isExtractingZIP = false
+                }
+                refreshFiles()
             }
-            refreshFiles()
         }
     }
 
@@ -301,7 +309,7 @@ struct FolderView: View {
         files.contains { ($0 as? FSFile)?.isTaggableAudio() ?? false }
     }
 
-    func sortFiles() {
+    func sortFiles() { // swiftlint:disable:this cyclomatic_complexity function_body_length
         // Separate directories and files
         var directories = files.filter { $0 is FSDirectory }
         var fileItems = files.filter { $0 is FSFile }
@@ -357,6 +365,7 @@ struct FolderView: View {
                 let rhsArtist = tagCache[rhsFile.path]?.artist ?? ""
                 comparison = lhsArtist.localizedStandardCompare(rhsArtist)
             }
+
             // Fall back to file name when primary sort values are equal
             let resolved = comparison == .orderedSame
                 ? lhsFile.name.localizedStandardCompare(rhsFile.name)

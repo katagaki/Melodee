@@ -138,13 +138,18 @@ class FilesystemManager {
                                                     comment: "")
         if let documentsDirectoryURL {
             manager
-                .createFile(atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
-                            contents: "".data(using: .utf8))
+                .createFile(
+                    atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
+                    contents: Data()
+                )
         }
         if let cloudDocumentsDirectoryURL {
             let placeholderFileURL: URL = cloudDocumentsDirectoryURL.appending(path: placeholderFilename)
             NSFileCoordinator().coordinate(writingItemAt: placeholderFileURL, error: .none) { url in
-                self.manager.createFile(atPath: url.path(percentEncoded: false), contents: "".data(using: .utf8))
+                self.manager.createFile(
+                    atPath: url.path(percentEncoded: false),
+                    contents: Data()
+                )
             }
         }
     }

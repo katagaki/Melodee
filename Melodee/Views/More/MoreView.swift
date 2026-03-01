@@ -11,36 +11,12 @@ import SwiftUI
 // swiftlint:disable type_body_length
 struct MoreView: View {
 
-    @AppStorage(wrappedValue: false, "CloudStoresPlaylists") var storePlaylistsInCloud: Bool
-    @AppStorage(wrappedValue: false, "CloudStoresFiles") var storeFilesInCloud: Bool
-
     @State var moreTabPath: [ViewPath] = []
-    @State var isPendingMoveToiCloudPrompt: Bool = false
 
     var body: some View {
         NavigationStack(path: $moreTabPath) {
             MoreList(repoName: "katagaki/Melodee", viewPath: ViewPath.moreAttributions) {
                 // TODO: Implement playlists
-                if false && FileManager.default.ubiquityIdentityToken != nil {
-                    Section {
-                        Toggle(isOn: $storeFilesInCloud, label: {
-                            ListRow(image: "ListIcon.Cloud.Files",
-                                    title: "Cloud.Stores.Files",
-                                    includeSpacer: true)
-                        })
-                        Toggle(isOn: $storePlaylistsInCloud, label: {
-                            ListRow(image: "ListIcon.Cloud.Playlists",
-                                    title: "Cloud.Stores.Playlists",
-                                    includeSpacer: true)
-                        })
-                    } header: {
-                        ListSectionHeader(text: "More.CloudSync")
-                    }
-                }
-            }
-            .sheet(isPresented: $isPendingMoveToiCloudPrompt) {
-                MoreMoveToCloudView(storeFilesInCloud: $storeFilesInCloud)
-                    .interactiveDismissDisabled()
             }
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
@@ -452,11 +428,6 @@ THE SOFTWARE.
                 default: Color.clear
                 }
             })
-            .onChange(of: storeFilesInCloud) { oldValue, newValue in
-                if !oldValue && newValue {
-                    isPendingMoveToiCloudPrompt = true
-                }
-            }
         }
     }
 }

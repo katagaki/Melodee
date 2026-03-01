@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/12.
 //
 
+import SwiftTagger
 import SwiftUI
 
 struct FBAudioFileRow: View {
@@ -12,13 +13,18 @@ struct FBAudioFileRow: View {
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @State var file: FSFile
+    var sortOption: SortOption = .fileName
+    @State var tagSubtitle: String?
 
     var body: some View {
         Button {
             mediaPlayer.playImmediately(file)
         } label: {
-            ListFileRow(file: .constant(file))
+            ListFileRow(file: .constant(file), subtitle: tagSubtitle)
                 .tint(.primary)
+        }
+        .task(id: sortOption) {
+            tagSubtitle = readTagSubtitle()
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
@@ -41,6 +47,34 @@ struct FBAudioFileRow: View {
                       systemImage: "text.line.last.and.arrowtriangle.forward")
             }
             .tint(.orange)
+        }
+    }
+
+    func readTagSubtitle() -> String? {
+        guard sortOption != .fileName, file.isTaggableAudio() else {
+            return nil
+        }
+        do {
+            let audioFile = try AudioFile(location: URL(fileURLWithPath: file.path))
+            switch sortOption {
+            case .fileName:
+                return nil
+            case .trackTitle:
+                let title = audioFile.title ?? ""
+                return title.isEmpty ? nil : title
+            case .trackNumber:
+                let track = audioFile.trackNumber.index
+                return track != 0 ? String(track) : nil
+            case .albumName:
+                let album = audioFile.album ?? ""
+                return album.isEmpty ? nil : album
+            case .artistName:
+                let artist = audioFile.artist ?? ""
+                return artist.isEmpty ? nil : artist
+            }
+        } catch {
+            debugPrint("Error reading tag for subtitle: \(error.localizedDescription)")
+            return nil
         }
     }
 }

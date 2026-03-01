@@ -5,7 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/12.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
 import SwiftTagger
 
@@ -37,7 +37,7 @@ struct TagTyped {
         }
     }
 
-    // swiftlint:disable cyclomatic_complexity function_body_length
+    // swiftlint:disable cyclomatic_complexity
     mutating func merge(with file: FSFile, audioFile: AudioFile) async {
         if title != audioFile.title ?? "" {
             title = nil
@@ -90,12 +90,12 @@ struct TagTyped {
             }
         }
     }
-    // swiftlint:enable cyclomatic_complexity function_body_length
+    // swiftlint:enable cyclomatic_complexity
 
     func albumArtUsingAVPlayer(file: FSFile) async -> Data? {
         do {
-            let playerItem = AVPlayerItem(url: URL(filePath: file.path))
-            let metadataList = try await playerItem.asset.load(.metadata)
+            let asset = AVURLAsset(url: URL(filePath: file.path))
+            let metadataList = try await asset.load(.metadata)
             for item in metadataList {
                 switch item.commonKey {
                 case .commonKeyArtwork?:

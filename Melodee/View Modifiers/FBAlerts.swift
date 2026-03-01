@@ -15,6 +15,7 @@ struct FileBrowserAlerts: ViewModifier {
     @Binding var state: FBState
     var refreshFiles: () -> Void
 
+    // swiftlint:disable function_body_length
     func body(content: Content) -> some View {
         content
             .alert("Alert.RenameFile.Title", isPresented: $state.isRenamingFile, actions: {
@@ -78,6 +79,7 @@ struct FileBrowserAlerts: ViewModifier {
                 }
             }
     }
+    // swiftlint:enable function_body_length
 }
 
 extension View {

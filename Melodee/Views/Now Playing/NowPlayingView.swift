@@ -92,7 +92,8 @@ struct NowPlayingView: View {
     }
 
     func setAlbumArt() async {
-        let albumArtUIImage = await mediaPlayer.albumArt()
+        nonisolated(unsafe) let player = mediaPlayer
+        let albumArtUIImage = await player.albumArt()
         withAnimation(.default.speed(2)) {
             albumArt = Image(uiImage: albumArtUIImage)
         }

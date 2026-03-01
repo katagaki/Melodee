@@ -138,13 +138,18 @@ class FilesystemManager {
                                                     comment: "")
         if let documentsDirectoryURL {
             manager
-                .createFile(atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
-                            contents: "".data(using: .utf8))
+                .createFile(
+                    atPath: "\(documentsDirectoryURL.path())\(placeholderFilename)",
+                    contents: Data()
+                )
         }
         if let cloudDocumentsDirectoryURL {
             let placeholderFileURL: URL = cloudDocumentsDirectoryURL.appending(path: placeholderFilename)
             NSFileCoordinator().coordinate(writingItemAt: placeholderFileURL, error: .none) { url in
-                self.manager.createFile(atPath: url.path(percentEncoded: false), contents: "".data(using: .utf8))
+                self.manager.createFile(
+                    atPath: url.path(percentEncoded: false),
+                    contents: Data()
+                )
             }
         }
     }
@@ -175,17 +180,19 @@ class FilesystemManager {
 
     func extractFiles(file: FSFile,
                       encoding: String.Encoding = .shiftJIS,
-                      onProgressUpdate: @escaping () -> Void,
-                      onError: @escaping (String) -> Void,
-                      onCompletion: @escaping () -> Void) {
+                      onProgressUpdate: @escaping @Sendable () -> Void,
+                      onError: @escaping @Sendable (String) -> Void,
+                      onCompletion: @escaping @Sendable () -> Void) {
         let destinationURL = URL(filePath: file.path).deletingPathExtension()
         let destinationDirectory = destinationURL.path().removingPercentEncoding ?? destinationURL.path()
         debugPrint("Attempting to create directory \(destinationDirectory)...")
         createDirectory(at: destinationDirectory)
         debugPrint("Attempting to extract ZIP to \(destinationDirectory)...")
         extractionProgress = Progress()
+        let extractionProgressRef = extractionProgress
+        nonisolated(unsafe) let managerRef = self
         DispatchQueue.global(qos: .background).async {
-            let observation = self.extractionProgress?.observe(\.fractionCompleted) { _, _ in
+            let observation = extractionProgressRef?.observe(\.fractionCompleted) { _, _ in
                 DispatchQueue.main.async {
                     onProgressUpdate()
                 }
@@ -194,21 +201,21 @@ class FilesystemManager {
                 try FileManager().unzipItem(at: URL(filePath: file.path),
                                             to: URL(filePath: destinationDirectory),
                                             skipCRC32: true,
-                                            progress: self.extractionProgress,
+                                            progress: extractionProgressRef,
                                             pathEncoding: encoding)
                 DispatchQueue.main.async {
                     onCompletion()
                 }
             } catch {
-                if !(self.extractionProgress?.isCancelled ?? false) {
+                if !(extractionProgressRef?.isCancelled ?? false) {
                     debugPrint("Error occurred while extracting ZIP: \(error.localizedDescription)")
                     if encoding == .shiftJIS {
                         debugPrint("Attempting extraction with UTF-8...")
-                        self.extractFiles(file: file,
-                                          encoding: .utf8,
-                                          onProgressUpdate: onProgressUpdate,
-                                          onError: onError,
-                                          onCompletion: onCompletion)
+                        managerRef.extractFiles(file: file,
+                                                encoding: .utf8,
+                                                onProgressUpdate: onProgressUpdate,
+                                                onError: onError,
+                                                onCompletion: onCompletion)
                     } else {
                         DispatchQueue.main.async {
                             onError(error.localizedDescription)

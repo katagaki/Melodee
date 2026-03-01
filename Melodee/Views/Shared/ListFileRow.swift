@@ -5,7 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import SwiftUI
 
 struct ListFileRow: View {
@@ -13,6 +13,7 @@ struct ListFileRow: View {
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @Binding var file: FSFile
+    var subtitle: String?
     @State var thumbnail: UIImage?
     @State var isThumbnailFetchCompleted: Bool = false
 
@@ -48,7 +49,7 @@ struct ListFileRow: View {
                     .font(.body)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                Text(URL(filePath: file.path).fileSizeString)
+                Text(subtitle ?? URL(filePath: file.path).fileSizeString)
                     .font(.caption)
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -68,20 +69,23 @@ struct ListFileRow: View {
         }
         .task {
             if !isThumbnailFetchCompleted {
+                let filePath = file.path
+                let isTaggable = file.isTaggableAudio()
+                let isImage = file.type == .image
                 Task.detached {
-                    let fileURL: URL = URL(filePath: file.path)
-                    if file.isTaggableAudio() {
+                    let fileURL: URL = URL(filePath: filePath)
+                    if isTaggable {
                         NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
-                            Task {
+                            Task { @MainActor in
                                 let albumArt = await albumArt(at: url)
                                 withAnimation(.default.speed(2)) {
                                     self.thumbnail = albumArt
                                 }
                             }
                         }
-                    } else if file.type == .image {
+                    } else if isImage {
                         NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
-                            Task {
+                            Task { @MainActor in
                                 if let thumbnail = await UIImage(contentsOfFile: url.path(percentEncoded: false))?
                                     .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
                                     withAnimation(.default.speed(2)) {
@@ -99,8 +103,8 @@ struct ListFileRow: View {
 
     func albumArt(at url: URL) async -> UIImage {
         do {
-            let playerItem = AVPlayerItem(url: url)
-            let metadataList = try await playerItem.asset.load(.metadata)
+            let asset = AVURLAsset(url: url)
+            let metadataList = try await asset.load(.metadata)
             for item in metadataList {
                 switch item.commonKey {
                 case .commonKeyArtwork?:

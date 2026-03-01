@@ -5,7 +5,8 @@
 //  Created by Claude on 2026/02/07.
 //
 
-import AVFoundation
+// swiftlint:disable file_length
+@preconcurrency import AVFoundation
 import Foundation
 import LAME
 
@@ -19,6 +20,7 @@ enum AudioConversionError: Error {
     case writerFailed
 }
 
+// swiftlint:disable:next type_body_length
 class AudioConverter {
 
     /// Converts an audio file from one format to another using AVAssetReader and AVAssetWriter
@@ -32,7 +34,7 @@ class AudioConverter {
         _ sourceFile: FSFile,
         to targetFormat: String,
         deleteOriginal: Bool = false,
-        progressHandler: ((Double) -> Void)? = nil
+        progressHandler: (@Sendable (Double) -> Void)? = nil
     ) async throws -> FSFile {
         let sourceURL = URL(fileURLWithPath: sourceFile.path)
 
@@ -80,15 +82,15 @@ class AudioConverter {
     }
 
     /// Converts audio using AVAssetExportSession (for M4A output)
-    private static func convertUsingExportSession(
+    private static func convertUsingExportSession( // swiftlint:disable:this function_parameter_count
         sourceFile: FSFile,
         sourceURL: URL,
         outputURL: URL,
         targetFormat: String,
         deleteOriginal: Bool,
-        progressHandler: ((Double) -> Void)?
+        progressHandler: (@Sendable (Double) -> Void)?
     ) async throws -> FSFile {
-        let asset = AVAsset(url: sourceURL)
+        let asset = AVURLAsset(url: sourceURL)
 
         // Use AppleM4A preset for M4A output
         let preset = AVAssetExportPresetAppleM4A
@@ -110,30 +112,23 @@ class AudioConverter {
             throw AudioConversionError.exportSessionFailed
         }
 
-        exportSession.outputFileType = outputFileType
-        exportSession.outputURL = outputURL
-
-        // Start progress monitoring if handler provided
-        let progressTask: Task<Void, Never>? = if let progressHandler {
-            Task {
-                while !Task.isCancelled {
-                    progressHandler(Double(exportSession.progress))
-                    try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        // Perform the export with progress monitoring
+        nonisolated(unsafe) let exportSessionRef = exportSession
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                try await exportSession.export(to: outputURL, as: outputFileType)
+            }
+            if let progressHandler {
+                group.addTask {
+                    while !Task.isCancelled {
+                        progressHandler(Double(exportSessionRef.progress))
+                        try await Task.sleep(nanoseconds: 100_000_000)
+                    }
                 }
             }
-        } else {
-            nil
-        }
-
-        // Perform the export
-        await exportSession.export()
-
-        // Cancel progress monitoring
-        progressTask?.cancel()
-
-        // Check for errors
-        if let error = exportSession.error {
-            throw error
+            // Wait for the export to finish, then cancel the progress task
+            try await group.next()
+            group.cancelAll()
         }
 
         // Delete original if requested
@@ -153,19 +148,19 @@ class AudioConverter {
     }
 
     /// Converts audio to MP3 using LAME encoder
-    private static func convertToMP3(
+    private static func convertToMP3( // swiftlint:disable:this function_parameter_count function_body_length
         sourceFile: FSFile,
         sourceURL: URL,
         outputURL: URL,
         targetFormat: String,
         deleteOriginal: Bool,
-        progressHandler: ((Double) -> Void)?
+        progressHandler: (@Sendable (Double) -> Void)?
     ) async throws -> FSFile {
         return try await withCheckedThrowingContinuation { continuation in
             Task.detached {
                 do {
                     // Use AVAssetReader to decode any audio format to PCM
-                    let asset = AVAsset(url: sourceURL)
+                    let asset = AVURLAsset(url: sourceURL)
 
                     guard let audioTrack = try await asset.loadTracks(withMediaType: .audio).first else {
                         throw AudioConversionError.noAudioTrack
@@ -194,7 +189,9 @@ class AudioConverter {
                         throw AudioConversionError.noAudioTrack
                     }
 
-                    let audioStreamBasicDescription = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription)
+                    let audioStreamBasicDescription = CMAudioFormatDescriptionGetStreamBasicDescription(
+                        formatDescription
+                    )
                     let sampleRate = Int32(audioStreamBasicDescription?.pointee.mSampleRate ?? 44100)
                     let channels = Int32(audioStreamBasicDescription?.pointee.mChannelsPerFrame ?? 2)
 
@@ -233,6 +230,7 @@ class AudioConverter {
         }
     }
 
+    // swiftlint:disable function_parameter_count function_body_length
     /// Converts audio using AVAssetReader and AVAssetWriter (for WAV output)
     private static func convertUsingReaderWriter(
         sourceFile: FSFile,
@@ -240,9 +238,9 @@ class AudioConverter {
         outputURL: URL,
         targetFormat: String,
         deleteOriginal: Bool,
-        progressHandler: ((Double) -> Void)?
+        progressHandler: (@Sendable (Double) -> Void)?
     ) async throws -> FSFile {
-        let asset = AVAsset(url: sourceURL)
+        let asset = AVURLAsset(url: sourceURL)
 
         // Get the audio track
         guard let audioTrack = try await asset.loadTracks(withMediaType: .audio).first else {
@@ -285,29 +283,35 @@ class AudioConverter {
         // Get duration for progress calculation
         let duration = try await asset.load(.duration)
         let durationSeconds = CMTimeGetSeconds(duration)
-        var processedSamples = 0
+        nonisolated(unsafe) var processedSamples = 0
 
         // Process audio samples
+        // Note: AV types are not Sendable but are used safely on a serial queue here
+        nonisolated(unsafe) let writerInputRef = writerInput
+        nonisolated(unsafe) let readerOutputRef = readerOutput
+        nonisolated(unsafe) let writerRef = writer
+        let progressHandlerRef = progressHandler
+
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            writerInput.requestMediaDataWhenReady(on: DispatchQueue(label: "audioConversion")) {
-                while writerInput.isReadyForMoreMediaData {
-                    guard let sampleBuffer = readerOutput.copyNextSampleBuffer() else {
-                        writerInput.markAsFinished()
-                        writer.finishWriting {
+            writerInputRef.requestMediaDataWhenReady(on: DispatchQueue(label: "audioConversion")) {
+                while writerInputRef.isReadyForMoreMediaData {
+                    guard let sampleBuffer = readerOutputRef.copyNextSampleBuffer() else {
+                        writerInputRef.markAsFinished()
+                        writerRef.finishWriting {
                             continuation.resume()
                         }
                         return
                     }
 
-                    writerInput.append(sampleBuffer)
+                    writerInputRef.append(sampleBuffer)
                     processedSamples += 1
 
                     // Update progress if handler provided (approximate based on sample count)
-                    if let progressHandler, processedSamples % 100 == 0 {
+                    if let progressHandlerRef, processedSamples % 100 == 0 {
                         // Estimate progress - this is approximate
                         let estimatedProgress = min(Double(processedSamples) / (durationSeconds * 44.1), 1.0)
                         DispatchQueue.main.async {
-                            progressHandler(estimatedProgress)
+                            progressHandlerRef(estimatedProgress)
                         }
                     }
                 }
@@ -338,6 +342,7 @@ class AudioConverter {
 
         return newFile
     }
+    // swiftlint:enable function_parameter_count function_body_length
 
     /// Checks if a conversion between two formats is supported
     static func isConversionSupported(from sourceFormat: String, to targetFormat: String) -> Bool {
@@ -382,6 +387,7 @@ class AudioConverter {
 // MARK: - MP3 Encoding Extension
 extension AudioConverter {
 
+    // swiftlint:disable cyclomatic_complexity function_parameter_count function_body_length
     /// Encodes audio from AVAssetReader to MP3 using LAME
     fileprivate static func encodeToMP3FromReader(
         reader: AVAssetReader,
@@ -390,7 +396,7 @@ extension AudioConverter {
         channels: Int32,
         outputURL: URL,
         totalDuration: CMTime,
-        progressHandler: ((Double) -> Void)?
+        progressHandler: (@Sendable (Double) -> Void)?
     ) throws {
         // Initialize and configure LAME
         guard let lame = lame_init() else {
@@ -519,6 +525,7 @@ extension AudioConverter {
         // Write VBR/INFO tag
         lame_mp3_tags_fid(lame, outputFile)
     }
+    // swiftlint:enable cyclomatic_complexity function_parameter_count function_body_length
 
     /// Writes a minimal ID3v2.3 tag to an MP3 file to make it compatible with SwiftTagger
     fileprivate static func writeMinimalID3Tag(to url: URL) throws {

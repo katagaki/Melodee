@@ -37,4 +37,8 @@ struct FBState {
     var fileBeingConverted: FSFile?
     var conversionProgress: Double = 0.0
     var targetConversionFormat: String = ""
+
+    // State handling for sort
+    var sortOption: SortOption = .fileName
+    var sortOrder: SortOrder = .ascending
 }

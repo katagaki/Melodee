@@ -13,6 +13,7 @@ struct ListFileRow: View {
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
     @Binding var file: FSFile
+    var subtitle: String?
     @State var thumbnail: UIImage?
     @State var isThumbnailFetchCompleted: Bool = false
 
@@ -48,7 +49,7 @@ struct ListFileRow: View {
                     .font(.body)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                Text(URL(filePath: file.path).fileSizeString)
+                Text(subtitle ?? URL(filePath: file.path).fileSizeString)
                     .font(.caption)
                     .lineLimit(1)
                     .truncationMode(.middle)

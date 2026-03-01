@@ -6,6 +6,7 @@
 //
 
 import Komponents
+import SwiftTagger
 import SwiftUI
 import TipKit
 
@@ -110,7 +111,7 @@ struct FolderView: View {
                             FBDirectoryRow(directory: directory, storageLocation: storageLocation)
                         } else if let file = file as? FSFile {
                             switch file.type {
-                            case .audio: FBAudioFileRow(file: file)
+                            case .audio: FBAudioFileRow(file: file, sortOption: state.sortOption)
                             case .image: FBImageFileRow(file: file)
                             case .text: FBTextFileRow(file: file)
                             case .pdf: FBPdfFileRow(file: file)
@@ -144,11 +145,12 @@ struct FolderView: View {
         )
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                // HACK: Prevent weird animation when going from view to view
-                if folderContainsTaggableFiles() {
-                    FBMenu(files: $files)
-                } else {
-                    EmptyView()
+                HStack(spacing: 0) {
+                    FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
+                    // HACK: Prevent weird animation when going from view to view
+                    if folderContainsTaggableFiles() {
+                        FBMenu(files: $files)
+                    }
                 }
             }
             ToolbarItem(placement: .principal) {
@@ -187,7 +189,8 @@ struct FolderView: View {
         }
         .overlay {
             if state.isExtractingZIP {
-                // TODO: ProgressAlert should be on a higher level (cover the entire view, instead of just the view inside the navigation stack
+                // TODO: ProgressAlert should be on a higher level
+                //       (cover the entire view, instead of just the view inside the navigation stack
                 ProgressAlert(title: "Alert.ExtractingZIP.Title",
                               message: "Alert.ExtractingZIP.Text",
                               percentage: $state.extractionPercentage) {
@@ -224,6 +227,12 @@ struct FolderView: View {
                 state.newDirectoryName = ""
             }
         }
+        .onChange(of: state.sortOption) {
+            sortFiles()
+        }
+        .onChange(of: state.sortOrder) {
+            sortFiles()
+        }
         .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
     }
 
@@ -256,6 +265,7 @@ struct FolderView: View {
         updateFileManagerDirectory()
         withAnimation {
             self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
+            sortFiles()
             state.isInitialLoadCompleted = true
         }
     }
@@ -292,6 +302,74 @@ struct FolderView: View {
 
     func folderContainsTaggableFiles() -> Bool {
         files.contains { ($0 as? FSFile)?.isTaggableAudio() ?? false }
+    }
+
+    func sortFiles() {
+        // Separate directories and files
+        var directories = files.filter { $0 is FSDirectory }
+        var fileItems = files.filter { $0 is FSFile }
+
+        // Sort directories alphabetically (always by name)
+        directories.sort { lhs, rhs in
+            let result = lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            return state.sortOrder == .ascending ? result : !result
+        }
+
+        // Build tag cache for tag-based sort options
+        var tagCache: [String: AudioFile] = [:]
+        if state.sortOption != .fileName {
+            for item in fileItems {
+                if let file = item as? FSFile, file.isTaggableAudio() {
+                    do {
+                        let audioFile = try AudioFile(location: URL(fileURLWithPath: file.path))
+                        tagCache[file.path] = audioFile
+                    } catch {
+                        debugPrint("Error reading tags for sort: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+
+        // Sort files, falling back to file name when primary sort values are equal
+        fileItems.sort { lhs, rhs in
+            guard let lhsFile = lhs as? FSFile, let rhsFile = rhs as? FSFile else {
+                return false
+            }
+            let comparison: ComparisonResult
+            switch state.sortOption {
+            case .fileName:
+                comparison = lhsFile.name.localizedStandardCompare(rhsFile.name)
+            case .trackTitle:
+                let lhsTitle = tagCache[lhsFile.path]?.title ?? ""
+                let rhsTitle = tagCache[rhsFile.path]?.title ?? ""
+                comparison = lhsTitle.localizedStandardCompare(rhsTitle)
+            case .trackNumber:
+                let lhsTrack = tagCache[lhsFile.path]?.trackNumber.index ?? Int.max
+                let rhsTrack = tagCache[rhsFile.path]?.trackNumber.index ?? Int.max
+                if lhsTrack != rhsTrack {
+                    comparison = lhsTrack < rhsTrack ? .orderedAscending : .orderedDescending
+                } else {
+                    comparison = .orderedSame
+                }
+            case .albumName:
+                let lhsAlbum = tagCache[lhsFile.path]?.album ?? ""
+                let rhsAlbum = tagCache[rhsFile.path]?.album ?? ""
+                comparison = lhsAlbum.localizedStandardCompare(rhsAlbum)
+            case .artistName:
+                let lhsArtist = tagCache[lhsFile.path]?.artist ?? ""
+                let rhsArtist = tagCache[rhsFile.path]?.artist ?? ""
+                comparison = lhsArtist.localizedStandardCompare(rhsArtist)
+            }
+            // Fall back to file name when primary sort values are equal
+            let resolved = comparison == .orderedSame
+                ? lhsFile.name.localizedStandardCompare(rhsFile.name)
+                : comparison
+            return state.sortOrder == .ascending
+                ? resolved == .orderedAscending
+                : resolved == .orderedDescending
+        }
+
+        files = directories + fileItems
     }
 
     func openInFilesApp() {

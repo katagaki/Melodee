@@ -5,10 +5,10 @@
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
-import AVFAudio
+@preconcurrency import AVFAudio
 import Foundation
+@preconcurrency import MediaPlayer
 import SwiftTagger
-import MediaPlayer
 
 // swiftlint:disable type_body_length
 @Observable
@@ -162,7 +162,9 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     func play() {
         // Set up audio session
-        UIApplication.shared.beginReceivingRemoteControlEvents()
+        MainActor.assumeIsolated {
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+        }
         do {
             try audioSession.setCategory(AVAudioSession.Category.playback)
             try audioSession.setActive(true)
@@ -250,8 +252,9 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     func setNowPlaying() {
         if let audioPlayer = audioPlayer {
-            Task {
-                await setNowPlaying(with: audioPlayer)
+            nonisolated(unsafe) let managerRef = self
+            Task { @MainActor in
+                await managerRef.setNowPlaying(with: audioPlayer)
             }
         }
     }
@@ -300,8 +303,8 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     func albumArt() async -> UIImage {
         do {
             if let url = audioPlayer?.url {
-                let playerItem = AVPlayerItem(url: url)
-                let metadataList = try await playerItem.asset.load(.metadata)
+                let asset = AVURLAsset(url: url)
+                let metadataList = try await asset.load(.metadata)
                 for item in metadataList {
                     switch item.commonKey {
                     case .commonKeyArtwork?:

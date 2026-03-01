@@ -144,13 +144,10 @@ struct FolderView: View {
             )
         )
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                HStack(spacing: 0) {
-                    FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
-                    // HACK: Prevent weird animation when going from view to view
-                    if folderContainsTaggableFiles() {
-                        FBMenu(files: $files)
-                    }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
+                if folderContainsTaggableFiles() {
+                    FBMenu(files: $files)
                 }
             }
             ToolbarItem(placement: .principal) {

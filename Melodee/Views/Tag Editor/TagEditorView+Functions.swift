@@ -21,10 +21,11 @@ extension TagEditorView {
                 let audioFile = try AudioFile(location: fileURL)
                 audioFiles.updateValue(audioFile, forKey: file)
 
+                nonisolated(unsafe) let audioFileRef = audioFile
                 if tagCombined == nil {
-                    tagCombined = await TagTyped(file, audioFile: audioFile)
+                    tagCombined = await TagTyped(file, audioFile: audioFileRef)
                 } else {
-                    await tagCombined!.merge(with: file, audioFile: audioFile)
+                    await tagCombined!.merge(with: file, audioFile: audioFileRef)
                 }
             } catch {
                 debugPrint("Error occurred while reading tags: \n\(error.localizedDescription)")
@@ -44,20 +45,13 @@ extension TagEditorView {
 
     func saveAllTagData() async {
         savePercentage = 0
-        _ = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for (file, var audioFile) in audioFiles {
-                group.addTask {
-                    return await audioFile.saveTagData(to: file, tagData: tagData)
-                }
-            }
-            var saveStates: [Bool] = []
-            for await result in group {
-                DispatchQueue.main.async {
-                    savePercentage += 100 / audioFiles.count
-                }
-                saveStates.append(result)
-            }
-            return saveStates
+        let tagDataCopy = tagData
+        let audioFilesCopy = audioFiles
+        let totalCount = audioFilesCopy.count
+        for (file, audioFile) in audioFilesCopy {
+            var mutableAudioFile = audioFile
+            _ = mutableAudioFile.saveTagData(to: file, tagData: tagDataCopy)
+            savePercentage += 100 / totalCount
         }
     }
 

@@ -64,7 +64,7 @@ struct FilesView: View {
             )
             .toolbar {
                 if hasSelectedExternalDirectory {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
                         Button {
                             isSelectingExternalDirectory = true
                         } label: {

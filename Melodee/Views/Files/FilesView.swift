@@ -71,6 +71,9 @@ struct FilesView: View {
                             Text("Library.SelectAnotherFolder")
                         }
                     }
+                    if #available(iOS 26.0, *) {
+                        ToolbarSpacer(.fixed)
+                    }
                 }
             }
             .sheet(isPresented: $isSelectingExternalDirectory) {

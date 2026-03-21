@@ -64,12 +64,15 @@ struct FilesView: View {
             )
             .toolbar {
                 if hasSelectedExternalDirectory {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
                         Button {
                             isSelectingExternalDirectory = true
                         } label: {
                             Text("Library.SelectAnotherFolder")
                         }
+                    }
+                    if #available(iOS 26.0, *) {
+                        ToolbarSpacer(.fixed, placement: .topBarTrailing)
                     }
                 }
             }

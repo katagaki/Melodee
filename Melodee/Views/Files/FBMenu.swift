@@ -15,12 +15,8 @@ struct FBMenu: View {
     @State var validFiles: [FSFile] = []
 
     var body: some View {
-        Menu {
-            NavigationLink(value: ViewPath.tagEditorMultiple(files: validFiles)) {
-                Label("Shared.EditTag.All", systemImage: "tag")
-            }
-        } label: {
-            Label("Shared.More", systemImage: "ellipsis")
+        NavigationLink(value: ViewPath.tagEditorMultiple(files: validFiles)) {
+            Label("Shared.EditTag.All", systemImage: "tag")
         }
         .task {
             validFiles.removeAll()

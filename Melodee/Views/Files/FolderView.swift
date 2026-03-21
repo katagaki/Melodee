@@ -146,10 +146,15 @@ struct FolderView: View {
         )
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
                 if folderContainsTaggableFiles() {
                     FBMenu(files: $files)
                 }
+            }
+            if #available(iOS 26.0, *) {
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+            }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
             }
             ToolbarItem(placement: .principal) {
                 Text(viewTitle())

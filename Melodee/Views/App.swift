@@ -5,6 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
@@ -25,5 +26,6 @@ struct MelodeeApp: App {
                 .environment(mediaPlayerManager)
                 .environment(nowPlayingBarManager)
         }
+        .modelContainer(for: Playlist.self)
     }
 }

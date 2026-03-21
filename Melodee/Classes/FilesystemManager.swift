@@ -119,6 +119,17 @@ class FilesystemManager {
         }
     }
 
+    static func fileType(forExtension fileExtension: String) -> FileType {
+        switch fileExtension {
+        case "mp3", "m4a", "wav", "alac": return .audio
+        case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
+        case "txt": return .text
+        case "pdf": return .pdf
+        case "zip": return .zip
+        default: return .notSet
+        }
+    }
+
     func createDirectory(at directoryPath: String) {
         if let url = URL(string: directoryPath) {
             if !directoryOrFileExists(at: url) {

@@ -63,6 +63,75 @@ final class Playlist {
         )
         fileBookmarks.append(bookmark)
     }
+
+    // MARK: - JSON Export/Import
+
+    /// Exports this playlist to a portable JSON representation.
+    func toJSON() -> PlaylistJSON {
+        let items = sortedBookmarks.compactMap { bookmark -> PlaylistJSON.Item? in
+            guard let url = bookmark.resolveURL() else { return nil }
+            return PlaylistJSON.Item(
+                fileName: bookmark.fileName,
+                fileExtension: bookmark.fileExtension,
+                relativePath: url.lastPathComponent,
+                order: bookmark.order
+            )
+        }
+        return PlaylistJSON(name: name, items: items)
+    }
+
+    /// Imports files from a JSON representation, resolving paths relative to baseURL.
+    func importFromJSON(_ json: PlaylistJSON, baseURL: URL) {
+        for item in json.items {
+            let fileURL = baseURL.appendingPathComponent(
+                "\(item.fileName).\(item.fileExtension)"
+            )
+            if FileManager.default.fileExists(atPath: fileURL.path(percentEncoded: false)) {
+                try? addFile(url: fileURL)
+            }
+        }
+    }
+
+    // MARK: - M3U8 Export/Import
+
+    /// Exports this playlist to M3U8 format with relative paths only.
+    func toM3U8() -> String {
+        var lines: [String] = ["#EXTM3U", "#PLAYLIST:\(name)"]
+        for bookmark in sortedBookmarks {
+            guard let url = bookmark.resolveURL() else { continue }
+            let filename = url.lastPathComponent
+            lines.append("#EXTINF:-1,\(bookmark.fileName)")
+            lines.append(filename)
+        }
+        return lines.joined(separator: "\n") + "\n"
+    }
+
+    /// Imports files from M3U8 content, resolving relative paths against baseURL.
+    /// Only relative paths are supported; absolute paths are skipped.
+    static func fromM3U8(content: String, baseURL: URL) -> (name: String?, relativePaths: [String]) {
+        var name: String?
+        var paths: [String] = []
+
+        for line in content.components(separatedBy: .newlines) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            if trimmed.isEmpty || trimmed.hasPrefix("#EXTINF") {
+                continue
+            }
+            if trimmed.hasPrefix("#PLAYLIST:") {
+                name = String(trimmed.dropFirst("#PLAYLIST:".count))
+                continue
+            }
+            if trimmed.hasPrefix("#") {
+                continue
+            }
+            // Skip absolute paths
+            if trimmed.hasPrefix("/") || trimmed.contains("://") {
+                continue
+            }
+            paths.append(trimmed)
+        }
+        return (name, paths)
+    }
 }
 
 @Model
@@ -122,5 +191,19 @@ final class PlaylistFileBookmark {
             path: url.path(percentEncoded: false),
             type: fileType
         )
+    }
+}
+
+// MARK: - Portable JSON Representation
+
+struct PlaylistJSON: Codable {
+    var name: String
+    var items: [Item]
+
+    struct Item: Codable {
+        var fileName: String
+        var fileExtension: String
+        var relativePath: String
+        var order: Int
     }
 }

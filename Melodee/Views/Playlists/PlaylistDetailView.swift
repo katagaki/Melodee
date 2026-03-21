@@ -20,6 +20,8 @@ struct PlaylistDetailView: View {
     @State var isAddingFiles: Bool = false
     @State var isRenamingPlaylist: Bool = false
     @State var editedPlaylistName: String = ""
+    @State var isExporting: Bool = false
+    @State var exportURL: URL?
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
         .filter { $0.activationState == .foregroundActive }
@@ -146,6 +148,20 @@ struct PlaylistDetailView: View {
                     } label: {
                         Label("Playlists.Rename", systemImage: "pencil")
                     }
+                    Menu {
+                        Button {
+                            exportAsJSON()
+                        } label: {
+                            Label("Playlists.Export.JSON", systemImage: "doc.text")
+                        }
+                        Button {
+                            exportAsM3U8()
+                        } label: {
+                            Label("Playlists.Export.M3U8", systemImage: "music.note.list")
+                        }
+                    } label: {
+                        Label("Playlists.Export", systemImage: "square.and.arrow.up")
+                    }
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
@@ -180,6 +196,15 @@ struct PlaylistDetailView: View {
         }
         .onAppear {
             resolveFiles()
+        }
+        .sheet(isPresented: $isExporting) {
+            if let exportURL {
+                ShareSheet(activityItems: [exportURL])
+                    .onDisappear {
+                        try? FileManager.default.removeItem(at: exportURL)
+                        self.exportURL = nil
+                    }
+            }
         }
     }
 
@@ -246,6 +271,27 @@ struct PlaylistDetailView: View {
         case .zip: ListFileRow(file: .constant(file))
         default: ListFileRow(file: .constant(file))
         }
+    }
+
+    func exportAsJSON() {
+        let json = playlist.toJSON()
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        guard let data = try? encoder.encode(json) else { return }
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(playlist.name).json")
+        try? data.write(to: tempURL)
+        exportURL = tempURL
+        isExporting = true
+    }
+
+    func exportAsM3U8() {
+        let content = playlist.toM3U8()
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(playlist.name).m3u8")
+        try? content.write(to: tempURL, atomically: true, encoding: .utf8)
+        exportURL = tempURL
+        isExporting = true
     }
 }
 

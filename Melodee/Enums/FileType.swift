@@ -14,6 +14,7 @@ enum FileType: String, Codable {
     case text
     case pdf
     case zip
+    case playlist
     case notSet
 
     func icon() -> Image {
@@ -22,6 +23,7 @@ enum FileType: String, Codable {
         case .image: return Image("File.Image")
         case .pdf: return Image("File.PDF")
         case .zip: return Image("File.Archive")
+        case .playlist: return Image(systemName: "music.note.list")
         default: return Image("File.Generic")
         }
     }

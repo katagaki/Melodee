@@ -21,6 +21,7 @@ struct FolderView: View {
     @State var state = FBState()
     @State var isSelectingExternalDirectory = false
     @State var storageLocation: StorageLocation = .local
+    @State var isCreatingPlaylist = false
 
     var overrideStorageLocation: StorageLocation?
 
@@ -117,6 +118,7 @@ struct FolderView: View {
                             case .text: FBTextFileRow(file: file)
                             case .pdf: FBPdfFileRow(file: file)
                             case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
+                            case .playlist: FBPlaylistFileRow(file: file)
                             default: ListFileRow(file: .constant(file))
                             }
                         }
@@ -145,6 +147,17 @@ struct FolderView: View {
             )
         )
         .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    isCreatingPlaylist = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .disabled(!folderContainsPlayableAudio())
+            }
+            if #available(iOS 26.0, *) {
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+            }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if folderContainsTaggableFiles() {
                     FBMenu(files: $files)
@@ -237,6 +250,28 @@ struct FolderView: View {
             sortFiles()
         }
         .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
+        .sheet(isPresented: $isCreatingPlaylist) {
+            CreatePlaylistSheet(
+                audioFiles: files.compactMap { $0 as? FSFile }.filter { $0.type == .audio },
+                directoryURL: currentDirectoryURL()
+            ) {
+                refreshFiles()
+            }
+        }
+    }
+
+    func currentDirectoryURL() -> URL {
+        if let currentDirectory {
+            return URL(fileURLWithPath: currentDirectory.path)
+        }
+        switch storageLocation {
+        case .local:
+            return fileManager.documentsDirectoryURL ?? FileManager.default.temporaryDirectory
+        case .cloud:
+            return fileManager.cloudDocumentsDirectoryURL ?? FileManager.default.temporaryDirectory
+        case .external:
+            return fileManager.directory ?? FileManager.default.temporaryDirectory
+        }
     }
 
     func updateFileManagerDirectory() {

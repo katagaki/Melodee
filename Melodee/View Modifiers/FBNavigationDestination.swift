@@ -24,6 +24,8 @@ struct FileBrowserNavigationDestinations: ViewModifier {
                     TextViewerView(file: file)
                 case .pdfViewer(let file):
                     PDFViewerView(file: file)
+                case .playlistViewer(let file):
+                    PlaylistDetailView(file: file)
                 case .tagEditorSingle(let file):
                     TagEditorView(files: [file])
                 case .tagEditorMultiple(let files):

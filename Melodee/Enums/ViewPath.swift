@@ -12,6 +12,7 @@ enum ViewPath: Hashable {
     case imageViewer(file: FSFile)
     case textViewer(file: FSFile)
     case pdfViewer(file: FSFile)
+    case playlistViewer(file: FSFile)
     case tagEditorSingle(file: FSFile)
     case tagEditorMultiple(files: [FSFile])
     case moreAttributions

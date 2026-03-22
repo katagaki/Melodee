@@ -12,12 +12,12 @@ import UniformTypeIdentifiers
 struct PlaylistDetailView: View {
 
     @Environment(MediaPlayerManager.self) var mediaPlayer
-    @Environment(\.modelContext) private var modelContext
 
-    var playlist: Playlist
+    /// The .melodee file
+    var file: FSFile
 
+    @State var playlist: Playlist?
     @State var resolvedFiles: [ResolvedPlaylistFile] = []
-    @State var isAddingFiles: Bool = false
     @State var isRenamingPlaylist: Bool = false
     @State var editedPlaylistName: String = ""
     @State var isExporting: Bool = false
@@ -33,6 +33,18 @@ struct PlaylistDetailView: View {
     @State var heightOfTitle: CGFloat = 1.0
     @State var scrollOffset: CGFloat = 0.0
 
+    var playlistName: String {
+        playlist?.name ?? file.name
+    }
+
+    var fileURL: URL {
+        URL(fileURLWithPath: file.path)
+    }
+
+    var baseURL: URL {
+        fileURL.deletingLastPathComponent()
+    }
+
     var audioFiles: [ResolvedPlaylistFile] {
         resolvedFiles.filter { $0.file.type == .audio }
     }
@@ -44,7 +56,7 @@ struct PlaylistDetailView: View {
     var body: some View {
         List {
             Section {
-                Text(playlist.name)
+                Text(playlistName)
                     .font(.largeTitle)
                     .textCase(.none)
                     .bold()
@@ -127,23 +139,16 @@ struct PlaylistDetailView: View {
                 endPoint: .bottom
             )
         )
-        .navigationTitle(playlist.name)
+        .navigationTitle(playlistName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                Button {
-                    isAddingFiles = true
-                } label: {
-                    Image(systemName: "plus")
-                }
-            }
             if #available(iOS 26.0, *) {
                 ToolbarSpacer(.fixed, placement: .topBarTrailing)
             }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Menu {
                     Button {
-                        editedPlaylistName = playlist.name
+                        editedPlaylistName = playlistName
                         isRenamingPlaylist = true
                     } label: {
                         Label("Playlists.Rename", systemImage: "pencil")
@@ -167,7 +172,7 @@ struct PlaylistDetailView: View {
                 }
             }
             ToolbarItem(placement: .principal) {
-                Text(playlist.name)
+                Text(playlistName)
                     .lineLimit(1)
                     .truncationMode(.middle)
                     .bold()
@@ -175,27 +180,20 @@ struct PlaylistDetailView: View {
                     .transition(.opacity.animation(.default.speed(0.2)))
             }
         }
-        .sheet(isPresented: $isAddingFiles) {
-            DocumentPicker(
-                allowedUTIs: [.audio, .image, .text, .pdf, .zip],
-                onDocumentPicked: { url in
-                    addFileToPlaylist(url: url)
-                }
-            )
-            .ignoresSafeArea(edges: [.bottom])
-        }
         .alert("Playlists.Rename", isPresented: $isRenamingPlaylist) {
             TextField("Playlists.PlaylistName", text: $editedPlaylistName)
             Button("Shared.Cancel", role: .cancel) { }
             Button("Shared.Save") {
                 let trimmed = editedPlaylistName.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !trimmed.isEmpty {
-                    playlist.name = trimmed
+                if !trimmed.isEmpty, var updated = playlist {
+                    updated.name = trimmed
+                    playlist = updated
+                    PlaylistManager.save(updated, to: fileURL)
                 }
             }
         }
         .onAppear {
-            resolveFiles()
+            loadPlaylist()
         }
         .sheet(isPresented: $isExporting) {
             if let exportURL {
@@ -208,40 +206,33 @@ struct PlaylistDetailView: View {
         }
     }
 
+    func loadPlaylist() {
+        playlist = PlaylistManager.load(from: fileURL)
+        resolveFiles()
+    }
+
     func resolveFiles() {
+        guard let playlist else {
+            resolvedFiles = []
+            return
+        }
         var resolved: [ResolvedPlaylistFile] = []
-        for bookmark in playlist.sortedBookmarks {
-            if let file = bookmark.resolveFile() {
-                resolved.append(ResolvedPlaylistFile(bookmark: bookmark, file: file))
+        for playlistFile in playlist.files {
+            if let fsFile = playlistFile.resolve(relativeTo: baseURL) {
+                resolved.append(ResolvedPlaylistFile(playlistFile: playlistFile, file: fsFile))
             }
         }
         resolvedFiles = resolved
     }
 
-    func addFileToPlaylist(url: URL) {
-        let accessing = url.startAccessingSecurityScopedResource()
-        defer {
-            if accessing { url.stopAccessingSecurityScopedResource() }
-        }
-        do {
-            try playlist.addFile(url: url)
-            resolveFiles()
-        } catch {
-            debugPrint("Failed to add file to playlist: \(error.localizedDescription)")
-        }
-    }
-
     func deleteItems(from section: [ResolvedPlaylistFile], at offsets: IndexSet) {
+        guard var updated = playlist else { return }
         for index in offsets {
             let item = section[index]
-            if let bookmarkIndex = playlist.fileBookmarks.firstIndex(where: {
-                $0.persistentModelID == item.bookmark.persistentModelID
-            }) {
-                let bookmark = playlist.fileBookmarks[bookmarkIndex]
-                playlist.fileBookmarks.remove(at: bookmarkIndex)
-                modelContext.delete(bookmark)
-            }
+            updated.files.removeAll { $0.relativePath == item.playlistFile.relativePath }
         }
+        playlist = updated
+        PlaylistManager.save(updated, to: fileURL)
         resolveFiles()
     }
 
@@ -274,10 +265,10 @@ struct PlaylistDetailView: View {
     }
 
     func exportAsJSON() {
-        let json = playlist.toJSON()
+        guard let playlist else { return }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        guard let data = try? encoder.encode(json) else { return }
+        guard let data = try? encoder.encode(playlist) else { return }
         let tempURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(playlist.name).json")
         try? data.write(to: tempURL)
@@ -286,6 +277,7 @@ struct PlaylistDetailView: View {
     }
 
     func exportAsM3U8() {
+        guard let playlist else { return }
         let content = playlist.toM3U8()
         let tempURL = FileManager.default.temporaryDirectory
             .appendingPathComponent("\(playlist.name).m3u8")
@@ -296,7 +288,7 @@ struct PlaylistDetailView: View {
 }
 
 struct ResolvedPlaylistFile: Identifiable {
-    let bookmark: PlaylistFileBookmark
+    let playlistFile: PlaylistFile
     let file: FSFile
-    var id: String { bookmark.order.description + file.path }
+    var id: String { playlistFile.relativePath + file.path }
 }

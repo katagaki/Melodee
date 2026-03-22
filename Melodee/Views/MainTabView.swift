@@ -49,10 +49,7 @@ struct MainTabView: View {
             } label: {
                 Label(externalFolderTabTitleFormatted(), systemImage: "folder.fill")
             }
-            Tab("Tab.Playlists", systemImage: "music.note.list", value: 3) {
-                PlaylistsView()
-            }
-            Tab("Tab.More", systemImage: "ellipsis", value: 4) {
+            Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()
             }
         }

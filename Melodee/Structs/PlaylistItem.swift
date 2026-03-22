@@ -6,109 +6,32 @@
 //
 
 import Foundation
-import SwiftData
 
-@Model
-final class Playlist {
+struct Playlist: Codable {
     var name: String
-    @Relationship(deleteRule: .cascade, inverse: \PlaylistFileBookmark.playlist)
-    var fileBookmarks: [PlaylistFileBookmark]
+    var files: [PlaylistFile]
 
-    init(name: String) {
+    init(name: String, files: [PlaylistFile] = []) {
         self.name = name
-        self.fileBookmarks = []
+        self.files = files
     }
 
-    /// Returns bookmarks sorted by their order index
-    var sortedBookmarks: [PlaylistFileBookmark] {
-        fileBookmarks.sorted { $0.order < $1.order }
-    }
+    // MARK: - M3U8 Export
 
-    /// Resolves all file bookmarks into FSFile objects, skipping any that fail to resolve.
-    func resolveFiles() -> [FSFile] {
-        var results: [FSFile] = []
-        for bookmark in sortedBookmarks {
-            if let file = bookmark.resolveFile() {
-                results.append(file)
-            }
-        }
-        return results
-    }
-
-    /// Returns the first taggable audio file (MP3 or M4A) for album art, or nil if none exist.
-    func firstTaggableAudioFile() -> FSFile? {
-        for bookmark in sortedBookmarks {
-            if let file = bookmark.resolveFile(), file.isTaggableAudio() {
-                return file
-            }
-        }
-        return nil
-    }
-
-    /// Adds a file bookmark at the end of the playlist
-    func addFile(url: URL) throws {
-        let bookmarkData = try url.bookmarkData(
-            options: .minimalBookmark,
-            includingResourceValuesForKeys: nil,
-            relativeTo: nil
-        )
-        let nextOrder = (fileBookmarks.map(\.order).max() ?? -1) + 1
-        let fileName = url.deletingPathExtension().lastPathComponent
-        let fileExtension = url.pathExtension.lowercased()
-        let bookmark = PlaylistFileBookmark(
-            order: nextOrder,
-            bookmarkData: bookmarkData,
-            fileName: fileName,
-            fileExtension: fileExtension
-        )
-        fileBookmarks.append(bookmark)
-    }
-
-    // MARK: - JSON Export/Import
-
-    /// Exports this playlist to a portable JSON representation.
-    func toJSON() -> PlaylistJSON {
-        let items = sortedBookmarks.compactMap { bookmark -> PlaylistJSON.Item? in
-            guard let url = bookmark.resolveURL() else { return nil }
-            return PlaylistJSON.Item(
-                fileName: bookmark.fileName,
-                fileExtension: bookmark.fileExtension,
-                relativePath: url.lastPathComponent,
-                order: bookmark.order
-            )
-        }
-        return PlaylistJSON(name: name, items: items)
-    }
-
-    /// Imports files from a JSON representation, resolving paths relative to baseURL.
-    func importFromJSON(_ json: PlaylistJSON, baseURL: URL) {
-        for item in json.items {
-            let fileURL = baseURL.appendingPathComponent(
-                "\(item.fileName).\(item.fileExtension)"
-            )
-            if FileManager.default.fileExists(atPath: fileURL.path(percentEncoded: false)) {
-                try? addFile(url: fileURL)
-            }
-        }
-    }
-
-    // MARK: - M3U8 Export/Import
-
-    /// Exports this playlist to M3U8 format with relative paths only.
     func toM3U8() -> String {
         var lines: [String] = ["#EXTM3U", "#PLAYLIST:\(name)"]
-        for bookmark in sortedBookmarks {
-            guard let url = bookmark.resolveURL() else { continue }
-            let filename = url.lastPathComponent
-            lines.append("#EXTINF:-1,\(bookmark.fileName)")
-            lines.append(filename)
+        for file in files {
+            let fileName = URL(fileURLWithPath: file.relativePath)
+                .deletingPathExtension().lastPathComponent
+            lines.append("#EXTINF:-1,\(fileName)")
+            lines.append(file.relativePath)
         }
         return lines.joined(separator: "\n") + "\n"
     }
 
-    /// Imports files from M3U8 content, resolving relative paths against baseURL.
-    /// Only relative paths are supported; absolute paths are skipped.
-    static func fromM3U8(content: String, baseURL: URL) -> (name: String?, relativePaths: [String]) {
+    // MARK: - M3U8 Import
+
+    static func fromM3U8(content: String) -> (name: String?, relativePaths: [String]) {
         var name: String?
         var paths: [String] = []
 
@@ -134,76 +57,31 @@ final class Playlist {
     }
 }
 
-@Model
-final class PlaylistFileBookmark {
-    var order: Int
-    var bookmarkData: Data
-    var fileName: String
-    var fileExtension: String
-    var playlist: Playlist?
+struct PlaylistFile: Codable, Identifiable, Hashable {
+    var relativePath: String
 
-    init(order: Int, bookmarkData: Data, fileName: String, fileExtension: String) {
-        self.order = order
-        self.bookmarkData = bookmarkData
-        self.fileName = fileName
-        self.fileExtension = fileExtension
+    var id: String { relativePath }
+
+    var fileName: String {
+        URL(fileURLWithPath: relativePath).deletingPathExtension().lastPathComponent
     }
 
-    /// Resolves the bookmark data into a URL, re-saving if stale.
-    /// Returns nil if the bookmark cannot be resolved or the file doesn't exist.
-    func resolveURL() -> URL? {
-        do {
-            var isStale = false
-            let url = try URL(
-                resolvingBookmarkData: bookmarkData,
-                options: .withoutUI,
-                relativeTo: nil,
-                bookmarkDataIsStale: &isStale
-            )
-            if isStale {
-                // Re-save the bookmark data
-                if let newBookmarkData = try? url.bookmarkData(
-                    options: .minimalBookmark,
-                    includingResourceValuesForKeys: nil,
-                    relativeTo: nil
-                ) {
-                    bookmarkData = newBookmarkData
-                }
-            }
-            guard FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) else {
-                return nil
-            }
-            return url
-        } catch {
-            debugPrint("Failed to resolve bookmark: \(error.localizedDescription)")
+    var fileExtension: String {
+        URL(fileURLWithPath: relativePath).pathExtension.lowercased()
+    }
+
+    func resolve(relativeTo baseURL: URL) -> FSFile? {
+        let fileURL = baseURL.appendingPathComponent(relativePath)
+        guard FileManager.default.fileExists(atPath: fileURL.path(percentEncoded: false)) else {
             return nil
         }
-    }
-
-    /// Resolves the bookmark into an FSFile, or returns nil on failure.
-    func resolveFile() -> FSFile? {
-        guard let url = resolveURL() else { return nil }
-        let fileExtension = url.pathExtension.lowercased()
-        let fileType = FilesystemManager.fileType(forExtension: fileExtension)
+        let ext = fileURL.pathExtension.lowercased()
+        let fileType = FilesystemManager.fileType(forExtension: ext)
         return FSFile(
-            name: url.deletingPathExtension().lastPathComponent,
-            extension: fileExtension,
-            path: url.path(percentEncoded: false),
+            name: fileURL.deletingPathExtension().lastPathComponent,
+            extension: ext,
+            path: fileURL.path(percentEncoded: false),
             type: fileType
         )
-    }
-}
-
-// MARK: - Portable JSON Representation
-
-struct PlaylistJSON: Codable {
-    var name: String
-    var items: [Item]
-
-    struct Item: Codable {
-        var fileName: String
-        var fileExtension: String
-        var relativePath: String
-        var order: Int
     }
 }

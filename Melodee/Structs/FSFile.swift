@@ -43,7 +43,7 @@ struct FSFile: FilesystemObject {
         } catch {
             debugPrint(error.localizedDescription)
         }
-        return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
+        return "Melodee"
     }
 
     /// Returns true if this file is a taggable audio file (MP3 or M4A)

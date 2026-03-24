@@ -839,13 +839,13 @@
               "ipad" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "メロディーにファイルを追加するには、「ファイル」アプリを開き、「このiPad内」の「メロディー」フォルダーにファイルを移動してください。"
+                  "value" : "Melodeeにファイルを追加するには、「ファイル」アプリを開き、「このiPad内」の「Melodee」フォルダーにファイルを移動してください。"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "メロディーにファイルを追加するには、「ファイル」アプリを開き、「このiPhone内」の「メロディー」フォルダーにファイルを移動してください。"
+                  "value" : "Melodeeにファイルを追加するには、「ファイル」アプリを開き、「このiPhone内」の「Melodee」フォルダーにファイルを移動してください。"
                 }
               }
             }
@@ -937,7 +937,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "メロディーにファイルを追加する方法"
+            "value" : "Melodeeにファイルを追加する方法"
           }
         },
         "ko" : {

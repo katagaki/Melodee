@@ -270,8 +270,7 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         let albumArt = await albumArt()
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingTitle() ?? ""
-        nowPlayingInfo[MPMediaItemPropertyArtist] = Bundle.main
-            .object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "Melodee"
         nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in
             return albumArt
         }

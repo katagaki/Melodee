@@ -12,13 +12,16 @@ struct CreatePlaylistSheet: View {
 
     @Environment(\.dismiss) var dismiss
 
-    var audioFiles: [FSFile]
-    var directoryURL: URL
+    var scopeRootURL: URL
+    var saveDirectoryURL: URL
+    var fileManager: FilesystemManager
     var onCreated: () -> Void
 
     @State var playlistName: String = ""
+    @State var allAudioFiles: [FSFile] = []
     @State var selectedFiles: Set<String> = []
     @State var thumbnail: UIImage?
+    @State var isLoading: Bool = true
     @FocusState var isNameFieldFocused: Bool
 
     var body: some View {
@@ -56,57 +59,77 @@ struct CreatePlaylistSheet: View {
                 }
 
                 // MARK: - Song list
-                Section {
-                    Button {
-                        if selectedFiles.count == audioFiles.count {
-                            selectedFiles.removeAll()
-                        } else {
-                            selectedFiles = Set(audioFiles.map(\.path))
-                        }
-                    } label: {
+                if isLoading {
+                    Section {
                         HStack {
-                            Image(systemName: selectedFiles.count == audioFiles.count
-                                  ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(selectedFiles.count == audioFiles.count
-                                                 ? .accent : .secondary)
-                                .imageScale(.large)
-                            Text("Playlists.SelectAll")
-                                .foregroundStyle(.primary)
                             Spacer()
-                            Text("\(selectedFiles.count)/\(audioFiles.count)")
-                                .foregroundStyle(.secondary)
-                                .font(.subheadline)
-                        }
-                    }
-                    .listRowBackground(Color.clear)
-
-                    ForEach(audioFiles, id: \.path) { file in
-                        Button {
-                            toggleSelection(file)
-                        } label: {
-                            HStack(spacing: 12.0) {
-                                Image(systemName: selectedFiles.contains(file.path)
-                                      ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(selectedFiles.contains(file.path)
-                                                     ? .accent : .secondary)
-                                    .imageScale(.large)
-                                VStack(alignment: .leading, spacing: 2.0) {
-                                    Text(file.name)
-                                        .font(.body)
-                                        .foregroundStyle(.primary)
-                                        .lineLimit(1)
-                                    Text("\(file.name).\(file.extension)")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                        .lineLimit(1)
-                                }
-                                Spacer()
-                            }
+                            ProgressView()
+                            Spacer()
                         }
                         .listRowBackground(Color.clear)
                     }
-                } header: {
-                    Text("Playlists.Songs")
+                } else if allAudioFiles.isEmpty {
+                    Section {
+                        ContentUnavailableView {
+                            Label("Playlists.NoAudioFiles.Title", systemImage: "music.note")
+                        } description: {
+                            Text("Playlists.NoAudioFiles.Description")
+                        }
+                        .listRowBackground(Color.clear)
+                    }
+                } else {
+                    Section {
+                        Button {
+                            if selectedFiles.count == allAudioFiles.count {
+                                selectedFiles.removeAll()
+                            } else {
+                                selectedFiles = Set(allAudioFiles.map(\.path))
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: selectedFiles.count == allAudioFiles.count
+                                      ? "checkmark.circle.fill" : "circle")
+                                    .foregroundStyle(selectedFiles.count == allAudioFiles.count
+                                                     ? .accent : .secondary)
+                                    .imageScale(.large)
+                                Text("Playlists.SelectAll")
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                Text("\(selectedFiles.count)/\(allAudioFiles.count)")
+                                    .foregroundStyle(.secondary)
+                                    .font(.subheadline)
+                            }
+                        }
+                        .listRowBackground(Color.clear)
+
+                        ForEach(allAudioFiles, id: \.path) { file in
+                            Button {
+                                toggleSelection(file)
+                            } label: {
+                                HStack(spacing: 12.0) {
+                                    Image(systemName: selectedFiles.contains(file.path)
+                                          ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(selectedFiles.contains(file.path)
+                                                         ? .accent : .secondary)
+                                        .imageScale(.large)
+                                    VStack(alignment: .leading, spacing: 2.0) {
+                                        Text(file.name)
+                                            .font(.body)
+                                            .foregroundStyle(.primary)
+                                            .lineLimit(1)
+                                        Text(relativeDisplayPath(for: file))
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(1)
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .listRowBackground(Color.clear)
+                        }
+                    } header: {
+                        Text("Playlists.Songs")
+                    }
                 }
             }
             .listStyle(.plain)
@@ -137,14 +160,48 @@ struct CreatePlaylistSheet: View {
                 }
             }
             .onAppear {
-                // Select all by default
-                selectedFiles = Set(audioFiles.map(\.path))
                 isNameFieldFocused = true
+                loadAllAudioFiles()
             }
             .task {
                 await loadThumbnail()
             }
         }
+    }
+
+    func loadAllAudioFiles() {
+        let allFiles = fileManager.files(in: scopeRootURL)
+        var audioFiles: [FSFile] = []
+        collectAudioFiles(from: allFiles, into: &audioFiles)
+        allAudioFiles = audioFiles.sorted {
+            $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+        }
+        selectedFiles = Set(allAudioFiles.map(\.path))
+        isLoading = false
+    }
+
+    func collectAudioFiles(from objects: [any FilesystemObject], into result: inout [FSFile]) {
+        for object in objects {
+            if let file = object as? FSFile, file.type == .audio {
+                result.append(file)
+            } else if let directory = object as? FSDirectory {
+                collectAudioFiles(from: directory.files, into: &result)
+            }
+        }
+    }
+
+    /// Display path relative to scope root (e.g. "subfolder/song.mp3")
+    func relativeDisplayPath(for file: FSFile) -> String {
+        let filePath = file.path
+        let rootPath = scopeRootURL.path(percentEncoded: false)
+        if filePath.hasPrefix(rootPath) {
+            var relative = String(filePath.dropFirst(rootPath.count))
+            if relative.hasPrefix("/") {
+                relative = String(relative.dropFirst())
+            }
+            return relative
+        }
+        return "\(file.name).\(file.extension)"
     }
 
     func toggleSelection(_ file: FSFile) {
@@ -159,13 +216,21 @@ struct CreatePlaylistSheet: View {
         let trimmedName = playlistName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else { return }
 
-        let selected = audioFiles.filter { selectedFiles.contains($0.path) }
-        _ = PlaylistManager.create(name: trimmedName, in: directoryURL, audioFiles: selected)
+        let selected = allAudioFiles.filter { selectedFiles.contains($0.path) }
+        _ = PlaylistManager.create(
+            name: trimmedName,
+            in: saveDirectoryURL,
+            audioFiles: selected
+        )
         onCreated()
     }
 
     func loadThumbnail() async {
-        guard let firstAudio = audioFiles.first(where: { $0.isTaggableAudio() }) else { return }
+        // Wait for files to load
+        while isLoading {
+            try? await Task.sleep(for: .milliseconds(100))
+        }
+        guard let firstAudio = allAudioFiles.first(where: { $0.isTaggableAudio() }) else { return }
         let url = URL(fileURLWithPath: firstAudio.path)
         do {
             let asset = AVURLAsset(url: url)

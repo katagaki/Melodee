@@ -34,12 +34,41 @@ class PlaylistManager {
             .appendingPathComponent(sanitizedName)
             .appendingPathExtension(playlistExtension)
 
-        let playlistFiles = audioFiles.map { file in
-            PlaylistFile(relativePath: "\(file.name).\(file.extension)")
+        let playlistFiles = audioFiles.compactMap { file -> PlaylistFile? in
+            guard let relativePath = relativePath(
+                from: directoryURL,
+                to: URL(fileURLWithPath: file.path)
+            ) else { return nil }
+            return PlaylistFile(relativePath: relativePath)
         }
         let playlist = Playlist(name: name, files: playlistFiles)
         save(playlist, to: fileURL)
         return fileURL
+    }
+
+    /// Computes a relative path from a directory to a file.
+    static func relativePath(from base: URL, to target: URL) -> String? {
+        let basePath = base.standardizedFileURL.path(percentEncoded: false)
+        let targetPath = target.standardizedFileURL.path(percentEncoded: false)
+
+        let baseComponents = basePath.split(separator: "/", omittingEmptySubsequences: true)
+        let targetComponents = targetPath.split(separator: "/", omittingEmptySubsequences: true)
+
+        // Find common prefix length
+        var commonLength = 0
+        while commonLength < baseComponents.count && commonLength < targetComponents.count
+                && baseComponents[commonLength] == targetComponents[commonLength] {
+            commonLength += 1
+        }
+
+        // Number of ".." needed to go up from base
+        let ups = baseComponents.count - commonLength
+        var parts: [String] = Array(repeating: "..", count: ups)
+        // Append remaining target components
+        parts.append(contentsOf: targetComponents[commonLength...].map(String.init))
+
+        let result = parts.joined(separator: "/")
+        return result.isEmpty ? nil : result
     }
 
     // MARK: - Helpers

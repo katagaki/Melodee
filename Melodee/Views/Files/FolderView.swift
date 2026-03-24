@@ -153,7 +153,6 @@ struct FolderView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-                .disabled(!folderContainsPlayableAudio())
             }
             if #available(iOS 26.0, *) {
                 ToolbarSpacer(.fixed, placement: .topBarTrailing)
@@ -252,8 +251,9 @@ struct FolderView: View {
         .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
         .sheet(isPresented: $isCreatingPlaylist) {
             CreatePlaylistSheet(
-                audioFiles: files.compactMap { $0 as? FSFile }.filter { $0.type == .audio },
-                directoryURL: currentDirectoryURL()
+                scopeRootURL: scopeRootURL(),
+                saveDirectoryURL: currentDirectoryURL(),
+                fileManager: fileManager
             ) {
                 refreshFiles()
             }
@@ -264,6 +264,10 @@ struct FolderView: View {
         if let currentDirectory {
             return URL(fileURLWithPath: currentDirectory.path)
         }
+        return scopeRootURL()
+    }
+
+    func scopeRootURL() -> URL {
         switch storageLocation {
         case .local:
             return fileManager.documentsDirectoryURL ?? FileManager.default.temporaryDirectory

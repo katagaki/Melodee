@@ -15,7 +15,6 @@ struct MainTabView: View {
     @State var localFilesTabPath: [ViewPath] = []
     @State var cloudFilesTabPath: [ViewPath] = []
     @AppStorage("SelectedTab") var selectedTab: Int = 0
-    @State var externalFolderTabTitle: String = ""
     @Namespace private var nowPlayingNamespace
 
     @Namespace var namespace
@@ -44,15 +43,10 @@ struct MainTabView: View {
                     }
                 }
             }
-            Tab(value: 2) {
-                FilesView(externalFolderTabTitle: $externalFolderTabTitle)
-            } label: {
-                Label(externalFolderTabTitleFormatted(), systemImage: "folder.fill")
+            Tab("Tab.ExternalFolders", systemImage: "folder.fill", value: 2) {
+                FilesView()
             }
-            Tab("Tab.Playlists", systemImage: "music.note.list", value: 3) {
-                PlaylistsView()
-            }
-            Tab("Tab.More", systemImage: "ellipsis", value: 4) {
+            Tab("Tab.More", systemImage: "ellipsis", value: 3) {
                 MoreView()
             }
         }
@@ -65,15 +59,4 @@ struct MainTabView: View {
         .adaptiveTabBottomAccessory()
     }
 
-    func externalFolderTabTitleFormatted() -> String {
-        if externalFolderTabTitle.isEmpty {
-            return NSLocalizedString("Tab.ExternalFolder.Select", comment: "")
-        } else {
-            if externalFolderTabTitle.count >= 15 {
-                return NSLocalizedString("Tab.ExternalFolder", comment: "")
-            } else {
-                return externalFolderTabTitle
-            }
-        }
-    }
 }

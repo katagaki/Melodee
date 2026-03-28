@@ -12,14 +12,16 @@ import UniformTypeIdentifiers
 struct PlaylistDetailView: View {
 
     @Environment(MediaPlayerManager.self) var mediaPlayer
-    @Environment(\.modelContext) private var modelContext
 
-    var playlist: Playlist
+    /// The .melodee file
+    var file: FSFile
 
+    @State var playlist: Playlist?
     @State var resolvedFiles: [ResolvedPlaylistFile] = []
-    @State var isAddingFiles: Bool = false
     @State var isRenamingPlaylist: Bool = false
     @State var editedPlaylistName: String = ""
+    @State var isExporting: Bool = false
+    @State var exportURL: URL?
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
         .filter { $0.activationState == .foregroundActive }
@@ -30,6 +32,18 @@ struct PlaylistDetailView: View {
         .windowScene?.statusBarManager?.statusBarFrame.height ?? 0
     @State var heightOfTitle: CGFloat = 1.0
     @State var scrollOffset: CGFloat = 0.0
+
+    var playlistName: String {
+        playlist?.name ?? file.name
+    }
+
+    var fileURL: URL {
+        URL(fileURLWithPath: file.path)
+    }
+
+    var baseURL: URL {
+        fileURL.deletingLastPathComponent()
+    }
 
     var audioFiles: [ResolvedPlaylistFile] {
         resolvedFiles.filter { $0.file.type == .audio }
@@ -42,7 +56,7 @@ struct PlaylistDetailView: View {
     var body: some View {
         List {
             Section {
-                Text(playlist.name)
+                Text(playlistName)
                     .font(.largeTitle)
                     .textCase(.none)
                     .bold()
@@ -125,33 +139,33 @@ struct PlaylistDetailView: View {
                 endPoint: .bottom
             )
         )
-        .navigationTitle(playlist.name)
+        .navigationTitle(playlistName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
-                    isAddingFiles = true
+                    editedPlaylistName = playlistName
+                    isRenamingPlaylist = true
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "pencil")
                 }
-            }
-            if #available(iOS 26.0, *) {
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
-            ToolbarItemGroup(placement: .topBarTrailing) {
                 Menu {
                     Button {
-                        editedPlaylistName = playlist.name
-                        isRenamingPlaylist = true
+                        exportAsJSON()
                     } label: {
-                        Label("Playlists.Rename", systemImage: "pencil")
+                        Label("Playlists.Export.JSON", systemImage: "doc.text")
+                    }
+                    Button {
+                        exportAsM3U8()
+                    } label: {
+                        Label("Playlists.Export.M3U8", systemImage: "music.note.list")
                     }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Image(systemName: "square.and.arrow.up")
                 }
             }
             ToolbarItem(placement: .principal) {
-                Text(playlist.name)
+                Text(playlistName)
                     .lineLimit(1)
                     .truncationMode(.middle)
                     .bold()
@@ -159,64 +173,59 @@ struct PlaylistDetailView: View {
                     .transition(.opacity.animation(.default.speed(0.2)))
             }
         }
-        .sheet(isPresented: $isAddingFiles) {
-            DocumentPicker(
-                allowedUTIs: [.audio, .image, .text, .pdf, .zip],
-                onDocumentPicked: { url in
-                    addFileToPlaylist(url: url)
-                }
-            )
-            .ignoresSafeArea(edges: [.bottom])
-        }
         .alert("Playlists.Rename", isPresented: $isRenamingPlaylist) {
             TextField("Playlists.PlaylistName", text: $editedPlaylistName)
             Button("Shared.Cancel", role: .cancel) { }
             Button("Shared.Save") {
                 let trimmed = editedPlaylistName.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !trimmed.isEmpty {
-                    playlist.name = trimmed
+                if !trimmed.isEmpty, var updated = playlist {
+                    updated.name = trimmed
+                    playlist = updated
+                    PlaylistManager.save(updated, to: fileURL)
                 }
             }
         }
         .onAppear {
-            resolveFiles()
+            loadPlaylist()
+        }
+        .sheet(isPresented: $isExporting) {
+            if let exportURL {
+                ShareSheet(activityItems: [exportURL])
+                    .onDisappear {
+                        try? FileManager.default.removeItem(at: exportURL)
+                        self.exportURL = nil
+                    }
+            }
         }
     }
 
+    func loadPlaylist() {
+        playlist = PlaylistManager.load(from: fileURL)
+        resolveFiles()
+    }
+
     func resolveFiles() {
+        guard let playlist else {
+            resolvedFiles = []
+            return
+        }
         var resolved: [ResolvedPlaylistFile] = []
-        for bookmark in playlist.sortedBookmarks {
-            if let file = bookmark.resolveFile() {
-                resolved.append(ResolvedPlaylistFile(bookmark: bookmark, file: file))
+        for playlistFile in playlist.files {
+            if let fsFile = playlistFile.resolve(relativeTo: baseURL) {
+                resolved.append(ResolvedPlaylistFile(playlistFile: playlistFile, file: fsFile))
             }
         }
         resolvedFiles = resolved
     }
 
-    func addFileToPlaylist(url: URL) {
-        let accessing = url.startAccessingSecurityScopedResource()
-        defer {
-            if accessing { url.stopAccessingSecurityScopedResource() }
-        }
-        do {
-            try playlist.addFile(url: url)
-            resolveFiles()
-        } catch {
-            debugPrint("Failed to add file to playlist: \(error.localizedDescription)")
-        }
-    }
-
     func deleteItems(from section: [ResolvedPlaylistFile], at offsets: IndexSet) {
+        guard var updated = playlist else { return }
         for index in offsets {
             let item = section[index]
-            if let bookmarkIndex = playlist.fileBookmarks.firstIndex(where: {
-                $0.persistentModelID == item.bookmark.persistentModelID
-            }) {
-                let bookmark = playlist.fileBookmarks[bookmarkIndex]
-                playlist.fileBookmarks.remove(at: bookmarkIndex)
-                modelContext.delete(bookmark)
-            }
+            updated.files.removeAll { $0.relativePath == item.playlistFile.relativePath }
         }
+        playlist = updated
+        PlaylistManager.save(updated, to: fileURL)
         resolveFiles()
     }
 
@@ -247,10 +256,32 @@ struct PlaylistDetailView: View {
         default: ListFileRow(file: .constant(file))
         }
     }
+
+    func exportAsJSON() {
+        guard let playlist else { return }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        guard let data = try? encoder.encode(playlist) else { return }
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(playlist.name).json")
+        try? data.write(to: tempURL)
+        exportURL = tempURL
+        isExporting = true
+    }
+
+    func exportAsM3U8() {
+        guard let playlist else { return }
+        let content = playlist.toM3U8()
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(playlist.name).m3u8")
+        try? content.write(to: tempURL, atomically: true, encoding: .utf8)
+        exportURL = tempURL
+        isExporting = true
+    }
 }
 
 struct ResolvedPlaylistFile: Identifiable {
-    let bookmark: PlaylistFileBookmark
+    let playlistFile: PlaylistFile
     let file: FSFile
-    var id: String { bookmark.order.description + file.path }
+    var id: String { playlistFile.relativePath + file.path }
 }

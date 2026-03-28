@@ -13,7 +13,6 @@ import Zoomy
 struct ZoomableImageView: UIViewControllerRepresentable {
 
     static let analyzer = ImageAnalyzer()
-    nonisolated(unsafe) static let configuration = ImageAnalyzer.Configuration([.text, .machineReadableCode])
 
     let imagePath: String
 
@@ -31,9 +30,9 @@ struct ZoomableImageView: UIViewControllerRepresentable {
             // Configure image view with zoom
             viewController.addZoombehavior(for: imageView, settings: .noZoomCancellingSettings)
             // Configure Live Text for image view
-            let analyzerConfig = ZoomableImageView.configuration
             Task {
                 do {
+                    let analyzerConfig = ImageAnalyzer.Configuration([.text, .machineReadableCode])
                     let interaction = ImageAnalysisInteraction()
                     let analysis = try await ZoomableImageView.analyzer
                         .analyze(uiImage, configuration: analyzerConfig)

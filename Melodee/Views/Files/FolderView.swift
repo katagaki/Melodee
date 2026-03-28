@@ -21,6 +21,7 @@ struct FolderView: View {
     @State var state = FBState()
     @State var isSelectingExternalDirectory = false
     @State var storageLocation: StorageLocation = .local
+    @State var isCreatingPlaylist = false
 
     var overrideStorageLocation: StorageLocation?
 
@@ -117,6 +118,7 @@ struct FolderView: View {
                             case .text: FBTextFileRow(file: file)
                             case .pdf: FBPdfFileRow(file: file)
                             case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
+                            case .playlist: FBPlaylistFileRow(file: file)
                             default: ListFileRow(file: .constant(file))
                             }
                         }
@@ -145,6 +147,16 @@ struct FolderView: View {
             )
         )
         .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    isCreatingPlaylist = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+            if #available(iOS 26.0, *) {
+                ToolbarSpacer(.fixed, placement: .topBarTrailing)
+            }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if folderContainsTaggableFiles() {
                     FBMenu(files: $files)
@@ -237,6 +249,33 @@ struct FolderView: View {
             sortFiles()
         }
         .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
+        .sheet(isPresented: $isCreatingPlaylist) {
+            CreatePlaylistSheet(
+                scopeRootURL: scopeRootURL(),
+                saveDirectoryURL: currentDirectoryURL(),
+                fileManager: fileManager
+            ) {
+                refreshFiles()
+            }
+        }
+    }
+
+    func currentDirectoryURL() -> URL {
+        if let currentDirectory {
+            return URL(fileURLWithPath: currentDirectory.path)
+        }
+        return scopeRootURL()
+    }
+
+    func scopeRootURL() -> URL {
+        switch storageLocation {
+        case .local:
+            return fileManager.documentsDirectoryURL ?? FileManager.default.temporaryDirectory
+        case .cloud:
+            return fileManager.cloudDocumentsDirectoryURL ?? FileManager.default.temporaryDirectory
+        case .external:
+            return fileManager.directory ?? FileManager.default.temporaryDirectory
+        }
     }
 
     func updateFileManagerDirectory() {
@@ -246,7 +285,9 @@ struct FolderView: View {
         case .cloud:
             fileManager.directory = fileManager.cloudDocumentsDirectoryURL
         case .external:
-            debugPrint("External directory already set")
+            if let currentDirectory {
+                fileManager.directory = URL(fileURLWithPath: currentDirectory.path)
+            }
         }
     }
 
@@ -315,9 +356,14 @@ struct FolderView: View {
     }
 
     func sortFiles() { // swiftlint:disable:this cyclomatic_complexity function_body_length
-        // Separate directories and files
+        // Separate into groups: folders > playlists > audio tracks > other files
         var directories = files.filter { $0 is FSDirectory }
-        var fileItems = files.filter { $0 is FSFile }
+        let allFiles = files.compactMap { $0 as? FSFile }
+        var playlists: [any FilesystemObject] = allFiles.filter { $0.type == .playlist }
+        var audioFiles: [any FilesystemObject] = allFiles.filter { $0.type == .audio }
+        var otherFiles: [any FilesystemObject] = allFiles.filter {
+            $0.type != .playlist && $0.type != .audio
+        }
 
         // Sort directories alphabetically (always by name)
         directories.sort { lhs, rhs in
@@ -325,10 +371,16 @@ struct FolderView: View {
             return state.sortOrder == .ascending ? result : !result
         }
 
+        // Sort playlists by name
+        playlists.sort { lhs, rhs in
+            let result = lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            return state.sortOrder == .ascending ? result : !result
+        }
+
         // Build tag cache for tag-based sort options
         var tagCache: [String: AudioFile] = [:]
         if state.sortOption != .fileName {
-            for item in fileItems {
+            for item in audioFiles {
                 if let file = item as? FSFile, file.isTaggableAudio() {
                     do {
                         let audioFile = try AudioFile(location: URL(fileURLWithPath: file.path))
@@ -340,8 +392,8 @@ struct FolderView: View {
             }
         }
 
-        // Sort files, falling back to file name when primary sort values are equal
-        fileItems.sort { lhs, rhs in
+        // Sort audio files by the selected sort option
+        audioFiles.sort { lhs, rhs in
             guard let lhsFile = lhs as? FSFile, let rhsFile = rhs as? FSFile else {
                 return false
             }
@@ -380,7 +432,14 @@ struct FolderView: View {
                 : resolved == .orderedDescending
         }
 
-        files = directories + fileItems
+        // Sort other files by name
+        otherFiles.sort { lhs, rhs in
+            let result = lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
+            return state.sortOrder == .ascending ? result : !result
+        }
+
+        // Combine: folders > playlists > audio tracks > other files
+        files = directories + playlists + audioFiles + otherFiles
     }
 
     func openInFilesApp() {

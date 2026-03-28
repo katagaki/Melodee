@@ -36,6 +36,7 @@ struct ListFileRow: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 16.0, height: 16.0)
+                            .foregroundStyle(file.type.iconColor)
                             .offset(x: 6.0, y: 6.0)
                     }
             } else {
@@ -43,6 +44,7 @@ struct ListFileRow: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 28.0, height: 28.0)
+                    .foregroundStyle(file.type.iconColor)
             }
             VStack(alignment: .leading, spacing: 2.0) {
                 Text(file.name)

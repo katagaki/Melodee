@@ -153,12 +153,12 @@ struct PlaylistDetailView: View {
                     Button {
                         exportAsJSON()
                     } label: {
-                        Label("Playlists.Export.JSON", systemImage: "doc.text")
+                        Label(verbatim: "JSON", systemImage: "doc.text")
                     }
                     Button {
                         exportAsM3U8()
                     } label: {
-                        Label("Playlists.Export.M3U8", systemImage: "music.note.list")
+                        Label(verbatim: "M3U8", systemImage: "music.note.list")
                     }
                 } label: {
                     Image(systemName: "square.and.arrow.up")

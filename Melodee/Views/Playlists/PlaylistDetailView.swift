@@ -65,15 +65,12 @@ struct PlaylistDetailView: View {
                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
                     .listRowBackground(Color.clear)
                     .textSelection(.enabled)
-                    .background {
-                        GeometryReader { geometry in
-                            DispatchQueue.main.async {
-                                withAnimation {
-                                    scrollOffset = geometry.frame(in: .global).minY - statusBarHeight - 51.0
-                                    heightOfTitle = geometry.frame(in: .local).height
-                                }
-                            }
-                            Color.clear
+                    .onGeometryChange(for: CGRect.self) { geometry in
+                        geometry.frame(in: .global)
+                    } action: { frame in
+                        withAnimation {
+                            scrollOffset = frame.minY - statusBarHeight - 51.0
+                            heightOfTitle = frame.height
                         }
                     }
                     .opacity(scrollOffset > -heightOfTitle ? 1 : 0)

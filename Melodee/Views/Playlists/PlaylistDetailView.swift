@@ -73,7 +73,7 @@ struct PlaylistDetailView: View {
                                     heightOfTitle = geometry.frame(in: .local).height
                                 }
                             }
-                            return Color.clear
+                            Color.clear
                         }
                     }
                     .opacity(scrollOffset > -heightOfTitle ? 1 : 0)
@@ -153,12 +153,12 @@ struct PlaylistDetailView: View {
                     Button {
                         exportAsJSON()
                     } label: {
-                        Label(verbatim: "JSON", systemImage: "doc.text")
+                        Label { Text(verbatim: "JSON") } icon: { Image(systemName: "doc.text") }
                     }
                     Button {
                         exportAsM3U8()
                     } label: {
-                        Label(verbatim: "M3U8", systemImage: "music.note.list")
+                        Label { Text(verbatim: "M3U8") } icon: { Image(systemName: "music.note.list") }
                     }
                 } label: {
                     Image(systemName: "square.and.arrow.up")

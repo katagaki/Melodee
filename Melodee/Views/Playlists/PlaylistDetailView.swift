@@ -142,33 +142,26 @@ struct PlaylistDetailView: View {
         .navigationTitle(playlistName)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if #available(iOS 26.0, *) {
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
             ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    editedPlaylistName = playlistName
+                    isRenamingPlaylist = true
+                } label: {
+                    Image(systemName: "pencil")
+                }
                 Menu {
                     Button {
-                        editedPlaylistName = playlistName
-                        isRenamingPlaylist = true
+                        exportAsJSON()
                     } label: {
-                        Label("Playlists.Rename", systemImage: "pencil")
+                        Label("Playlists.Export.JSON", systemImage: "doc.text")
                     }
-                    Menu {
-                        Button {
-                            exportAsJSON()
-                        } label: {
-                            Label("Playlists.Export.JSON", systemImage: "doc.text")
-                        }
-                        Button {
-                            exportAsM3U8()
-                        } label: {
-                            Label("Playlists.Export.M3U8", systemImage: "music.note.list")
-                        }
+                    Button {
+                        exportAsM3U8()
                     } label: {
-                        Label("Playlists.Export", systemImage: "square.and.arrow.up")
+                        Label("Playlists.Export.M3U8", systemImage: "music.note.list")
                     }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Image(systemName: "square.and.arrow.up")
                 }
             }
             ToolbarItem(placement: .principal) {

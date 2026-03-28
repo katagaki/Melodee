@@ -285,7 +285,9 @@ struct FolderView: View {
         case .cloud:
             fileManager.directory = fileManager.cloudDocumentsDirectoryURL
         case .external:
-            debugPrint("External directory already set")
+            if let currentDirectory {
+                fileManager.directory = URL(fileURLWithPath: currentDirectory.path)
+            }
         }
     }
 

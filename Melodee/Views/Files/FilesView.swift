@@ -5,55 +5,48 @@
 //  Created by シン・ジャスティン on 2024/03/16.
 //
 
-import Komponents
 import SwiftUI
+
+struct ExternalFolderBookmark: Identifiable, Codable {
+    var id: UUID
+    var name: String
+    var bookmarkData: Data
+
+    init(name: String, bookmarkData: Data) {
+        self.id = UUID()
+        self.name = name
+        self.bookmarkData = bookmarkData
+    }
+}
 
 struct FilesView: View {
 
-    @State var fileManager: FilesystemManager = FilesystemManager()
-
-    @State var isSelectingExternalDirectory: Bool = false
-    @State var hasSelectedExternalDirectory: Bool = false
-    @State var selectedFolderName: String = ""
-
-    @State var isCreatingPlaylist: Bool = false
-    @State var newPlaylistName: String = ""
-
-    @State var filesTabPath: [ViewPath] = []
-    @State var forceRefreshFlag: Bool = false
-
-    @Binding var externalFolderTabTitle: String
-
-    @Namespace var namespace
+    @State var isSelectingDirectory: Bool = false
+    @State var bookmarks: [ExternalFolderBookmark] = []
 
     var body: some View {
-        NavigationStack(path: $filesTabPath) {
-            Group {
-                if hasSelectedExternalDirectory {
-                    // Show the external folder browser
-                    FolderView(
-                        currentDirectory: nil,
-                        overrideStorageLocation: .external,
-                        fileManager: fileManager
-                    )
-                    .id(forceRefreshFlag)
-                } else {
-                    // Show ContentUnavailableView when no folder is selected
-                    ContentUnavailableView {
-                        Label("Library.NoFolder.Title", systemImage: "folder.badge.questionmark")
-                    } description: {
-                        Text("Library.NoFolder.Description")
-                    } actions: {
-                        Button {
-                            isSelectingExternalDirectory = true
-                        } label: {
-                            Text("Library.SelectFolder")
+        NavigationStack {
+            List {
+                Section {
+                    ForEach(bookmarks) { bookmark in
+                        if let url = resolveBookmark(bookmark) {
+                            NavigationLink(value: ViewPath.fileBrowser(
+                                directory: FSDirectory(
+                                    name: bookmark.name,
+                                    path: url.path(percentEncoded: false),
+                                    files: []
+                                ),
+                                storageLocation: .external
+                            )) {
+                                Label(bookmark.name, systemImage: "folder.fill")
+                            }
+                            .listRowBackground(Color.clear)
                         }
-                        .buttonStyle(.borderedProminent)
                     }
+                    .onDelete(perform: deleteBookmarks)
                 }
             }
-            .navigationTitle("ViewTitle.Files")
+            .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .background(
                 .linearGradient(
@@ -62,88 +55,152 @@ struct FilesView: View {
                     endPoint: .bottom
                 )
             )
+            .navigationTitle("ViewTitle.ExternalFolders")
             .toolbar {
-                if hasSelectedExternalDirectory {
-                    ToolbarItemGroup(placement: .topBarTrailing) {
-                        Button {
-                            isSelectingExternalDirectory = true
-                        } label: {
-                            Text("Library.SelectAnotherFolder")
-                        }
-                    }
-                    if #available(iOS 26.0, *) {
-                        ToolbarSpacer(.fixed, placement: .topBarTrailing)
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Button {
+                        isSelectingDirectory = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(isPresented: $isSelectingExternalDirectory) {
-                DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
-                    fileManager.directory = url
-                    fileManager.storageLocation = .external
-                    let isAccessSuccessful = url.startAccessingSecurityScopedResource()
-                    if isAccessSuccessful {
-                        hasSelectedExternalDirectory = true
-                        selectedFolderName = url.lastPathComponent
-                        externalFolderTabTitle = url.lastPathComponent
-                        filesTabPath.removeAll()
-                        // Save bookmark for persistence
-                        saveExternalFolderBookmark(url: url)
-                        // Trigger refresh by toggling the flag
-                        forceRefreshFlag.toggle()
-                    } else {
-                        url.stopAccessingSecurityScopedResource()
+            .overlay {
+                if bookmarks.isEmpty {
+                    ContentUnavailableView {
+                        Label("Library.NoFolder.Title", systemImage: "folder.badge.questionmark")
+                    } description: {
+                        Text("Library.NoFolder.Description")
+                    } actions: {
+                        Button {
+                            isSelectingDirectory = true
+                        } label: {
+                            Text("Library.AddFolder")
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
+                }
+            }
+            .sheet(isPresented: $isSelectingDirectory) {
+                DocumentPicker(allowedUTIs: [.folder], onDocumentPicked: { url in
+                    addBookmark(for: url)
                 })
                 .ignoresSafeArea(edges: [.bottom])
             }
             .onAppear {
-                // Restore external folder on first appearance
-                restoreExternalFolderBookmark()
+                loadBookmarks()
             }
             .hasFileBrowserNavigationDestinations()
         }
     }
 
-    func saveExternalFolderBookmark(url: URL) {
+    // MARK: - Bookmark persistence
+
+    func loadBookmarks() {
+        guard let data = UserDefaults.standard.data(forKey: "ExternalFolderBookmarks"),
+              let decoded = try? JSONDecoder().decode([ExternalFolderBookmark].self, from: data) else {
+            // Migrate from old single bookmark if present
+            migrateOldBookmark()
+            return
+        }
+        bookmarks = decoded
+
+        // Start accessing all bookmarked resources
+        for bookmark in bookmarks {
+            _ = resolveBookmark(bookmark)
+        }
+    }
+
+    func saveBookmarks() {
+        guard let data = try? JSONEncoder().encode(bookmarks) else { return }
+        UserDefaults.standard.set(data, forKey: "ExternalFolderBookmarks")
+    }
+
+    func addBookmark(for url: URL) {
+        let accessing = url.startAccessingSecurityScopedResource()
+        guard accessing else { return }
+
         do {
             let bookmarkData = try url.bookmarkData(
                 options: .minimalBookmark,
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
-            UserDefaults.standard.set(bookmarkData, forKey: "ExternalFolderBookmark")
+            // Don't add duplicates
+            if !bookmarks.contains(where: { $0.name == url.lastPathComponent }) {
+                let bookmark = ExternalFolderBookmark(
+                    name: url.lastPathComponent,
+                    bookmarkData: bookmarkData
+                )
+                bookmarks.append(bookmark)
+                saveBookmarks()
+            }
         } catch {
             debugPrint("Failed to create bookmark: \(error)")
+            url.stopAccessingSecurityScopedResource()
         }
     }
 
-    func restoreExternalFolderBookmark() {
-        guard !hasSelectedExternalDirectory,
-              let bookmarkData = UserDefaults.standard.data(forKey: "ExternalFolderBookmark") else {
-            return
-        }
+    func deleteBookmarks(at offsets: IndexSet) {
+        bookmarks.remove(atOffsets: offsets)
+        saveBookmarks()
+    }
+
+    func resolveBookmark(_ bookmark: ExternalFolderBookmark) -> URL? {
         do {
             var isStale = false
             let url = try URL(
-                resolvingBookmarkData: bookmarkData,
+                resolvingBookmarkData: bookmark.bookmarkData,
                 options: .withoutUI,
                 relativeTo: nil,
                 bookmarkDataIsStale: &isStale
             )
             if isStale {
-                saveExternalFolderBookmark(url: url)
+                // Refresh bookmark data
+                if let newData = try? url.bookmarkData(
+                    options: .minimalBookmark,
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil
+                ), let index = bookmarks.firstIndex(where: { $0.id == bookmark.id }) {
+                    bookmarks[index] = ExternalFolderBookmark(
+                        name: bookmark.name,
+                        bookmarkData: newData
+                    )
+                    saveBookmarks()
+                }
             }
-            let isAccessSuccessful = url.startAccessingSecurityScopedResource()
-            if isAccessSuccessful {
-                fileManager.directory = url
-                fileManager.storageLocation = .external
-                hasSelectedExternalDirectory = true
-                selectedFolderName = url.lastPathComponent
-                externalFolderTabTitle = url.lastPathComponent
-                forceRefreshFlag.toggle()
-            }
+            _ = url.startAccessingSecurityScopedResource()
+            return url
         } catch {
             debugPrint("Failed to resolve bookmark: \(error)")
+            return nil
+        }
+    }
+
+    // MARK: - Migration
+
+    func migrateOldBookmark() {
+        guard let oldData = UserDefaults.standard.data(forKey: "ExternalFolderBookmark") else {
+            return
+        }
+        do {
+            var isStale = false
+            let url = try URL(
+                resolvingBookmarkData: oldData,
+                options: .withoutUI,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale
+            )
+            let bookmarkData = isStale
+                ? try url.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
+                : oldData
+            let bookmark = ExternalFolderBookmark(name: url.lastPathComponent, bookmarkData: bookmarkData)
+            bookmarks = [bookmark]
+            saveBookmarks()
+            UserDefaults.standard.removeObject(forKey: "ExternalFolderBookmark")
+            _ = url.startAccessingSecurityScopedResource()
+        } catch {
+            debugPrint("Failed to migrate old bookmark: \(error)")
             UserDefaults.standard.removeObject(forKey: "ExternalFolderBookmark")
         }
     }

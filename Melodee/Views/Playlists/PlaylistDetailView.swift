@@ -190,6 +190,7 @@ struct PlaylistDetailView: View {
             if let playlist {
                 ManagePlaylistSheet(
                     scopeRootURL: scopeRootURL,
+                    playlistDirectoryURL: baseURL,
                     fileManager: fileManager,
                     existingFiles: playlist.files
                 ) { updatedFiles in

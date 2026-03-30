@@ -139,9 +139,8 @@ struct ManagePlaylistSheet: View {
         }
 
         // Pre-select files that are already in the playlist
-        let baseURL = scopeRootURL
         for existing in existingFiles {
-            let resolvedURL = baseURL.appendingPathComponent(existing.relativePath)
+            let resolvedURL = playlistDirectoryURL.appendingPathComponent(existing.relativePath)
             let resolvedPath = resolvedURL.path(percentEncoded: false)
             if allAudioFiles.contains(where: { $0.path == resolvedPath }) {
                 selectedPaths.insert(resolvedPath)
@@ -183,7 +182,7 @@ struct ManagePlaylistSheet: View {
     }
 
     func saveChanges() {
-        let baseURL = scopeRootURL
+        let baseURL = playlistDirectoryURL
         let selected = allAudioFiles.filter { selectedPaths.contains($0.path) }
         let updatedFiles = selected.compactMap { file -> PlaylistFile? in
             guard let relativePath = PlaylistManager.relativePath(

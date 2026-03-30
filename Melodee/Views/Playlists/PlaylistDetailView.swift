@@ -61,9 +61,6 @@ struct PlaylistDetailView: View {
                     .textCase(.none)
                     .bold()
                     .foregroundColor(.primary)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
-                    .listRowBackground(Color.clear)
                     .textSelection(.enabled)
                     .onGeometryChange(for: CGRect.self) { geometry in
                         geometry.frame(in: .global)
@@ -74,6 +71,9 @@ struct PlaylistDetailView: View {
                         }
                     }
                     .opacity(scrollOffset > -heightOfTitle ? 1 : 0)
+                    .listRowSeparator(.hidden, edges: .all)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                    .listRowBackground(Color.clear)
                 HStack(alignment: .center, spacing: 8.0) {
                     Group {
                         ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
@@ -127,6 +127,7 @@ struct PlaylistDetailView: View {
                 }
             }
         }
+        .navigationTitle(playlistName)
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(
@@ -136,8 +137,6 @@ struct PlaylistDetailView: View {
                 endPoint: .bottom
             )
         )
-        .navigationTitle(playlistName)
-        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
@@ -182,6 +181,8 @@ struct PlaylistDetailView: View {
                 }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .onAppear {
             loadPlaylist()
         }

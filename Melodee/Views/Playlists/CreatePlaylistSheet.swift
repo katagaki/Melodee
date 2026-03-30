@@ -75,6 +75,7 @@ struct CreatePlaylistSheet: View {
                         } description: {
                             Text("Playlists.NoAudioFiles.Description")
                         }
+                        .listRowSeparator(.hidden, edges: .all)
                         .listRowBackground(Color.clear)
                     }
                 } else {

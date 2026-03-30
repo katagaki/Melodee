@@ -76,6 +76,7 @@ struct NowPlayingView: View {
                     .blur(radius: 64.0)
                     .opacity(0.3)
             }
+            .ignoresSafeArea()
         }
         .task {
             if previousQueueID != mediaPlayer.currentlyPlayingID {

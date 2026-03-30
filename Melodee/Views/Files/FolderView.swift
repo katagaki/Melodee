@@ -151,7 +151,7 @@ struct FolderView: View {
                 Button {
                     isCreatingPlaylist = true
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "music.note.list")
                 }
             }
             if #available(iOS 26.0, *) {

@@ -114,7 +114,7 @@ class FilesystemManager {
         case "txt": return .text
         case "pdf": return .pdf
         case "zip": return .zip
-        case "melodee": return .playlist
+        case "mpl": return .playlist
         case "icloud": return fileType(for: url.deletingPathExtension())
         default: return nil
         }
@@ -127,7 +127,7 @@ class FilesystemManager {
         case "txt": return .text
         case "pdf": return .pdf
         case "zip": return .zip
-        case "melodee": return .playlist
+        case "mpl": return .playlist
         default: return .notSet
         }
     }

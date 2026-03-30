@@ -7,21 +7,21 @@
 
 import Komponents
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct PlaylistDetailView: View {
 
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
-    /// The .melodee file
+    /// The .mpl file
     var file: FSFile
+    var fileManager: FilesystemManager
+    var scopeRootURL: URL
 
     @State var playlist: Playlist?
     @State var resolvedFiles: [ResolvedPlaylistFile] = []
     @State var isRenamingPlaylist: Bool = false
     @State var editedPlaylistName: String = ""
-    @State var isExporting: Bool = false
-    @State var exportURL: URL?
+    @State var isManagingFiles: Bool = false
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
         .filter { $0.activationState == .foregroundActive }
@@ -126,6 +126,20 @@ struct PlaylistDetailView: View {
                     .listRowBackground(Color.clear)
                 }
             }
+            Section {
+                Button {
+                    isManagingFiles = true
+                } label: {
+                    Text("Playlists.Manage")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 4.0)
+                        .padding(.horizontal, 12.0)
+                        .background(.fill.tertiary, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            }
         }
         .navigationTitle(playlistName)
         .listStyle(.plain)
@@ -144,20 +158,6 @@ struct PlaylistDetailView: View {
                     isRenamingPlaylist = true
                 } label: {
                     Image(systemName: "pencil")
-                }
-                Menu {
-                    Button {
-                        exportAsJSON()
-                    } label: {
-                        Label { Text(verbatim: "JSON") } icon: { Image(systemName: "doc.text") }
-                    }
-                    Button {
-                        exportAsM3U8()
-                    } label: {
-                        Label { Text(verbatim: "M3U8") } icon: { Image(systemName: "music.note.list") }
-                    }
-                } label: {
-                    Image(systemName: "square.and.arrow.up")
                 }
             }
             ToolbarItem(placement: .principal) {
@@ -186,13 +186,19 @@ struct PlaylistDetailView: View {
         .onAppear {
             loadPlaylist()
         }
-        .sheet(isPresented: $isExporting) {
-            if let exportURL {
-                ShareSheet(activityItems: [exportURL])
-                    .onDisappear {
-                        try? FileManager.default.removeItem(at: exportURL)
-                        self.exportURL = nil
-                    }
+        .sheet(isPresented: $isManagingFiles) {
+            if let playlist {
+                ManagePlaylistSheet(
+                    scopeRootURL: scopeRootURL,
+                    fileManager: fileManager,
+                    existingFiles: playlist.files
+                ) { updatedFiles in
+                    var updated = playlist
+                    updated.files = updatedFiles
+                    self.playlist = updated
+                    PlaylistManager.save(updated, to: fileURL)
+                    resolveFiles()
+                }
             }
         }
     }
@@ -255,27 +261,6 @@ struct PlaylistDetailView: View {
         }
     }
 
-    func exportAsJSON() {
-        guard let playlist else { return }
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        guard let data = try? encoder.encode(playlist) else { return }
-        let tempURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("\(playlist.name).json")
-        try? data.write(to: tempURL)
-        exportURL = tempURL
-        isExporting = true
-    }
-
-    func exportAsM3U8() {
-        guard let playlist else { return }
-        let content = playlist.toM3U8()
-        let tempURL = FileManager.default.temporaryDirectory
-            .appendingPathComponent("\(playlist.name).m3u8")
-        try? content.write(to: tempURL, atomically: true, encoding: .utf8)
-        exportURL = tempURL
-        isExporting = true
-    }
 }
 
 struct ResolvedPlaylistFile: Identifiable {

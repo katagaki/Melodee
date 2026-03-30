@@ -118,7 +118,7 @@ struct FolderView: View {
                             case .text: FBTextFileRow(file: file)
                             case .pdf: FBPdfFileRow(file: file)
                             case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
-                            case .playlist: FBPlaylistFileRow(file: file)
+                            case .playlist: FBPlaylistFileRow(file: file, scopeRootURL: scopeRootURL())
                             default: ListFileRow(file: .constant(file))
                             }
                         }

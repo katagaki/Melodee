@@ -16,45 +16,6 @@ struct Playlist: Codable {
         self.files = files
     }
 
-    // MARK: - M3U8 Export
-
-    func toM3U8() -> String {
-        var lines: [String] = ["#EXTM3U", "#PLAYLIST:\(name)"]
-        for file in files {
-            let fileName = URL(fileURLWithPath: file.relativePath)
-                .deletingPathExtension().lastPathComponent
-            lines.append("#EXTINF:-1,\(fileName)")
-            lines.append(file.relativePath)
-        }
-        return lines.joined(separator: "\n") + "\n"
-    }
-
-    // MARK: - M3U8 Import
-
-    static func fromM3U8(content: String) -> (name: String?, relativePaths: [String]) {
-        var name: String?
-        var paths: [String] = []
-
-        for line in content.components(separatedBy: .newlines) {
-            let trimmed = line.trimmingCharacters(in: .whitespaces)
-            if trimmed.isEmpty || trimmed.hasPrefix("#EXTINF") {
-                continue
-            }
-            if trimmed.hasPrefix("#PLAYLIST:") {
-                name = String(trimmed.dropFirst("#PLAYLIST:".count))
-                continue
-            }
-            if trimmed.hasPrefix("#") {
-                continue
-            }
-            // Skip absolute paths
-            if trimmed.hasPrefix("/") || trimmed.contains("://") {
-                continue
-            }
-            paths.append(trimmed)
-        }
-        return (name, paths)
-    }
 }
 
 struct PlaylistFile: Codable, Identifiable, Hashable {

@@ -10,7 +10,7 @@ import Foundation
 @Observable
 class PlaylistManager {
 
-    static let playlistExtension = "melodee"
+    static let playlistExtension = "mpl"
 
     // MARK: - Load / Save
 

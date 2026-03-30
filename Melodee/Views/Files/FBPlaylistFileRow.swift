@@ -10,9 +10,10 @@ import SwiftUI
 struct FBPlaylistFileRow: View {
 
     @State var file: FSFile
+    var scopeRootURL: URL
 
     var body: some View {
-        NavigationLink(value: ViewPath.playlistViewer(file: file)) {
+        NavigationLink(value: ViewPath.playlistViewer(file: file, scopeRootURL: scopeRootURL)) {
             ListFileRow(file: .constant(file))
                 .tint(.primary)
         }

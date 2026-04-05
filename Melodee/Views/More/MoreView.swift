@@ -28,7 +28,6 @@ struct MoreView: View {
                 }
             }
             .navigationTitle("ViewTitle.More")
-            .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: ViewPath.self, destination: { viewPath in
                 switch viewPath {
                 case .moreAttributions:

@@ -132,7 +132,7 @@ struct PlaylistDetailView: View {
                 } label: {
                     Text("Playlists.Manage")
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, 4.0)
+                        .padding(.vertical, 8.0)
                         .padding(.horizontal, 12.0)
                         .background(.fill.tertiary, in: Capsule())
                 }

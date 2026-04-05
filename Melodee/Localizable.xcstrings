@@ -2663,7 +2663,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%d songs"
+            "value" : "%d Audio Files"
           }
         },
         "ja" : {
@@ -2704,7 +2704,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Songs"
+            "value" : "Audio Files"
           }
         },
         "ja" : {
@@ -4654,37 +4654,37 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cloud"
+            "value" : "iCloud"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "クラウド上"
+            "value" : "iCloud"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "클라우드"
+            "value" : "iCloud"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đám mây"
+            "value" : "iCloud"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "云"
+            "value" : "iCloud"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "雲端"
+            "value" : "iCloud"
           }
         }
       }

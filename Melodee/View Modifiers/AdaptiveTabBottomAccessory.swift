@@ -50,6 +50,7 @@ struct AdaptiveTabBottomAccessory: ViewModifier {
                     NowPlayingBar()
                         .popoverTip(NPQueueTip(), arrowEdge: .bottom)
                 }
+                .popupInteractionStyle(.none)
         }
     }
 }

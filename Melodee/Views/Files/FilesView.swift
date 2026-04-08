@@ -143,7 +143,13 @@ struct FilesView: View {
 
     func deleteBookmarks(at offsets: IndexSet) {
         for offset in offsets {
-            if let url = resolveBookmark(bookmarks[offset]) {
+            var isStale = false
+            if let url = try? URL(
+                resolvingBookmarkData: bookmarks[offset].bookmarkData,
+                options: .withoutUI,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale
+            ) {
                 url.stopAccessingSecurityScopedResource()
             }
         }

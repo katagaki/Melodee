@@ -308,7 +308,11 @@ struct FolderView: View {
     func refreshFiles() {
         updateFileManagerDirectory()
         withAnimation {
-            self.files = fileManager.files(in: URL(string: currentDirectory?.path ?? ""))
+            if let path = currentDirectory?.path {
+                self.files = fileManager.files(in: URL(fileURLWithPath: path))
+            } else {
+                self.files = fileManager.files()
+            }
             sortFiles()
             state.isInitialLoadCompleted = true
         }
@@ -443,15 +447,15 @@ struct FolderView: View {
     }
 
     func openInFilesApp() {
-        let filesUrl: URL = FileManager.default.urls(
+        guard let filesUrl = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
-        ).first!
+        ).first else { return }
         let sharedDocumentsUrlString: String = filesUrl.absoluteString.replacingOccurrences(
             of: "file://",
             with: "shareddocuments://"
         )
-        let sharedDocumentsUrl: URL = URL(string: sharedDocumentsUrlString)!
+        guard let sharedDocumentsUrl = URL(string: sharedDocumentsUrlString) else { return }
         if UIApplication.shared.canOpenURL(sharedDocumentsUrl) {
             UIApplication.shared.open(sharedDocumentsUrl, options: [:])
         }

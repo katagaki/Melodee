@@ -130,7 +130,8 @@ struct FBContextMenu: View {
     }
 
     func isDirectoryEligibleForQueue(_ directory: FSDirectory) -> Bool {
-        if let url = URL(string: directory.path) {
+        let url = URL(fileURLWithPath: directory.path)
+        if FileManager.default.fileExists(atPath: directory.path) {
             let files = fileManager.files(in: url).filter({ $0 is FSFile })
             return files.contains(where: { file in
                 if let file = file as? FSFile {
@@ -143,7 +144,8 @@ struct FBContextMenu: View {
     }
 
     func isDirectoryEligibleForQueueRecursively(_ directory: FSDirectory) -> Bool {
-        if let url = URL(string: directory.path) {
+        let url = URL(fileURLWithPath: directory.path)
+        if FileManager.default.fileExists(atPath: directory.path) {
             let files = fileManager.files(in: url).filter({ $0 is FSDirectory })
             for file in files {
                 if let directory = file as? FSDirectory {
@@ -165,7 +167,8 @@ struct FBContextMenu: View {
     }
 
     func addToQueue(directory: FSDirectory, recursively isRecursiveAdd: Bool = false) {
-        if let url = URL(string: directory.path) {
+        let url = URL(fileURLWithPath: directory.path)
+        if FileManager.default.fileExists(atPath: directory.path) {
             let contents = fileManager.files(in: url).sorted { lhs, rhs in
                 lhs.name < rhs.name
             }

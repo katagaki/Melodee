@@ -142,6 +142,11 @@ struct FilesView: View {
     }
 
     func deleteBookmarks(at offsets: IndexSet) {
+        for offset in offsets {
+            if let url = resolveBookmark(bookmarks[offset]) {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
         bookmarks.remove(atOffsets: offsets)
         saveBookmarks()
     }
@@ -169,7 +174,10 @@ struct FilesView: View {
                     saveBookmarks()
                 }
             }
-            _ = url.startAccessingSecurityScopedResource()
+            guard url.startAccessingSecurityScopedResource() else {
+                debugPrint("Failed to access security-scoped resource for: \(url)")
+                return nil
+            }
             return url
         } catch {
             debugPrint("Failed to resolve bookmark: \(error)")

@@ -11,6 +11,7 @@ import SwiftUI
 struct FBAudioFileRow: View {
 
     @Environment(MediaPlayerManager.self) var mediaPlayer
+    @Environment(FileDownloadManager.self) var downloadManager
 
     @State var file: FSFile
     var sortOption: SortOption = .fileName
@@ -18,18 +19,34 @@ struct FBAudioFileRow: View {
 
     var body: some View {
         Button {
-            mediaPlayer.playImmediately(file)
+            if file.isEvicted() {
+                downloadManager.startDownload(for: file) {
+                    mediaPlayer.playImmediately(file)
+                }
+            } else {
+                mediaPlayer.playImmediately(file)
+            }
         } label: {
             ListFileRow(file: .constant(file), subtitle: tagSubtitle)
                 .tint(.primary)
         }
         .task(id: sortOption) {
+            // Don't read tags from evicted iCloud files
+            guard !file.isEvicted() else { return }
             tagSubtitle = readTagSubtitle()
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button {
-                withAnimation(.default.speed(2)) {
-                    mediaPlayer.queueNext(file: file)
+                if file.isEvicted() {
+                    downloadManager.startDownload(for: file) {
+                        withAnimation(.default.speed(2)) {
+                            mediaPlayer.queueNext(file: file)
+                        }
+                    }
+                } else {
+                    withAnimation(.default.speed(2)) {
+                        mediaPlayer.queueNext(file: file)
+                    }
                 }
             } label: {
                 Label("Shared.Play.Next",
@@ -39,8 +56,16 @@ struct FBAudioFileRow: View {
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button {
-                withAnimation(.default.speed(2)) {
-                    mediaPlayer.queueLast(file: file)
+                if file.isEvicted() {
+                    downloadManager.startDownload(for: file) {
+                        withAnimation(.default.speed(2)) {
+                            mediaPlayer.queueLast(file: file)
+                        }
+                    }
+                } else {
+                    withAnimation(.default.speed(2)) {
+                        mediaPlayer.queueLast(file: file)
+                    }
                 }
             } label: {
                 Label("Shared.Play.Last",

@@ -20,41 +20,32 @@ struct ListFileRow: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 16.0) {
-            ZStack {
-                if file.isTaggableAudio() || file.type == .image,
-                   let thumbnail = thumbnail {
-                    Image(uiImage: thumbnail)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 28.0, height: 28.0)
-                        .clipShape(RoundedRectangle(cornerRadius: 6.0))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6.0)
-                                .stroke(.primary, lineWidth: 1/3)
-                                .opacity(0.3)
-                        )
-                        .overlay(alignment: .bottomTrailing) {
-                            file.type.icon()
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 16.0, height: 16.0)
-                                .foregroundStyle(file.type.iconColor)
-                                .offset(x: 6.0, y: 6.0)
-                        }
-                } else {
-                    file.type.icon()
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 28.0, height: 28.0)
-                        .foregroundStyle(file.type.iconColor)
-                }
-                if downloadManager.isDownloading(file) {
-                    Circle()
-                        .fill(.ultraThinMaterial)
-                        .frame(width: 28.0, height: 28.0)
-                    CircularProgressView(progress: downloadManager.progress(for: file))
-                        .frame(width: 22.0, height: 22.0)
-                }
+            if file.isTaggableAudio() || file.type == .image,
+               let thumbnail = thumbnail {
+                Image(uiImage: thumbnail)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 28.0, height: 28.0)
+                    .clipShape(RoundedRectangle(cornerRadius: 6.0))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6.0)
+                            .stroke(.primary, lineWidth: 1/3)
+                            .opacity(0.3)
+                    )
+                    .overlay(alignment: .bottomTrailing) {
+                        file.type.icon()
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 16.0, height: 16.0)
+                            .foregroundStyle(file.type.iconColor)
+                            .offset(x: 6.0, y: 6.0)
+                    }
+            } else {
+                file.type.icon()
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28.0, height: 28.0)
+                    .foregroundStyle(file.type.iconColor)
             }
             VStack(alignment: .leading, spacing: 2.0) {
                 Text(file.name)
@@ -62,7 +53,16 @@ struct ListFileRow: View {
                     .lineLimit(1)
                     .truncationMode(.middle)
                 HStack(spacing: 4.0) {
-                    if file.isEvicted() && !downloadManager.isDownloading(file) {
+                    if downloadManager.isDownloading(file) {
+                        if let progress = downloadManager.progress(for: file), progress > 0.0 {
+                            CircularProgressView(progress: progress)
+                                .frame(width: 10.0, height: 10.0)
+                        } else {
+                            ProgressView()
+                                .controlSize(.mini)
+                                .frame(width: 10.0, height: 10.0)
+                        }
+                    } else if file.isEvicted() {
                         Image(systemName: "icloud.and.arrow.down")
                             .font(.caption2)
                             .foregroundStyle(.secondary)

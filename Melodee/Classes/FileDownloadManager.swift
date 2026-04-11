@@ -13,8 +13,8 @@ class FileDownloadManager {
     @ObservationIgnored private var metadataQuery: NSMetadataQuery?
     @ObservationIgnored private var observer: Any?
 
-    /// Map of file path → download progress (0.0 to 1.0)
-    var downloadProgress: [String: Double] = [:]
+    /// Map of file path → download progress (0.0 to 1.0), nil means no progress data yet
+    var downloadProgress: [String: Double?] = [:]
 
     /// Files that have completed downloading and are ready for use
     var completedPaths: Set<String> = []
@@ -35,7 +35,7 @@ class FileDownloadManager {
         if let onComplete {
             completionHandlers[file.path] = onComplete
         }
-        downloadProgress[file.path] = 0.0
+        downloadProgress[file.path] = .some(nil)
         do {
             try FileManager.default.startDownloadingUbiquitousItem(at: url)
         } catch {
@@ -46,11 +46,13 @@ class FileDownloadManager {
     }
 
     func isDownloading(_ file: FSFile) -> Bool {
-        return downloadProgress[file.path] != nil && !completedPaths.contains(file.path)
+        return downloadProgress.keys.contains(file.path) && !completedPaths.contains(file.path)
     }
 
-    func progress(for file: FSFile) -> Double {
-        return downloadProgress[file.path] ?? 0.0
+    /// Returns the download progress (0.0–1.0), or nil if progress data is not yet available
+    func progress(for file: FSFile) -> Double? {
+        guard let entry = downloadProgress[file.path] else { return nil }
+        return entry
     }
 
     // MARK: - NSMetadataQuery monitoring
@@ -91,19 +93,21 @@ class FileDownloadManager {
             }
 
             // Only track files we've requested downloads for
-            guard downloadProgress[path] != nil else { continue }
+            guard downloadProgress.keys.contains(path) else { continue }
 
             let percent = item.value(
                 forAttribute: NSMetadataUbiquitousItemPercentDownloadedKey
-            ) as? Double ?? 0.0
+            ) as? Double
 
             let status = item.value(
                 forAttribute: NSMetadataUbiquitousItemDownloadingStatusKey
             ) as? String
 
-            downloadProgress[path] = min(percent / 100.0, 1.0)
+            if let percent {
+                downloadProgress[path] = min(percent / 100.0, 1.0)
+            }
 
-            if status == NSMetadataUbiquitousItemDownloadingStatusCurrent || percent >= 100.0 {
+            if status == NSMetadataUbiquitousItemDownloadingStatusCurrent || (percent ?? 0.0) >= 100.0 {
                 completedPaths.insert(path)
                 downloadProgress.removeValue(forKey: path)
                 if let handler = completionHandlers.removeValue(forKey: path) {

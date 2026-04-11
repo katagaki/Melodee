@@ -11,7 +11,6 @@ struct FBContextMenu: View {
 
     @Environment(FilesystemManager.self) var fileManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
-    @Environment(FileDownloadManager.self) var downloadManager
 
     @Binding var state: FBState
     var file: any FilesystemObject
@@ -24,42 +23,20 @@ struct FBContextMenu: View {
             // File type specific actions
             if file.type == .audio {
                 Button {
-                    if file.isEvicted() {
-                        downloadManager.startDownload(for: file) {
-                            mediaPlayer.playImmediately(file)
-                        }
-                    } else {
-                        mediaPlayer.playImmediately(file)
-                    }
+                    mediaPlayer.playImmediately(file)
                 } label: {
                     Label("Shared.Play", systemImage: "play")
                 }
                 Button {
-                    if file.isEvicted() {
-                        downloadManager.startDownload(for: file) {
-                            withAnimation(.default.speed(2)) {
-                                mediaPlayer.queueNext(file: file)
-                            }
-                        }
-                    } else {
-                        withAnimation(.default.speed(2)) {
-                            mediaPlayer.queueNext(file: file)
-                        }
+                    withAnimation(.default.speed(2)) {
+                        mediaPlayer.queueNext(file: file)
                     }
                 } label: {
                     Label("Shared.Play.Next", systemImage: "text.line.first.and.arrowtriangle.forward")
                 }
                 Button {
-                    if file.isEvicted() {
-                        downloadManager.startDownload(for: file) {
-                            withAnimation(.default.speed(2)) {
-                                mediaPlayer.queueLast(file: file)
-                            }
-                        }
-                    } else {
-                        withAnimation(.default.speed(2)) {
-                            mediaPlayer.queueLast(file: file)
-                        }
+                    withAnimation(.default.speed(2)) {
+                        mediaPlayer.queueLast(file: file)
                     }
                 } label: {
                     Label("Shared.Play.Last", systemImage: "text.line.last.and.arrowtriangle.forward")

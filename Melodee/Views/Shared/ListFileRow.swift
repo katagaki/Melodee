@@ -52,29 +52,26 @@ struct ListFileRow: View {
                     .font(.body)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                HStack(spacing: 4.0) {
-                    if downloadManager.isDownloading(file) {
-                        if let progress = downloadManager.progress(for: file), progress > 0.0 {
-                            CircularProgressView(progress: progress)
-                                .frame(width: 10.0, height: 10.0)
-                        } else {
-                            ProgressView()
-                                .controlSize(.mini)
-                                .frame(width: 10.0, height: 10.0)
-                        }
-                    } else if file.isEvicted() {
-                        Image(systemName: "icloud.and.arrow.down")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
-                    Text(subtitle ?? URL(filePath: file.path).fileSizeString)
-                        .font(.caption)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                        .foregroundStyle(.secondary)
-                }
+                Text(subtitle ?? URL(filePath: file.path).fileSizeString)
+                    .font(.caption)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .foregroundStyle(.secondary)
             }
             Spacer()
+            if downloadManager.isDownloading(file) {
+                if let progress = downloadManager.progress(for: file), progress > 0.0 {
+                    CircularProgressView(progress: progress)
+                        .frame(width: 16.0, height: 16.0)
+                } else {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+            } else if file.isEvicted() {
+                Image(systemName: "icloud.and.arrow.down")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
             if file.type == .audio {
                 Text(file.extension.uppercased())
                     .font(.caption2)

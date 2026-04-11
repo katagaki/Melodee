@@ -19,6 +19,7 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored let remoteCommandCenter = MPRemoteCommandCenter.shared()
     @ObservationIgnored let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
     @ObservationIgnored var audioPlayer: AVAudioPlayer?
+    @ObservationIgnored var downloadManager: FileDownloadManager?
     var isPlaybackActive: Bool = false
     var isPaused: Bool = true
     var repeatMode: RepeatMode = .none
@@ -148,13 +149,27 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
             queue.insert(file, at: currentlyPlayingIndex)
             setQueueIDs()
         }
+        // Set the currently playing ID before attempting playback
+        if file.playbackQueueID.isEmpty, currentlyPlayingIndex < queue.count {
+            currentlyPlayingID = queue[currentlyPlayingIndex].playbackQueueID
+        } else {
+            currentlyPlayingID = file.playbackQueueID
+        }
+        // If the file is evicted from iCloud, download it first
+        if file.isEvicted(), let downloadManager {
+            isPlaybackActive = true
+            isPaused = true
+            downloadManager.startDownload(for: file) { [weak self] in
+                self?.loadAndPlay(file)
+            }
+            return
+        }
+        loadAndPlay(file)
+    }
+
+    private func loadAndPlay(_ file: FSFile) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
-            if file.playbackQueueID.isEmpty, currentlyPlayingIndex < queue.count {
-                currentlyPlayingID = queue[currentlyPlayingIndex].playbackQueueID
-            } else {
-                currentlyPlayingID = file.playbackQueueID
-            }
             play()
         } catch {
             debugPrint(error.localizedDescription)
@@ -187,17 +202,16 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         } else {
             let index = currentlyPlayingIndex()
             guard !queue.isEmpty, index < queue.count else { return }
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: queue[index].path))
-                currentlyPlayingID = queue[index].playbackQueueID
-                play()
-            } catch {
-                debugPrint(error.localizedDescription)
-                if canGoToNextTrack() {
-                    skipToNextTrack()
-                } else {
-                    stop()
+            let file = queue[index]
+            currentlyPlayingID = file.playbackQueueID
+            if file.isEvicted(), let downloadManager {
+                isPlaybackActive = true
+                isPaused = true
+                downloadManager.startDownload(for: file) { [weak self] in
+                    self?.loadAndPlay(file)
                 }
+            } else {
+                loadAndPlay(file)
             }
         }
     }

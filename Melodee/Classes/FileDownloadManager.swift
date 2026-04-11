@@ -12,12 +12,10 @@ class FileDownloadManager {
 
     @ObservationIgnored private var metadataQuery: NSMetadataQuery?
     @ObservationIgnored private var observer: Any?
+    @ObservationIgnored private var pollTimer: Timer?
 
     /// Map of file path → download progress (0.0 to 1.0), nil means no progress data yet
     var downloadProgress: [String: Double?] = [:]
-
-    /// Files that have completed downloading and are ready for use
-    var completedPaths: Set<String> = []
 
     /// Callbacks to invoke when a specific file finishes downloading
     @ObservationIgnored private var completionHandlers: [String: () -> Void] = [:]
@@ -46,7 +44,7 @@ class FileDownloadManager {
     }
 
     func isDownloading(_ file: FSFile) -> Bool {
-        return downloadProgress.keys.contains(file.path) && !completedPaths.contains(file.path)
+        return downloadProgress.keys.contains(file.path)
     }
 
     /// Returns the download progress (0.0–1.0), or nil if progress data is not yet available
@@ -55,7 +53,7 @@ class FileDownloadManager {
         return entry
     }
 
-    // MARK: - NSMetadataQuery monitoring
+    // MARK: - Monitoring
 
     private func startMonitoring() {
         let query = NSMetadataQuery()
@@ -72,12 +70,40 @@ class FileDownloadManager {
 
         metadataQuery = query
         query.start()
+
+        // Poll for file existence as a reliable fallback for completion detection.
+        // NSMetadataQuery paths may not match FSFile paths (due to .icloud stripping),
+        // so polling ensures we detect when the real file appears on disk.
+        pollTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.pollForCompletedDownloads()
+        }
     }
 
     private func stopMonitoring() {
         metadataQuery?.stop()
+        pollTimer?.invalidate()
         if let observer {
             NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
+    private func pollForCompletedDownloads() {
+        for path in Array(downloadProgress.keys) {
+            let fileURL = URL(filePath: path)
+            // Check if the real file now exists on disk (not the .icloud placeholder)
+            guard FileManager.default.fileExists(atPath: fileURL.path(percentEncoded: false)) else {
+                continue
+            }
+            // Verify it's actually downloaded via resource values if it's a ubiquitous item
+            do {
+                let values = try fileURL.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+                if let status = values.ubiquitousItemDownloadingStatus, status != .current {
+                    continue
+                }
+            } catch {
+                // Not a ubiquitous item or error reading - if the file exists, treat as downloaded
+            }
+            markCompleted(path: path)
         }
     }
 
@@ -108,12 +134,15 @@ class FileDownloadManager {
             }
 
             if status == NSMetadataUbiquitousItemDownloadingStatusCurrent || (percent ?? 0.0) >= 100.0 {
-                completedPaths.insert(path)
-                downloadProgress.removeValue(forKey: path)
-                if let handler = completionHandlers.removeValue(forKey: path) {
-                    handler()
-                }
+                markCompleted(path: path)
             }
+        }
+    }
+
+    private func markCompleted(path: String) {
+        downloadProgress.removeValue(forKey: path)
+        if let handler = completionHandlers.removeValue(forKey: path) {
+            handler()
         }
     }
 }

@@ -21,6 +21,7 @@ struct MelodeeApp: App {
                 .task {
                     debugPrint("Creating placeholder files")
                     fileManager.createPlaceholders()
+                    mediaPlayerManager.downloadManager = fileDownloadManager
                 }
                 .environment(fileManager)
                 .environment(mediaPlayerManager)

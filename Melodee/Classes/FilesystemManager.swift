@@ -133,15 +133,14 @@ class FilesystemManager {
     }
 
     func createDirectory(at directoryPath: String) {
-        if let url = URL(string: directoryPath) {
-            if !directoryOrFileExists(at: url) {
-                do {
-                    try FileManager.default.createDirectory(atPath: directoryPath,
-                                                            withIntermediateDirectories: true,
-                                                            attributes: nil)
-                } catch {
-                    debugPrint("Error occurred while creating directory: \(error.localizedDescription)")
-                }
+        let url = URL(fileURLWithPath: directoryPath)
+        if !directoryOrFileExists(at: url) {
+            do {
+                try FileManager.default.createDirectory(atPath: directoryPath,
+                                                        withIntermediateDirectories: true,
+                                                        attributes: nil)
+            } catch {
+                debugPrint("Error occurred while creating directory: \(error.localizedDescription)")
             }
         }
     }

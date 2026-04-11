@@ -11,6 +11,7 @@ import SwiftUI
 struct ListFileRow: View {
 
     @Environment(MediaPlayerManager.self) var mediaPlayer
+    @Environment(FileDownloadManager.self) var downloadManager
 
     @Binding var file: FSFile
     var subtitle: String?
@@ -58,6 +59,19 @@ struct ListFileRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
+            if downloadManager.isDownloading(file) {
+                if let progress = downloadManager.progress(for: file), progress > 0.0 {
+                    CircularProgressView(progress: progress)
+                        .frame(width: 16.0, height: 16.0)
+                } else {
+                    ProgressView()
+                        .controlSize(.small)
+                }
+            } else if file.isEvicted() {
+                Image(systemName: "icloud.and.arrow.down")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
             if file.type == .audio {
                 Text(file.extension.uppercased())
                     .font(.caption2)
@@ -71,6 +85,11 @@ struct ListFileRow: View {
         }
         .task {
             if !isThumbnailFetchCompleted {
+                // Don't try to read thumbnails from evicted iCloud files
+                guard !file.isEvicted() else {
+                    isThumbnailFetchCompleted = true
+                    return
+                }
                 let filePath = file.path
                 let isTaggable = file.isTaggableAudio()
                 let isImage = file.type == .image
@@ -122,7 +141,7 @@ struct ListFileRow: View {
         } catch {
             debugPrint(error.localizedDescription)
         }
-        return UIImage(named: "Album.Generic")!
+        return UIImage(named: "Album.Generic") ?? UIImage()
     }
 
 }

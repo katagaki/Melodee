@@ -61,4 +61,25 @@ struct FSFile: FilesystemObject {
     func availableConversionFormats() -> [String] {
         return AudioConverter.availableFormats(for: self.extension)
     }
+
+    /// Returns true if this file is stored in iCloud and not yet downloaded locally
+    func isEvicted() -> Bool {
+        let url = URL(filePath: path)
+        // Check if the .icloud placeholder file exists
+        let placeholderName = ".\(url.lastPathComponent).icloud"
+        let placeholderURL = url.deletingLastPathComponent().appending(path: placeholderName)
+        if FileManager.default.fileExists(atPath: placeholderURL.path(percentEncoded: false)) {
+            return true
+        }
+        // Also check via resource values for ubiquitous items
+        do {
+            let values = try url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+            if let status = values.ubiquitousItemDownloadingStatus {
+                return status != .current
+            }
+        } catch {
+            // Not a ubiquitous item, treat as local
+        }
+        return false
+    }
 }

@@ -24,6 +24,8 @@ struct FBAudioFileRow: View {
                 .tint(.primary)
         }
         .task(id: sortOption) {
+            // Don't read tags from evicted iCloud files
+            guard !file.isEvicted() else { return }
             tagSubtitle = readTagSubtitle()
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {

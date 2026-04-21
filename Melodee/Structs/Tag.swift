@@ -10,6 +10,7 @@ import Foundation
 struct Tag {
 
     var albumArt: Data?
+    var shouldRemoveAlbumArt: Bool = false
     var title: String?
     var artist: String?
     var album: String?

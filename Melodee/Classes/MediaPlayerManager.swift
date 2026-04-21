@@ -179,31 +179,30 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
             // Show a loading state while the decoder runs.
             isPlaybackActive = true
             isPaused = true
-            Task.detached(priority: .userInitiated) { [weak self] in
+            nonisolated(unsafe) let managerRef = self
+            Task.detached(priority: .userInitiated) {
                 do {
                     let tempURL = FileManager.default.temporaryDirectory
                         .appendingPathComponent(UUID().uuidString)
                         .appendingPathExtension("m4a")
                     try OGGConverter.convertOpusOGGToM4aFile(src: sourceURL, dest: tempURL)
                     await MainActor.run {
-                        guard let self else { return }
                         // If the user skipped to another track while we were decoding, discard.
-                        guard self.currentlyPlayingID == requestedID else {
+                        guard managerRef.currentlyPlayingID == requestedID else {
                             try? FileManager.default.removeItem(at: tempURL)
                             return
                         }
-                        self.cleanUpTemporaryDecodedFile()
-                        self.temporaryDecodedURL = tempURL
-                        self.loadAndPlayFromURL(tempURL)
+                        managerRef.cleanUpTemporaryDecodedFile()
+                        managerRef.temporaryDecodedURL = tempURL
+                        managerRef.loadAndPlayFromURL(tempURL)
                     }
                 } catch {
                     debugPrint("OGG decode failed: \(error.localizedDescription)")
                     await MainActor.run {
-                        guard let self else { return }
-                        if self.canGoToNextTrack() {
-                            self.skipToNextTrack()
+                        if managerRef.canGoToNextTrack() {
+                            managerRef.skipToNextTrack()
                         } else {
-                            self.stop()
+                            managerRef.stop()
                         }
                     }
                 }

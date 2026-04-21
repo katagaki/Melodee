@@ -412,6 +412,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """),
+        Dependency(name: "swift-ogg", licenseText: """
+swift-ogg is licensed under the Apache License, Version 2.0
+(see http://www.apache.org/licenses/LICENSE-2.0).
+
+The bundled opus-swift and ogg-swift wrappers are released under
+the MIT License, and the underlying libopus and libogg libraries
+are released under the BSD License.
+
+Copyright (c) 2022 Vector Creations Ltd
+"""),
         Dependency(name: "Zoomy", licenseText: """
 Copyright (c) 2018 Menno Lovink <mclovink@me.com>
 

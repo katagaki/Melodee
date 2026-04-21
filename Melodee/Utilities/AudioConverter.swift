@@ -9,6 +9,7 @@
 @preconcurrency import AVFoundation
 import Foundation
 import LAME
+import SwiftOGG
 
 enum AudioConversionError: Error {
     case invalidInputFile
@@ -61,6 +62,18 @@ class AudioConverter {
         // For MP3 output, use SwiftLAME encoder
         if targetFormat.lowercased() == "mp3" {
             return try await convertToMP3(
+                sourceFile: sourceFile,
+                sourceURL: sourceURL,
+                outputURL: outputURL,
+                targetFormat: targetFormat,
+                deleteOriginal: deleteOriginal,
+                progressHandler: progressHandler
+            )
+        }
+
+        // For OGG output, encode via SwiftOGG (going through an intermediate M4A when needed)
+        if targetFormat.lowercased() == "ogg" {
+            return try await convertToOGG(
                 sourceFile: sourceFile,
                 sourceURL: sourceURL,
                 outputURL: outputURL,
@@ -344,6 +357,108 @@ class AudioConverter {
     }
     // swiftlint:enable function_parameter_count function_body_length
 
+    /// Converts audio to Opus-in-OGG using SwiftOGG.
+    /// SwiftOGG only exposes direct M4A <-> OGG conversion, so non-M4A sources
+    /// are first transcoded to a temporary M4A file and then encoded to OGG.
+    private static func convertToOGG( // swiftlint:disable:this function_parameter_count
+        sourceFile: FSFile,
+        sourceURL: URL,
+        outputURL: URL,
+        targetFormat: String,
+        deleteOriginal: Bool,
+        progressHandler: (@Sendable (Double) -> Void)?
+    ) async throws -> FSFile {
+        let intermediateM4aURL: URL?
+        let encoderInputURL: URL
+
+        if sourceFile.extension.lowercased() == "m4a" {
+            intermediateM4aURL = nil
+            encoderInputURL = sourceURL
+            progressHandler?(0.0)
+        } else {
+            // Transcode to a temporary M4A first. Report half of the progress on the first leg.
+            let tempURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent(UUID().uuidString)
+                .appendingPathExtension("m4a")
+            intermediateM4aURL = tempURL
+
+            let intermediateProgress: (@Sendable (Double) -> Void)? = progressHandler.map { handler in
+                { value in handler(value * 0.5) }
+            }
+            try await transcodeToM4A(
+                sourceURL: sourceURL,
+                outputURL: tempURL,
+                progressHandler: intermediateProgress
+            )
+            encoderInputURL = tempURL
+        }
+
+        // Run the Opus encoder off the main actor; SwiftOGG performs blocking work.
+        let encoderInput = encoderInputURL
+        let encoderOutput = outputURL
+        try await Task.detached(priority: .userInitiated) {
+            try OGGConverter.convertM4aFileToOpusOGG(src: encoderInput, dest: encoderOutput)
+        }.value
+
+        if let intermediateM4aURL {
+            try? FileManager.default.removeItem(at: intermediateM4aURL)
+        }
+
+        progressHandler?(1.0)
+
+        if deleteOriginal {
+            try FileManager.default.removeItem(at: sourceURL)
+        }
+
+        return FSFile(
+            name: outputURL.deletingPathExtension().lastPathComponent,
+            extension: targetFormat.lowercased(),
+            path: outputURL.path,
+            type: .audio
+        )
+    }
+
+    /// Transcodes any AVFoundation-readable source to an M4A file at `outputURL`.
+    /// Used as an intermediate step when encoding sources that SwiftOGG can't accept directly.
+    private static func transcodeToM4A(
+        sourceURL: URL,
+        outputURL: URL,
+        progressHandler: (@Sendable (Double) -> Void)?
+    ) async throws {
+        let asset = AVURLAsset(url: sourceURL)
+        let preset = AVAssetExportPresetAppleM4A
+        let outputFileType = AVFileType.m4a
+
+        let isCompatible = await AVAssetExportSession.compatibility(
+            ofExportPreset: preset,
+            with: asset,
+            outputFileType: outputFileType
+        )
+        guard isCompatible else {
+            throw AudioConversionError.unsupportedConversion
+        }
+        guard let exportSession = AVAssetExportSession(asset: asset, presetName: preset) else {
+            throw AudioConversionError.exportSessionFailed
+        }
+
+        nonisolated(unsafe) let exportSessionRef = exportSession
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                try await exportSession.export(to: outputURL, as: outputFileType)
+            }
+            if let progressHandler {
+                group.addTask {
+                    while !Task.isCancelled {
+                        progressHandler(Double(exportSessionRef.progress))
+                        try await Task.sleep(nanoseconds: 100_000_000)
+                    }
+                }
+            }
+            try await group.next()
+            group.cancelAll()
+        }
+    }
+
     /// Checks if a conversion between two formats is supported
     static func isConversionSupported(from sourceFormat: String, to targetFormat: String) -> Bool {
         let source = sourceFormat.lowercased()
@@ -358,10 +473,10 @@ class AudioConverter {
         // MP3 encoding is now supported via SwiftLAME library
         // Prevent converting from lossy to lossless (doesn't improve quality)
         let supportedConversions: [String: [String]] = [
-            "wav": ["m4a", "mp3"],    // Lossless to lossy: OK (compression)
-            "mp3": ["m4a"],           // Lossy to lossy: OK (format change only, but not to MP3)
-            "m4a": ["mp3"],           // Lossy to lossy: OK (format change)
-            "alac": ["m4a", "wav", "mp3"]  // Lossless to anything: OK
+            "wav": ["m4a", "mp3", "ogg"],      // Lossless to lossy: OK (compression)
+            "mp3": ["m4a", "ogg"],             // Lossy to lossy: OK (format change only, but not to MP3)
+            "m4a": ["mp3", "ogg"],             // Lossy to lossy: OK (format change)
+            "alac": ["m4a", "wav", "mp3", "ogg"]  // Lossless to anything: OK
         ]
 
         return supportedConversions[source]?.contains(target) ?? false
@@ -374,10 +489,10 @@ class AudioConverter {
         // MP3 encoding is now supported via SwiftLAME library
         // Prevent converting from lossy to lossless (doesn't improve quality)
         let supportedConversions: [String: [String]] = [
-            "wav": ["m4a", "mp3"],    // Lossless to lossy: OK (compression)
-            "mp3": ["m4a"],           // Lossy to lossy: OK (format change only, but not to MP3)
-            "m4a": ["mp3"],           // Lossy to lossy: OK (format change)
-            "alac": ["m4a", "wav", "mp3"]  // Lossless to anything: OK
+            "wav": ["m4a", "mp3", "ogg"],      // Lossless to lossy: OK (compression)
+            "mp3": ["m4a", "ogg"],             // Lossy to lossy: OK (format change only, but not to MP3)
+            "m4a": ["mp3", "ogg"],             // Lossy to lossy: OK (format change)
+            "alac": ["m4a", "wav", "mp3", "ogg"]  // Lossless to anything: OK
         ]
 
         return supportedConversions[source] ?? []

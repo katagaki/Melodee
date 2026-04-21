@@ -8,6 +8,7 @@
 @preconcurrency import AVFAudio
 import Foundation
 @preconcurrency import MediaPlayer
+import SwiftOGG
 import SwiftTagger
 
 // swiftlint:disable type_body_length
@@ -20,6 +21,9 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     @ObservationIgnored let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
     @ObservationIgnored var audioPlayer: AVAudioPlayer?
     @ObservationIgnored var downloadManager: FileDownloadManager?
+    /// Temporary M4A file decoded from an OGG source for the current track.
+    /// Kept so it can be cleaned up when playback moves on.
+    @ObservationIgnored private var temporaryDecodedURL: URL?
     var isPlaybackActive: Bool = false
     var isPaused: Bool = true
     var repeatMode: RepeatMode = .none
@@ -168,8 +172,51 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     }
 
     private func loadAndPlay(_ file: FSFile) {
+        // AVAudioPlayer can't decode Opus-in-OGG, so transcode to a temporary M4A first.
+        if file.extension.lowercased() == "ogg" {
+            let sourceURL = URL(filePath: file.path)
+            let requestedID = currentlyPlayingID
+            // Show a loading state while the decoder runs.
+            isPlaybackActive = true
+            isPaused = true
+            Task.detached(priority: .userInitiated) { [weak self] in
+                do {
+                    let tempURL = FileManager.default.temporaryDirectory
+                        .appendingPathComponent(UUID().uuidString)
+                        .appendingPathExtension("m4a")
+                    try OGGConverter.convertOpusOGGToM4aFile(src: sourceURL, dest: tempURL)
+                    await MainActor.run {
+                        guard let self else { return }
+                        // If the user skipped to another track while we were decoding, discard.
+                        guard self.currentlyPlayingID == requestedID else {
+                            try? FileManager.default.removeItem(at: tempURL)
+                            return
+                        }
+                        self.cleanUpTemporaryDecodedFile()
+                        self.temporaryDecodedURL = tempURL
+                        self.loadAndPlayFromURL(tempURL)
+                    }
+                } catch {
+                    debugPrint("OGG decode failed: \(error.localizedDescription)")
+                    await MainActor.run {
+                        guard let self else { return }
+                        if self.canGoToNextTrack() {
+                            self.skipToNextTrack()
+                        } else {
+                            self.stop()
+                        }
+                    }
+                }
+            }
+            return
+        }
+        cleanUpTemporaryDecodedFile()
+        loadAndPlayFromURL(URL(filePath: file.path))
+    }
+
+    private func loadAndPlayFromURL(_ url: URL) {
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: URL(filePath: file.path))
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
             play()
         } catch {
             debugPrint(error.localizedDescription)
@@ -178,6 +225,13 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
             } else {
                 stop()
             }
+        }
+    }
+
+    private func cleanUpTemporaryDecodedFile() {
+        if let url = temporaryDecodedURL {
+            try? FileManager.default.removeItem(at: url)
+            temporaryDecodedURL = nil
         }
     }
 
@@ -245,6 +299,7 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         nowPlayingInfoCenter.nowPlayingInfo = nil
         isPlaybackActive = false
         isPaused = true
+        cleanUpTemporaryDecodedFile()
     }
 
     func skipToNextTrack() {

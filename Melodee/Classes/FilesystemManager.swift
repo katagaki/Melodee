@@ -109,7 +109,7 @@ class FilesystemManager {
     func fileType(for url: URL) -> FileType? {
         let fileExtension = url.pathExtension.lowercased()
         switch fileExtension {
-        case "mp3", "m4a", "wav", "alac": return .audio
+        case "mp3", "m4a", "wav", "alac", "ogg": return .audio
         case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
         case "txt": return .text
         case "pdf": return .pdf
@@ -122,7 +122,7 @@ class FilesystemManager {
 
     static func fileType(forExtension fileExtension: String) -> FileType {
         switch fileExtension {
-        case "mp3", "m4a", "wav", "alac": return .audio
+        case "mp3", "m4a", "wav", "alac", "ogg": return .audio
         case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
         case "txt": return .text
         case "pdf": return .pdf

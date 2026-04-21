@@ -1,5 +1,5 @@
 {
-  "originHash" : "22822789ba3e55ee34872c688839e22374c33e161e8acdfc38eee96bcf9b6f7e",
+  "originHash" : "db098d9daca0c2e312dfd1bf09f44e696e4669ae819a45e540c68040398e6ad6",
   "pins" : [
     {
       "identity" : "injectableloggers",
@@ -62,6 +62,33 @@
       "state" : {
         "revision" : "181a95b992f84d99a14c562c86e8ebef3cbcdca9",
         "version" : "1.1.5"
+      }
+    },
+    {
+      "identity" : "ogg-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vector-im/ogg-swift.git",
+      "state" : {
+        "revision" : "9d82ed838404f10b607a1a1689f404563e9115c3",
+        "version" : "0.8.3"
+      }
+    },
+    {
+      "identity" : "opus-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vector-im/opus-swift",
+      "state" : {
+        "revision" : "11f1887767cbc87c4b64b789ee830b779cc744cb",
+        "version" : "0.8.4"
+      }
+    },
+    {
+      "identity" : "swift-ogg",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/element-hq/swift-ogg",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d60d4dd3eaaa3b07eafed76420ea03b79a516a13"
       }
     },
     {

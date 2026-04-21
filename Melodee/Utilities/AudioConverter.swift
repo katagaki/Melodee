@@ -382,8 +382,11 @@ class AudioConverter {
                 .appendingPathExtension("m4a")
             intermediateM4aURL = tempURL
 
-            let intermediateProgress: (@Sendable (Double) -> Void)? = progressHandler.map { handler in
-                { value in handler(value * 0.5) }
+            let intermediateProgress: (@Sendable (Double) -> Void)?
+            if let handler = progressHandler {
+                intermediateProgress = { value in handler(value * 0.5) }
+            } else {
+                intermediateProgress = nil
             }
             try await transcodeToM4A(
                 sourceURL: sourceURL,

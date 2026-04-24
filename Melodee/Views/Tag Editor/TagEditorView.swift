@@ -80,6 +80,15 @@ struct TagEditorView: View {
                             } label: {
                                 Text("TagEditor.SelectAlbumArt.FromFiles")
                             }
+                            if tagData.albumArt != nil {
+                                Button(role: .destructive) {
+                                    selectedPhoto = nil
+                                    tagData.albumArt = nil
+                                    tagData.shouldRemoveAlbumArt = true
+                                } label: {
+                                    Text("TagEditor.RemoveAlbumArt")
+                                }
+                            }
                         }
                     }
                     Spacer(minLength: .zero)
@@ -143,6 +152,7 @@ struct TagEditorView: View {
                     selectedPhoto = nil
                     let imageFileData: Data? = try? Data(contentsOf: url)
                     tagData.albumArt = imageFileData
+                    tagData.shouldRemoveAlbumArt = false
                 }
                 url.stopAccessingSecurityScopedResource()
             })
@@ -173,6 +183,7 @@ struct TagEditorView: View {
                 if let selectedPhoto = selectedPhoto,
                     let data = try? await selectedPhoto.loadTransferable(type: Data.self) {
                     tagData.albumArt = data
+                    tagData.shouldRemoveAlbumArt = false
                 }
             }
         }

@@ -86,13 +86,19 @@ extension AudioFile {
             if let value = tagData.composer {
                 metadata.composer = replaceTokens(value, file: file)
             }
-            if let value = tagData.discNumber, !value.isEmpty, let disc = Int(value) {
-                metadata.discNumber = disc
+            if let value = tagData.discNumber {
+                if value.isEmpty {
+                    metadata.discNumber = nil
+                } else if let disc = Int(value) {
+                    metadata.discNumber = disc
+                }
             }
             if let data = tagData.albumArt {
                 metadata.removeAttachedPictures(ofType: .frontCover)
                 let picture = AttachedPicture(imageData: data, type: .frontCover)
                 metadata.attachPicture(picture)
+            } else if tagData.shouldRemoveAlbumArt {
+                metadata.removeAllAttachedPictures()
             }
             try writeMetadata()
             return true

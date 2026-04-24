@@ -12,7 +12,6 @@ A basic audio file player built for iOS.
 - Viewing the directory structure
 - Renaming files
 - Playing audio files (MP3, M4A, WAV, ALAC, OGG)
-- Converting WAV, MP3, M4A, and ALAC files to OGG (Opus)
 - Queuing audio files
 - Controlling audio from the Lock Screen or Control Center
 - Viewing, editing, and saving ID3 tags in MP3 files

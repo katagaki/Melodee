@@ -206,7 +206,7 @@ class AudioConverter {
                         progressHandler: progressHandler
                     )
 
-                    // Write minimal ID3 tag for SwiftTagger compatibility
+                    // Write a minimal ID3v2 container so downstream tag editors have a writable tag.
                     try writeMinimalID3Tag(to: outputURL)
 
                     // Delete original if requested
@@ -527,7 +527,7 @@ extension AudioConverter {
     }
     // swiftlint:enable cyclomatic_complexity function_parameter_count function_body_length
 
-    /// Writes a minimal ID3v2.3 tag to an MP3 file to make it compatible with SwiftTagger
+    /// Writes a minimal ID3v2.3 header to an MP3 file so downstream tag editors have a writable container.
     fileprivate static func writeMinimalID3Tag(to url: URL) throws {
         // Read the existing MP3 data
         guard let fileHandle = try? FileHandle(forUpdating: url) else {

@@ -8,22 +8,19 @@
 @preconcurrency import AVFAudio
 import Foundation
 @preconcurrency import MediaPlayer
-import SwiftOGG
-import SwiftTagger
+import SFBAudioEngine
+import UIKit
 
-// swiftlint:disable type_body_length
+// swiftlint:disable type_body_length file_length
 @Observable
-class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
+class MediaPlayerManager: NSObject, AudioPlayerDelegate {
 
     @ObservationIgnored let notificationCenter = NotificationCenter.default
     @ObservationIgnored let audioSession = AVAudioSession.sharedInstance()
     @ObservationIgnored let remoteCommandCenter = MPRemoteCommandCenter.shared()
     @ObservationIgnored let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-    @ObservationIgnored var audioPlayer: AVAudioPlayer?
+    @ObservationIgnored let audioPlayer = AudioPlayer()
     @ObservationIgnored var downloadManager: FileDownloadManager?
-    /// Temporary M4A file decoded from an OGG source for the current track.
-    /// Kept so it can be cleaned up when playback moves on.
-    @ObservationIgnored private var temporaryDecodedURL: URL?
     var isPlaybackActive: Bool = false
     var isPaused: Bool = true
     var repeatMode: RepeatMode = .none
@@ -32,16 +29,17 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     override init() {
         super.init()
+        audioPlayer.delegate = self
         // Set up remote controls
         remoteCommandCenter.playCommand.addTarget { _ in
-            if let audioPlayer = self.audioPlayer, !audioPlayer.isPlaying {
+            if !self.audioPlayer.isPlaying, self.canStartPlayback() {
                 self.play()
                 return .success
             }
             return .commandFailed
         }
         remoteCommandCenter.pauseCommand.addTarget { _ in
-            if let audioPlayer = self.audioPlayer, audioPlayer.isPlaying {
+            if self.audioPlayer.isPlaying {
                 self.pause()
                 return .success
             }
@@ -62,62 +60,35 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
             }
             return .commandFailed
         }
-        // Set up interruption notification observer
-        notificationCenter.addObserver(self,
-                                       selector: #selector(handleInterruption),
-                                       name: AVAudioSession.interruptionNotification,
-                                       object: AVAudioSession.sharedInstance())
     }
 
     func currentlyPlayingTitle() -> String? {
-        if audioPlayer != nil, let file = currentlyPlayingFile() {
-            if file.isTaggableAudio() {
-                do {
-                    let fileURL = URL(fileURLWithPath: file.path)
-                    let audioFile = try AudioFile(location: fileURL)
-                    return audioFile.title ?? file.name
-                } catch {
-                    debugPrint(error.localizedDescription)
-                }
-            }
-            return file.name
-        } else {
-            return nil
+        guard isPlaybackActive, let file = currentlyPlayingFile() else { return nil }
+        if file.isTaggableAudio(), let title = try? readMetadata(for: file)?.title, !title.isEmpty {
+            return title
         }
+        return file.name
     }
 
     func currentlyPlayingArtistName() -> String? {
-        if audioPlayer != nil, let file = currentlyPlayingFile() {
-            if file.isTaggableAudio() {
-                do {
-                    let fileURL = URL(fileURLWithPath: file.path)
-                    let audioFile = try AudioFile(location: fileURL)
-                    return audioFile.artist ?? NSLocalizedString("Shared.UnknownArtist", comment: "")
-                } catch {
-                    debugPrint(error.localizedDescription)
-                }
-            }
-            return NSLocalizedString("Shared.UnknownArtist", comment: "")
-        } else {
-            return nil
+        guard isPlaybackActive, let file = currentlyPlayingFile() else { return nil }
+        if file.isTaggableAudio(), let artist = try? readMetadata(for: file)?.artist, !artist.isEmpty {
+            return artist
         }
+        return NSLocalizedString("Shared.UnknownArtist", comment: "")
     }
 
     func currentlyPlayingAlbumName() -> String? {
-        if audioPlayer != nil, let file = currentlyPlayingFile() {
-            if file.isTaggableAudio() {
-                do {
-                    let fileURL = URL(fileURLWithPath: file.path)
-                    let audioFile = try AudioFile(location: fileURL)
-                    return audioFile.album ?? file.containingFolderName()
-                } catch {
-                    debugPrint(error.localizedDescription)
-                }
-            }
-            return file.containingFolderName()
-        } else {
-            return nil
+        guard isPlaybackActive, let file = currentlyPlayingFile() else { return nil }
+        if file.isTaggableAudio(), let album = try? readMetadata(for: file)?.albumTitle, !album.isEmpty {
+            return album
         }
+        return file.containingFolderName()
+    }
+
+    private func readMetadata(for file: FSFile) throws -> AudioMetadata? {
+        let fileURL = URL(fileURLWithPath: file.path)
+        return try AudioFile(readingPropertiesAndMetadataFrom: fileURL).metadata
     }
 
     func currentlyPlayingFile() -> FSFile? {
@@ -144,9 +115,7 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     func playImmediately(_ file: FSFile, addToQueue: Bool = true) {
         // Stop audio if it's playing
-        if let audioPlayer = audioPlayer {
-            audioPlayer.stop()
-        }
+        audioPlayer.stop()
         // Queue and/or play new file
         let currentlyPlayingIndex = currentlyPlayingIndex()
         if addToQueue {
@@ -172,53 +141,15 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     }
 
     private func loadAndPlay(_ file: FSFile) {
-        // AVAudioPlayer can't decode Opus-in-OGG, so transcode to a temporary M4A first.
-        if file.extension.lowercased() == "ogg" {
-            let sourceURL = URL(filePath: file.path)
-            let requestedID = currentlyPlayingID
-            // Show a loading state while the decoder runs.
-            isPlaybackActive = true
-            isPaused = true
-            nonisolated(unsafe) let managerRef = self
-            Task.detached(priority: .userInitiated) {
-                do {
-                    let tempURL = FileManager.default.temporaryDirectory
-                        .appendingPathComponent(UUID().uuidString)
-                        .appendingPathExtension("m4a")
-                    try OGGConverter.convertOpusOGGToM4aFile(src: sourceURL, dest: tempURL)
-                    await MainActor.run {
-                        // If the user skipped to another track while we were decoding, discard.
-                        guard managerRef.currentlyPlayingID == requestedID else {
-                            try? FileManager.default.removeItem(at: tempURL)
-                            return
-                        }
-                        managerRef.cleanUpTemporaryDecodedFile()
-                        managerRef.temporaryDecodedURL = tempURL
-                        managerRef.loadAndPlayFromURL(tempURL)
-                    }
-                } catch {
-                    debugPrint("OGG decode failed: \(error.localizedDescription)")
-                    await MainActor.run {
-                        if managerRef.canGoToNextTrack() {
-                            managerRef.skipToNextTrack()
-                        } else {
-                            managerRef.stop()
-                        }
-                    }
-                }
-            }
-            return
-        }
-        cleanUpTemporaryDecodedFile()
-        loadAndPlayFromURL(URL(filePath: file.path))
-    }
-
-    private func loadAndPlayFromURL(_ url: URL) {
+        activateAudioSession()
+        let url = URL(fileURLWithPath: file.path)
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            play()
+            try audioPlayer.play(url)
+            isPlaybackActive = true
+            isPaused = false
+            setNowPlaying()
         } catch {
-            debugPrint(error.localizedDescription)
+            debugPrint("Failed to start playback: \(error.localizedDescription)")
             if canGoToNextTrack() {
                 skipToNextTrack()
             } else {
@@ -227,15 +158,7 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         }
     }
 
-    private func cleanUpTemporaryDecodedFile() {
-        if let url = temporaryDecodedURL {
-            try? FileManager.default.removeItem(at: url)
-            temporaryDecodedURL = nil
-        }
-    }
-
-    func play() {
-        // Set up audio session
+    private func activateAudioSession() {
         MainActor.assumeIsolated {
             UIApplication.shared.beginReceivingRemoteControlEvents()
         }
@@ -245,27 +168,40 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         } catch {
             debugPrint(error.localizedDescription)
         }
-        // Play audio
-        if let audioPlayer = audioPlayer {
-            audioPlayer.delegate = self
-            audioPlayer.play()
+    }
+
+    func play() {
+        activateAudioSession()
+        if audioPlayer.isPaused {
+            do {
+                try audioPlayer.play()
+                isPlaybackActive = true
+                isPaused = false
+                setNowPlaying()
+                return
+            } catch {
+                debugPrint("Failed to resume playback: \(error.localizedDescription)")
+            }
+        }
+        if audioPlayer.isPlaying {
             isPlaybackActive = true
             isPaused = false
             setNowPlaying()
-        } else {
-            let index = currentlyPlayingIndex()
-            guard !queue.isEmpty, index < queue.count else { return }
-            let file = queue[index]
-            currentlyPlayingID = file.playbackQueueID
-            if file.isEvicted(), let downloadManager {
-                isPlaybackActive = true
-                isPaused = true
-                downloadManager.startDownload(for: file) { [weak self] in
-                    self?.loadAndPlay(file)
-                }
-            } else {
-                loadAndPlay(file)
+            return
+        }
+        // Stopped — start from the queue.
+        let index = currentlyPlayingIndex()
+        guard !queue.isEmpty, index < queue.count else { return }
+        let file = queue[index]
+        currentlyPlayingID = file.playbackQueueID
+        if file.isEvicted(), let downloadManager {
+            isPlaybackActive = true
+            isPaused = true
+            downloadManager.startDownload(for: file) { [weak self] in
+                self?.loadAndPlay(file)
             }
+        } else {
+            loadAndPlay(file)
         }
     }
 
@@ -282,23 +218,17 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     }
 
     func pause() {
-        if let audioPlayer = audioPlayer {
-            audioPlayer.pause()
-            isPaused = true
-        }
+        audioPlayer.pause()
+        isPaused = true
     }
 
     func stop() {
-        if let audioPlayer = audioPlayer {
-            audioPlayer.stop()
-        }
+        audioPlayer.stop()
         queue.removeAll()
-        self.audioPlayer = nil
         currentlyPlayingID = ""
         nowPlayingInfoCenter.nowPlayingInfo = nil
         isPlaybackActive = false
         isPaused = true
-        cleanUpTemporaryDecodedFile()
     }
 
     func skipToNextTrack() {
@@ -318,10 +248,9 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     }
 
     func seekTo(_ time: TimeInterval) {
-        if let audioPlayer = audioPlayer {
-            audioPlayer.currentTime = time
-            setNowPlaying()
-        }
+        guard audioPlayer.supportsSeeking else { return }
+        audioPlayer.seek(time: time)
+        setNowPlaying()
     }
 
     func setQueueIDs() {
@@ -331,21 +260,21 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
     }
 
     func setNowPlaying() {
-        if let audioPlayer = audioPlayer {
-            nonisolated(unsafe) let managerRef = self
-            Task { @MainActor in
-                await managerRef.setNowPlaying(with: audioPlayer)
-            }
+        nonisolated(unsafe) let managerRef = self
+        Task { @MainActor in
+            await managerRef.setNowPlayingOnMain()
         }
     }
 
-    func setNowPlaying(with audioPlayer: AVAudioPlayer) async {
+    @MainActor
+    private func setNowPlayingOnMain() async {
         // Set remote command center command enable/disable
+        let playing = audioPlayer.isPlaying
         remoteCommandCenter.playCommand.isEnabled = canStartPlayback()
-        remoteCommandCenter.pauseCommand.isEnabled = audioPlayer.isPlaying
+        remoteCommandCenter.pauseCommand.isEnabled = playing
         remoteCommandCenter.nextTrackCommand.isEnabled = canGoToNextTrack()
         remoteCommandCenter.previousTrackCommand.isEnabled = canGoToPreviousTrack()
-        remoteCommandCenter.changePlaybackPositionCommand.isEnabled = audioPlayer.isPlaying
+        remoteCommandCenter.changePlaybackPositionCommand.isEnabled = playing && audioPlayer.supportsSeeking
         // Set now playing info
         let albumArt = await albumArt()
         var nowPlayingInfo = [String: Any]()
@@ -354,55 +283,83 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in
             return albumArt
         }
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = audioPlayer.currentTime
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = audioPlayer.duration
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = audioPlayer.rate
+        if let time = audioPlayer.time {
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time.currentTime
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = time.totalTime
+        }
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = playing ? 1.0 : 0.0
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 
-    @objc func handleInterruption(notification: Notification) {
-        guard let userInfo = notification.userInfo,
-            let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
-                return
+    func albumArt() async -> UIImage {
+        if let file = currentlyPlayingFile(),
+           let metadata = try? readMetadata(for: file),
+           let picture = metadata.attachedPictures(ofType: .frontCover).first
+            ?? metadata.attachedPictures.first,
+           let image = UIImage(data: picture.imageData) {
+            return image
         }
+        return UIImage(named: "Album.Generic") ?? UIImage()
+    }
+
+    // MARK: - AudioPlayerDelegate
+
+    func audioPlayer(_ audioPlayer: AudioPlayer, renderingComplete decoder: PCMDecoding) {
+        nonisolated(unsafe) let managerRef = self
+        Task { @MainActor in
+            managerRef.handleRenderingComplete()
+        }
+    }
+
+    func audioPlayer(_ audioPlayer: AudioPlayer, nowPlayingChanged nowPlaying: PCMDecoding?) {
+        nonisolated(unsafe) let managerRef = self
+        Task { @MainActor in
+            managerRef.setNowPlaying()
+        }
+    }
+
+    func audioPlayer(_ audioPlayer: AudioPlayer, playbackStateChanged playbackState: AudioPlayer.PlaybackState) {
+        nonisolated(unsafe) let managerRef = self
+        let isNowPaused = playbackState != .playing
+        Task { @MainActor in
+            managerRef.isPaused = isNowPaused
+            if playbackState == .playing {
+                managerRef.isPlaybackActive = true
+            }
+            managerRef.setNowPlaying()
+        }
+    }
+
+    func audioPlayer(_ audioPlayer: AudioPlayer, encounteredError error: Error) {
+        debugPrint("SFBAudioEngine error: \(error.localizedDescription)")
+    }
+
+    func audioPlayer(
+        _ audioPlayer: AudioPlayer,
+        audioSessionInterruption notification: Notification,
+        userInfo: [AnyHashable: Any]
+    ) {
+        guard let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        nonisolated(unsafe) let managerRef = self
         switch type {
         case .began:
-            isPaused = true
+            Task { @MainActor in managerRef.isPaused = true }
         case .ended:
             guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
             let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
             if options.contains(.shouldResume) {
-                isPaused = false
+                Task { @MainActor in managerRef.isPaused = false }
             }
         default: ()
         }
     }
 
-    func albumArt() async -> UIImage {
-        do {
-            if let url = audioPlayer?.url {
-                let asset = AVURLAsset(url: url)
-                let metadataList = try await asset.load(.metadata)
-                for item in metadataList {
-                    switch item.commonKey {
-                    case .commonKeyArtwork?:
-                        if let data = try await item.load(.dataValue),
-                           let image = UIImage(data: data) {
-                            return image
-                        }
-                    default: break
-                    }
-                }
-            }
-        } catch {
-            debugPrint(error.localizedDescription)
-        }
-        return UIImage(named: "Album.Generic") ?? UIImage()
-    }
-
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        debugPrint("AVAudioPlayer finished playing!")
+    @MainActor
+    private func handleRenderingComplete() {
+        debugPrint("SFBAudioEngine finished rendering track.")
         let index = currentlyPlayingIndex()
         guard !queue.isEmpty, index < queue.count else {
             debugPrint("Queue is empty or index out of bounds, stopping playback.")
@@ -412,8 +369,7 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         switch repeatMode {
         case .none:
             if index >= queue.count - 1 {
-                debugPrint("Killing AVAudioPlayer instance...")
-                audioPlayer = nil
+                debugPrint("Reached end of queue.")
                 nowPlayingInfoCenter.nowPlayingInfo = nil
                 isPlaybackActive = false
                 isPaused = true
@@ -435,4 +391,4 @@ class MediaPlayerManager: NSObject, AVAudioPlayerDelegate {
         }
     }
 }
-// swiftlint:enable type_body_length
+// swiftlint:enable type_body_length file_length

@@ -5,8 +5,8 @@
 //  Created by シン・ジャスティン on 2026/03/01.
 //
 
+import SFBAudioEngine
 import SwiftUI
-import SwiftTagger
 
 extension TagEditorView {
     func readAllTagData() async {
@@ -16,23 +16,17 @@ extension TagEditorView {
         initialLoadPercentage = 0
         for file in files {
             debugPrint("Attempting to read tag data for file \(file.name)...")
-            do {
-                let fileURL = URL(fileURLWithPath: file.path)
-                let audioFile = try AudioFile(location: fileURL)
-                audioFiles.updateValue(audioFile, forKey: file)
+            guard let audioFile = AudioFile.read(for: file) else {
+                initialLoadPercentage += 100 / files.count
+                continue
+            }
+            audioFiles.updateValue(audioFile, forKey: file)
 
-                nonisolated(unsafe) let audioFileRef = audioFile
-                if tagCombined == nil {
-                    tagCombined = await TagTyped(file, audioFile: audioFileRef)
-                } else {
-                    await tagCombined!.merge(with: file, audioFile: audioFileRef)
-                }
-            } catch {
-                debugPrint("Error occurred while reading tags: \n\(error.localizedDescription)")
-                // Try to create new tag
-                if let newAudioFile = AudioFile.newTag(for: file) {
-                    audioFiles.updateValue(newAudioFile, forKey: file)
-                }
+            nonisolated(unsafe) let audioFileRef = audioFile
+            if tagCombined == nil {
+                tagCombined = await TagTyped(file, audioFile: audioFileRef)
+            } else {
+                await tagCombined!.merge(with: file, audioFile: audioFileRef)
             }
             initialLoadPercentage += 100 / files.count
         }
@@ -49,8 +43,7 @@ extension TagEditorView {
         let audioFilesCopy = audioFiles
         let totalCount = audioFilesCopy.count
         for (file, audioFile) in audioFilesCopy {
-            var mutableAudioFile = audioFile
-            _ = mutableAudioFile.saveTagData(to: file, tagData: tagDataCopy)
+            _ = audioFile.saveTagData(to: file, tagData: tagDataCopy)
             savePercentage += 100 / totalCount
         }
     }

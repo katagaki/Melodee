@@ -7,7 +7,7 @@
 
 @preconcurrency import AVFoundation
 import Foundation
-import SwiftTagger
+import SFBAudioEngine
 
 struct TagTyped {
 
@@ -22,16 +22,16 @@ struct TagTyped {
     init(_ file: FSFile, audioFile: AudioFile) async {
         title = audioFile.title ?? ""
         artist = audioFile.artist ?? ""
-        album = audioFile.album ?? ""
+        album = audioFile.albumTitle ?? ""
         albumArtist = audioFile.albumArtist ?? ""
         year = audioFile.year
-        track = audioFile.trackNumber.index != 0 ? audioFile.trackNumber.index : nil
-        genre = audioFile.genreCustom ?? ""
+        track = audioFile.trackNumber
+        genre = audioFile.genre ?? ""
         composer = audioFile.composer ?? ""
-        discNumber = audioFile.discNumber.index != 0 ? audioFile.discNumber.index : nil
+        discNumber = audioFile.discNumber
 
-        if let coverArtImage = audioFile.coverArt {
-            albumArt = coverArtImage.pngData() ?? coverArtImage.jpegData(compressionQuality: 1.0)
+        if let data = audioFile.coverArtData {
+            albumArt = data
         } else {
             albumArt = await albumArtUsingAVPlayer(file: file)
         }
@@ -45,7 +45,7 @@ struct TagTyped {
         if artist != audioFile.artist ?? "" {
             artist = nil
         }
-        if album != audioFile.album ?? "" {
+        if album != audioFile.albumTitle ?? "" {
             album = nil
         }
         if albumArtist != audioFile.albumArtist ?? "" {
@@ -56,27 +56,23 @@ struct TagTyped {
         } else if audioFile.year == nil && year != nil {
             year = nil
         }
-        let trackFromTag = audioFile.trackNumber.index != 0 ? audioFile.trackNumber.index : nil
-        if let trackValue = trackFromTag, track != trackValue {
+        if let trackValue = audioFile.trackNumber, track != trackValue {
             track = nil
-        } else if trackFromTag == nil && track != nil {
+        } else if audioFile.trackNumber == nil && track != nil {
             track = nil
         }
-        if genre != audioFile.genreCustom ?? "" {
+        if genre != audioFile.genre ?? "" {
             genre = nil
         }
         if composer != audioFile.composer ?? "" {
             composer = nil
         }
-        let discNumberFromTag = audioFile.discNumber.index != 0 ? audioFile.discNumber.index : nil
-        if let discValue = discNumberFromTag,
-           discNumber != discValue {
+        if let discValue = audioFile.discNumber, discNumber != discValue {
             discNumber = nil
-        } else if discNumberFromTag == nil && discNumber != nil {
+        } else if audioFile.discNumber == nil && discNumber != nil {
             discNumber = nil
         }
-        if let coverArtImage = audioFile.coverArt,
-           let albumArtFromTag = coverArtImage.pngData() ?? coverArtImage.jpegData(compressionQuality: 1.0) {
+        if let albumArtFromTag = audioFile.coverArtData {
             if albumArt != albumArtFromTag {
                 albumArt = nil
             }
@@ -84,14 +80,13 @@ struct TagTyped {
             if albumArt != albumArtFromTag {
                 albumArt = nil
             }
-        } else {
-            if albumArt != nil {
-                albumArt = nil
-            }
+        } else if albumArt != nil {
+            albumArt = nil
         }
     }
     // swiftlint:enable cyclomatic_complexity
 
+    /// Fallback album-art source for containers where SFBAudioEngine couldn't surface an attached picture.
     func albumArtUsingAVPlayer(file: FSFile) async -> Data? {
         do {
             let asset = AVURLAsset(url: URL(filePath: file.path))

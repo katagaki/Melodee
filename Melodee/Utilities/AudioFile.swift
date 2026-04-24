@@ -6,110 +6,104 @@
 //
 
 import Foundation
-import SwiftTagger
+import SFBAudioEngine
 import UIKit
 
 extension AudioFile {
 
-    static func newTag(for file: FSFile) -> AudioFile? {
-        debugPrint("Attempting to create new tag...")
+    /// Opens a file for reading metadata via SFBAudioEngine. Returns nil on failure.
+    static func read(for file: FSFile) -> AudioFile? {
         do {
             let fileURL = URL(fileURLWithPath: file.path)
-            var audioFile = try AudioFile(location: fileURL)
-            audioFile.title = ""
-            try audioFile.write(outputLocation: fileURL)
-            return audioFile
+            return try AudioFile(readingPropertiesAndMetadataFrom: fileURL)
         } catch {
-            debugPrint("Error occurred while initializing tag: \n\(error)\n\(error.localizedDescription)")
+            debugPrint("Failed to read audio file \(file.name): \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    // MARK: - Convenience accessors over metadata
+
+    var title: String? { metadata.title }
+    var artist: String? { metadata.artist }
+    var albumTitle: String? { metadata.albumTitle }
+    var albumArtist: String? { metadata.albumArtist }
+    var genre: String? { metadata.genre }
+    var composer: String? { metadata.composer }
+    var trackNumber: Int? { metadata.trackNumber }
+    var discNumber: Int? { metadata.discNumber }
+
+    /// Integer year parsed from the tag's release date string (best-effort: first 4 digits).
+    var year: Int? {
+        guard let releaseDate = metadata.releaseDate else { return nil }
+        let digits = releaseDate.prefix(4)
+        return Int(digits)
+    }
+
+    /// Cover art as a UIImage, if any attached picture is present.
+    var coverImage: UIImage? {
+        guard let data = coverArtData else { return nil }
+        return UIImage(data: data)
+    }
+
+    /// Cover art as raw image data (whatever bytes the tag contained — typically JPEG or PNG).
+    var coverArtData: Data? {
+        if let picture = metadata.attachedPictures(ofType: .frontCover).first
+            ?? metadata.attachedPictures.first {
+            return picture.imageData
         }
         return nil
     }
 
-    mutating func initializeTag(for file: FSFile) {
-        debugPrint("Attempting to initialize tag...")
-        do {
-            let fileURL = URL(fileURLWithPath: file.path)
-            self.title = ""
-            try self.write(outputLocation: fileURL)
-        } catch {
-            debugPrint("Error occurred while initializing tag: \n\(error)\n\(error.localizedDescription)")
-        }
-    }
+    // MARK: - Saving
 
     // swiftlint:disable cyclomatic_complexity function_body_length
-    mutating func saveTagData(to file: FSFile, tagData: Tag, retriesWhenFailed willRetry: Bool = true) -> Bool {
+    /// Writes the UI-layer `Tag` struct onto this file's metadata and saves to disk.
+    func saveTagData(to file: FSFile, tagData: Tag) -> Bool {
         debugPrint("Attempting to save tag data...")
         do {
-            // Build title
             if let value = tagData.title {
-                self.title = replaceTokens(value, file: file)
+                metadata.title = replaceTokens(value, file: file)
             }
-            // Build artist
             if let value = tagData.artist {
-                self.artist = replaceTokens(value, file: file)
+                metadata.artist = replaceTokens(value, file: file)
             }
-            // Build album
             if let value = tagData.album {
-                self.album = replaceTokens(value, file: file)
+                metadata.albumTitle = replaceTokens(value, file: file)
             }
-            // Build album artist
             if let value = tagData.albumArtist {
-                self.albumArtist = replaceTokens(value, file: file)
+                metadata.albumArtist = replaceTokens(value, file: file)
             }
-            // Build year via recordingDateTime
-            if let value = tagData.year, let year = Int(value) {
-                let calendar = Calendar(identifier: .iso8601)
-                var components = DateComponents()
-                components.year = year
-                components.month = 1
-                components.day = 1
-                if let date = calendar.date(from: components) {
-                    self.recordingDateTime = date
-                }
+            if let value = tagData.year, !value.isEmpty {
+                metadata.releaseDate = value
             }
-            // Build track
-            if let value = tagData.track, value != "", let track = Int(value) {
-                var currentTrack = self.trackNumber
-                currentTrack.index = track
-                self.trackNumber = currentTrack
+            if let value = tagData.track, !value.isEmpty, let track = Int(value) {
+                metadata.trackNumber = track
             }
-            // Build genre
             if let value = tagData.genre {
-                self.genreCustom = value
+                metadata.genre = value
             }
-            // Build composer
             if let value = tagData.composer {
-                self.composer = replaceTokens(value, file: file)
+                metadata.composer = replaceTokens(value, file: file)
             }
-            // Build disc number
-            if let value = tagData.discNumber, let disc = Int(value) {
-                var currentDisc = self.discNumber
-                currentDisc.index = disc
-                self.discNumber = currentDisc
+            if let value = tagData.discNumber, !value.isEmpty, let disc = Int(value) {
+                metadata.discNumber = disc
             }
-            // Build album art - use setCoverArt method
             if let data = tagData.albumArt {
-                // Write temp file and use setCoverArt
-                let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
-                try data.write(to: tempURL)
-                try self.setCoverArt(imageLocation: tempURL)
-                try? FileManager.default.removeItem(at: tempURL)
+                metadata.removeAttachedPictures(ofType: .frontCover)
+                let picture = AttachedPicture(imageData: data, type: .frontCover)
+                metadata.attachPicture(picture)
             }
-
-            let outputURL = URL(fileURLWithPath: file.path)
-            try self.write(outputLocation: outputURL)
+            try writeMetadata()
             return true
         } catch {
-            debugPrint("Error occurred while saving tag: \n\(error.localizedDescription)")
-            if willRetry {
-                initializeTag(for: file)
-                return saveTagData(to: file, tagData: tagData, retriesWhenFailed: false)
-            } else {
-                return false
-            }
+            debugPrint("Error occurred while saving tag: \(error.localizedDescription)")
+            return false
         }
     }
     // swiftlint:enable cyclomatic_complexity function_body_length
+
+    // MARK: - Token substitution (unchanged)
 
     func replaceTokens(_ original: String, file: FSFile) -> String {
         var newString = original
@@ -168,5 +162,4 @@ extension AudioFile {
         }
         return nil
     }
-
 }

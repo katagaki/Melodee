@@ -11,11 +11,11 @@ A basic audio file player built for iOS.
 ### What works
 - Viewing the directory structure
 - Renaming files
-- Playing audio files (MP3, M4A, WAV, ALAC, OGG)
+- Playing audio files (MP3, M4A/AAC/ALAC, WAV, AIFF, FLAC, Ogg Vorbis, Opus, Speex, APE, WavPack, Musepack, TrueAudio, DSF)
 - Queuing audio files
 - Controlling audio from the Lock Screen or Control Center
-- Viewing, editing, and saving ID3 tags in MP3 files
-- Batch editing ID3 tags
-- Using tokens to fill out ID3 tags using existing data (such as the track name or track number)
+- Viewing, editing, and saving metadata tags across all supported formats (ID3, iTunes, Vorbis Comments, APE, etc.)
+- Batch editing metadata tags
+- Using tokens to fill out metadata tags using existing data (such as the track name or track number)
 - Viewing image, text, and PDF files
 - Extracting ZIP files

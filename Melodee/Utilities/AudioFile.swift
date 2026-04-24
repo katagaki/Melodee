@@ -82,9 +82,13 @@ extension AudioFile {
                 self.composer = replaceTokens(value, file: file)
             }
             // Build disc number
-            if let value = tagData.discNumber, let disc = Int(value) {
+            if let value = tagData.discNumber {
                 var currentDisc = self.discNumber
-                currentDisc.index = disc
+                if value.isEmpty {
+                    currentDisc.index = 0
+                } else if let disc = Int(value) {
+                    currentDisc.index = disc
+                }
                 self.discNumber = currentDisc
             }
             // Build album art - use setCoverArt method
@@ -94,6 +98,8 @@ extension AudioFile {
                 try data.write(to: tempURL)
                 try self.setCoverArt(imageLocation: tempURL)
                 try? FileManager.default.removeItem(at: tempURL)
+            } else if tagData.shouldRemoveAlbumArt {
+                try self.removeCoverArt()
             }
 
             let outputURL = URL(fileURLWithPath: file.path)

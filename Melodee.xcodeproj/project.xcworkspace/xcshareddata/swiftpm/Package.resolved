@@ -1,5 +1,5 @@
 {
-  "originHash" : "8bc49f61d69689288b00132f57a11cdfa63f14156380d32ca1ab829bed66b705",
+  "originHash" : "f21f1a50525d1b17226157cb2e6681833da27930b7296979f93074cc2bc61311",
   "pins" : [
     {
       "identity" : "avfaudioextensions",
@@ -101,57 +101,12 @@
       }
     },
     {
-      "identity" : "komponents",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/katagaki/Komponents",
-      "state" : {
-        "branch" : "main",
-        "revision" : "93f484d6f2cef9c179387fcca2b2048413f9f0a6"
-      }
-    },
-    {
       "identity" : "lame-binary-xcframework",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sbooth/lame-binary-xcframework",
       "state" : {
         "revision" : "07703e040231d50f2e7f160c670f356f129a00e4",
         "version" : "0.1.2"
-      }
-    },
-    {
-      "identity" : "lame-xcframework",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/BB9z/LAME-xcframework",
-      "state" : {
-        "revision" : "3f906714cf8a8cf2a82a8cf5bc760e639febf7b2",
-        "version" : "3.100.3"
-      }
-    },
-    {
-      "identity" : "lnpopupcontroller",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/LeoNatan/LNPopupController.git",
-      "state" : {
-        "revision" : "6f4bfa89a32cc7254599869b4bca8d2638e74671",
-        "version" : "4.4.1"
-      }
-    },
-    {
-      "identity" : "lnpopupui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/LeoNatan/LNPopupUI",
-      "state" : {
-        "revision" : "1d44156e1acc5e218770ee8df93faa42ae9175c9",
-        "version" : "2.6.0"
-      }
-    },
-    {
-      "identity" : "lnswiftuiutils",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/LeoNatan/LNSwiftUIUtils.git",
-      "state" : {
-        "revision" : "181a95b992f84d99a14c562c86e8ebef3cbcdca9",
-        "version" : "1.1.5"
       }
     },
     {

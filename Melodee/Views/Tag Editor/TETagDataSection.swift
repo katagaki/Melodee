@@ -6,7 +6,6 @@
 //
 
 import Combine
-import Komponents
 import SwiftUI
 
 struct TETagDataSection: View {

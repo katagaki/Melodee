@@ -81,8 +81,8 @@ class AudioConverter {
         case "wav":
             let encoder = try AudioEncoder(url: outputURL, encoderName: .libsndfile)
             encoder.settings = [
-                AudioEncodingSettingsKey.libsndfileMajorFormat: LibsndfileMajorFormat.WAV.rawValue,
-                AudioEncodingSettingsKey.libsndfileSubtype: LibsndfileSubtype.PCM_16.rawValue
+                AudioEncodingSettingsKey.libsndfileMajorFormat: LibsndfileMajorFormat.WAV,
+                AudioEncodingSettingsKey.libsndfileSubtype: LibsndfileSubtype.PCM_16
             ]
             return encoder
         default:

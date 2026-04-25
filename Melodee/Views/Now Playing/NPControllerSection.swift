@@ -163,9 +163,9 @@ struct NPControllerSection: View {
         }
         .onReceive(updateTimer, perform: { _ in
             if !isSeekbarSeeking {
-                if let audioPlayer = mediaPlayer.audioPlayer {
-                    currentDuration = audioPlayer.currentTime
-                    totalDuration = audioPlayer.duration
+                if mediaPlayer.isPlaybackActive, let time = mediaPlayer.audioPlayer.time {
+                    currentDuration = time.currentTime
+                    totalDuration = time.totalTime
                 } else {
                     currentDuration = .zero
                     totalDuration = .zero

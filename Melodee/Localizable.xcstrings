@@ -134,13 +134,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New Folder"
+            "value" : "Create Folder"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新しいフォルダー"
+            "value" : "フォルダーを作成"
           }
         },
         "ko" : {
@@ -3356,13 +3356,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New Folder Name"
+            "value" : "Folder Name"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新しいフォルダー名"
+            "value" : "フォルダー名"
           }
         },
         "ko" : {

@@ -146,16 +146,15 @@ struct CreatePlaylistSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Shared.Cancel") {
+                    Button(role: .cancel) {
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Shared.Save") {
+                    Button(role: .confirm) {
                         createPlaylist()
                         dismiss()
                     }
-                    .bold()
                     .disabled(playlistName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                               || selectedFiles.isEmpty)
                 }

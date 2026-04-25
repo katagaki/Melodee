@@ -21,6 +21,8 @@ struct FolderView: View {
     @State var isSelectingExternalDirectory = false
     @State var storageLocation: StorageLocation = .local
     @State var isCreatingPlaylist = false
+    @State var isCreatingFolder = false
+    @State var newFolderName: String = ""
 
     var overrideStorageLocation: StorageLocation?
 
@@ -147,10 +149,20 @@ struct FolderView: View {
         )
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
-                Button {
-                    isCreatingPlaylist = true
+                Menu {
+                    Button {
+                        newFolderName = ""
+                        isCreatingFolder = true
+                    } label: {
+                        Label("Shared.Folder", systemImage: "folder")
+                    }
+                    Button {
+                        isCreatingPlaylist = true
+                    } label: {
+                        Label("Shared.Playlist", systemImage: "music.note.list")
+                    }
                 } label: {
-                    Image(systemName: "music.note.list")
+                    Image(systemName: "plus")
                 }
             }
             ToolbarSpacer(.fixed, placement: .topBarTrailing)
@@ -253,6 +265,25 @@ struct FolderView: View {
                 refreshFiles()
             }
         }
+        .alert("Alert.CreateFolder.Title", isPresented: $isCreatingFolder) {
+            TextField("Shared.NewDirectoryName", text: $newFolderName)
+            Button("Shared.Create") {
+                createFolder()
+            }
+            .disabled(newFolderName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            Button("Shared.Cancel", role: .cancel) {
+                newFolderName = ""
+            }
+        }
+    }
+
+    func createFolder() {
+        let trimmedName = newFolderName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else { return }
+        let folderURL = currentDirectoryURL().appendingPathComponent(trimmedName, isDirectory: true)
+        fileManager.createDirectory(at: folderURL.path(percentEncoded: false))
+        newFolderName = ""
+        refreshFiles()
     }
 
     func currentDirectoryURL() -> URL {

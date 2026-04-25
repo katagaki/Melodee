@@ -87,37 +87,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """),
         Dependency(name: "SFBAudioEngine", licenseText: """
-SFBAudioEngine is licensed under the MIT License.
+MIT License
 
-Copyright (c) 2006-2024 Stephen F. Booth <me@sbooth.org>
-https://github.com/sbooth/SFBAudioEngine
-
-SFBAudioEngine bundles the following third-party libraries, each
-under its own license:
-
-  - FLAC (BSD-3-Clause) — https://xiph.org/flac/
-  - libogg (BSD-3-Clause) — https://xiph.org/ogg/
-  - libopus (BSD-3-Clause) — https://opus-codec.org/
-  - libvorbis (BSD-3-Clause) — https://xiph.org/vorbis/
-  - Speex/SpeexDSP (BSD-3-Clause) — https://www.speex.org/
-  - WavPack (BSD-3-Clause) — http://www.wavpack.com/
-  - Monkey's Audio SDK (BSD-3-Clause) — https://www.monkeysaudio.com/
-  - libmpcdec (Musepack decoder, BSD-3-Clause) — https://www.musepack.net/
-  - dsd2pcm (BSD-2-Clause)
-  - DUMB (custom / free) — module-format decoder
-  - TagLib (LGPL-2.1 or MPL-1.1) — https://taglib.org/
-  - mpg123 (LGPL-2.1) — https://www.mpg123.de/
-  - libsndfile (LGPL-2.1) — http://libsndfile.github.io/libsndfile/
-  - LAME (LGPL) — https://lame.sourceforge.io/
-  - libtta-cpp (LGPL-2.1) — https://tausoft.org/
-  - libmpcenc (Musepack encoder, LGPL-2.1) — https://www.musepack.net/
-
-The LGPL components are dynamically linked as distributed by the
-SFBAudioEngine package in accordance with LGPL-2.1. Full license
-texts for each library are available in the upstream repositories
-linked above.
-
-MIT License terms (for SFBAudioEngine itself):
+Copyright (c) 2006-2026 Stephen F. Booth
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -8,13 +8,7 @@
 import SwiftUI
 
 extension View {
-    @ViewBuilder
     func adaptiveGlass() -> some View {
-        if #available(iOS 26.0, *) {
-            self
-                .glassEffect(.regular, in: .capsule)
-        } else {
-            self
-        }
+        self.glassEffect(.regular, in: .capsule)
     }
 }

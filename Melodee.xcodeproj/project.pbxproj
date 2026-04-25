@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E43C84792AB009B300D87A5F /* ZIPFoundation */; };
 		E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E447AAB92B771CC7009A3D3E /* Komponents */; };
-		E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */ = {isa = PBXBuildFile; productRef = E496EB322EACADE3008F4787 /* LNPopupUI-Static */; };
 		E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A622AB3FFA800C5810D /* Zoomy */; };
 		E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */ = {isa = PBXBuildFile; productRef = E4DB2A672AB4032900C5810D /* VariableBlurView */; };
 		E4F7368C2F37193F00A203FE /* LAME in Frameworks */ = {isa = PBXBuildFile; productRef = E4F7368B2F37193F00A203FE /* LAME */; };
@@ -62,7 +61,6 @@
 				E4F7368C2F37193F00A203FE /* LAME in Frameworks */,
 				E447AABA2B771CC7009A3D3E /* Komponents in Frameworks */,
 				E4F736B02F38010000A203FE /* SFBAudioEngine in Frameworks */,
-				E496EB332EACADE3008F4787 /* LNPopupUI-Static in Frameworks */,
 				E43C847A2AB009B300D87A5F /* ZIPFoundation in Frameworks */,
 				E4DB2A632AB3FFA800C5810D /* Zoomy in Frameworks */,
 				E4DB2A682AB4032900C5810D /* VariableBlurView in Frameworks */,
@@ -122,7 +120,6 @@
 				E4DB2A622AB3FFA800C5810D /* Zoomy */,
 				E4DB2A672AB4032900C5810D /* VariableBlurView */,
 				E447AAB92B771CC7009A3D3E /* Komponents */,
-				E496EB322EACADE3008F4787 /* LNPopupUI-Static */,
 				E4F7368B2F37193F00A203FE /* LAME */,
 				E4F736AF2F38010000A203FE /* SFBAudioEngine */,
 			);
@@ -163,7 +160,6 @@
 				E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */,
 				E4DB2A662AB4032900C5810D /* XCRemoteSwiftPackageReference "VariableBlurView" */,
 				E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */,
-				E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */,
 				E4F7368A2F37193F00A203FE /* XCRemoteSwiftPackageReference "LAME-xcframework" */,
 				E4F736AE2F38010000A203FE /* XCRemoteSwiftPackageReference "SFBAudioEngine" */,
 			);
@@ -477,14 +473,6 @@
 				kind = branch;
 			};
 		};
-		E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/LeoNatan/LNPopupUI";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.6.0;
-			};
-		};
 		E4DB2A612AB3FFA800C5810D /* XCRemoteSwiftPackageReference "Zoomy" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lvnkmn/Zoomy";
@@ -529,11 +517,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E447AAB82B771CC7009A3D3E /* XCRemoteSwiftPackageReference "Komponents" */;
 			productName = Komponents;
-		};
-		E496EB322EACADE3008F4787 /* LNPopupUI-Static */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E496EB292EACA76D008F4787 /* XCRemoteSwiftPackageReference "LNPopupUI" */;
-			productName = "LNPopupUI-Static";
 		};
 		E4DB2A622AB3FFA800C5810D /* Zoomy */ = {
 			isa = XCSwiftPackageProductDependency;

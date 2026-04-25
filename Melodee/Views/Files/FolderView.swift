@@ -154,17 +154,13 @@ struct FolderView: View {
                     Image(systemName: "music.note.list")
                 }
             }
-            if #available(iOS 26.0, *) {
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if folderContainsTaggableFiles() {
                     FBMenu(files: $files)
                 }
             }
-            if #available(iOS 26.0, *) {
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
             ToolbarItemGroup(placement: .topBarTrailing) {
                 FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
             }

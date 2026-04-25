@@ -45,13 +45,8 @@ struct ProgressAlert: View {
                 }
             }
             .background {
-                if #available(iOS 26.0, *) {
-                    RoundedRectangle(cornerRadius: 24.0)
-                        .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 24.0))
-                } else {
-                    RoundedRectangle(cornerRadius: 16.0)
-                        .fill(.thickMaterial)
-                }
+                RoundedRectangle(cornerRadius: 24.0)
+                    .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 24.0))
             }
             .padding(.all, 32.0)
         }

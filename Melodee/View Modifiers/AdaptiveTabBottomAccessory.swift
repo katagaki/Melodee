@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import LNPopupUI
 import TipKit
 
 struct AdaptiveTabBottomAccessory: ViewModifier {
@@ -15,43 +14,25 @@ struct AdaptiveTabBottomAccessory: ViewModifier {
     @Namespace var namespace
 
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content
-                .tabBarMinimizeBehavior(.automatic)
-                .tabViewBottomAccessory {
-                    Button {
-                        isPopupPresented.toggle()
-                    } label: {
-                        NowPlayingBar()
-                            .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
-                            .contentShape(.rect)
-                    }
-                    .buttonStyle(.plain)
-                    .popoverTip(NPQueueTip(), arrowEdge: .bottom)
-                }
-                .sheet(isPresented: $isPopupPresented) {
-                    NowPlayingView()
-                        .navigationTransition(
-                            .zoom(sourceID: "NowPlayingBar", in: namespace)
-                        )
-                }
-        } else {
-            content
-                .popup(
-                    isBarPresented: .constant(true),
-                    isPopupOpen: $isPopupPresented,
-                    popupContent: { NowPlayingView() }
-                )
-                .popupBarCustomView(
-                    wantsDefaultTapGesture: true,
-                    wantsDefaultPanGesture: false,
-                    wantsDefaultHighlightGesture: false
-                ) {
+        content
+            .tabBarMinimizeBehavior(.automatic)
+            .tabViewBottomAccessory {
+                Button {
+                    isPopupPresented.toggle()
+                } label: {
                     NowPlayingBar()
-                        .popoverTip(NPQueueTip(), arrowEdge: .bottom)
+                        .matchedTransitionSource(id: "NowPlayingBar", in: namespace)
+                        .contentShape(.rect)
                 }
-                .popupInteractionStyle(.none)
-        }
+                .buttonStyle(.plain)
+                .popoverTip(NPQueueTip(), arrowEdge: .bottom)
+            }
+            .sheet(isPresented: $isPopupPresented) {
+                NowPlayingView()
+                    .navigationTransition(
+                        .zoom(sourceID: "NowPlayingBar", in: namespace)
+                    )
+            }
     }
 }
 

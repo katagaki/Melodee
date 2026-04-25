@@ -280,15 +280,21 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingTitle() ?? ""
         nowPlayingInfo[MPMediaItemPropertyArtist] = "Melodee"
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: albumArt.size) { _ in
-            return albumArt
-        }
+        // The artwork request handler is invoked by MPNowPlayingInfoCenter on its own
+        // serial access queue. Build it from a nonisolated context so the closure is not
+        // inferred as @MainActor — otherwise Swift's isolation check crashes the process
+        // (dispatch_assert_queue) when jpegDataWithSize: calls back off the main actor.
+        nowPlayingInfo[MPMediaItemPropertyArtwork] = Self.makeArtwork(from: albumArt)
         if let time = audioPlayer.time {
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time.currentTime
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = time.totalTime
         }
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = playing ? 1.0 : 0.0
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
+
+    private static func makeArtwork(from image: UIImage) -> MPMediaItemArtwork {
+        MPMediaItemArtwork(boundsSize: image.size) { _ in image }
     }
 
     func albumArt() -> UIImage {

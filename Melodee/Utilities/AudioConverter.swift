@@ -44,7 +44,7 @@ class AudioConverter {
 
         try await Task.detached(priority: .userInitiated) {
             let encoder = try makeEncoder(for: targetFormat, outputURL: outputURL)
-            try SFBAudioEngine.AudioConverter.convert(fromURL: sourceURL, usingEncoder: encoder)
+            try SFBAudioEngine.AudioConverter.convert(sourceURL, using: encoder)
         }.value
 
         progressHandler?(1.0)
@@ -65,7 +65,7 @@ class AudioConverter {
     private static func makeEncoder(for targetFormat: String, outputURL: URL) throws -> AudioEncoder {
         switch targetFormat.lowercased() {
         case "mp3":
-            let encoder = try AudioEncoder(url: outputURL, encoderName: .mp3)
+            let encoder = try AudioEncoder(url: outputURL, encoderName: .MP3)
             encoder.settings = [
                 AudioEncodingSettingsKey.mp3ConstantBitrate: NSNumber(value: 320),
                 AudioEncodingSettingsKey.mp3Quality: NSNumber(value: 2)

@@ -112,28 +112,14 @@ struct ManagePlaylistSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    if #available(iOS 26.0, *) {
-                        Button(role: .cancel) {
-                            dismiss()
-                        }
-                    } else {
-                        Button("Shared.Cancel") {
-                            dismiss()
-                        }
+                    Button(role: .cancel) {
+                        dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    if #available(iOS 26.0, *) {
-                        Button(role: .confirm) {
-                            saveChanges()
-                            dismiss()
-                        }
-                    } else {
-                        Button("Shared.Save") {
-                            saveChanges()
-                            dismiss()
-                        }
-                        .bold()
+                    Button(role: .confirm) {
+                        saveChanges()
+                        dismiss()
                     }
                 }
             }

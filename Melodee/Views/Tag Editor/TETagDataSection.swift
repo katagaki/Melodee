@@ -6,7 +6,6 @@
 //
 
 import Combine
-import Komponents
 import SwiftUI
 
 struct TETagDataSection: View {
@@ -53,12 +52,8 @@ struct TETagDataSection: View {
                 ListDetailRow(title: "Tag.DiscNumber", value: tagData.discNumber)
             }
         } header: {
-            if #available(iOS 17.0, *) {
-                ListSectionHeader(text: "TagEditor.TagData")
-                    .popoverTip(TETokensTip(), arrowEdge: .bottom)
-            } else {
-                ListSectionHeader(text: "TagEditor.TagData")
-            }
+            ListSectionHeader(text: "TagEditor.TagData")
+                .popoverTip(TETokensTip(), arrowEdge: .bottom)
         }
         .onReceive(Just(tagData.year)) { _ in
             if let year = tagData.year {

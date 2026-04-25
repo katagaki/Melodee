@@ -108,8 +108,8 @@ class FilesystemManager {
 
     func fileType(for url: URL) -> FileType? {
         let fileExtension = url.pathExtension.lowercased()
+        if FilesystemManager.audioExtensions.contains(fileExtension) { return .audio }
         switch fileExtension {
-        case "mp3", "m4a", "wav", "alac": return .audio
         case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
         case "txt": return .text
         case "pdf": return .pdf
@@ -121,8 +121,8 @@ class FilesystemManager {
     }
 
     static func fileType(forExtension fileExtension: String) -> FileType {
+        if audioExtensions.contains(fileExtension) { return .audio }
         switch fileExtension {
-        case "mp3", "m4a", "wav", "alac": return .audio
         case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
         case "txt": return .text
         case "pdf": return .pdf
@@ -131,6 +131,14 @@ class FilesystemManager {
         default: return .notSet
         }
     }
+
+    /// Audio file extensions recognized by the file browser. SFBAudioEngine decodes all of these.
+    static let audioExtensions: Set<String> = [
+        "mp3", "m4a", "m4b", "aac", "wav", "wave", "aif", "aiff", "aifc", "caf",
+        "alac", "flac", "ogg", "oga", "opus", "spx",
+        "ape", "wv", "mpc", "tta", "shn",
+        "dsf", "dff"
+    ]
 
     func createDirectory(at directoryPath: String) {
         let url = URL(fileURLWithPath: directoryPath)

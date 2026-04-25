@@ -5,7 +5,6 @@
 //  Created by シン・ジャスティン on 2023/09/13.
 //
 
-import Komponents
 import SwiftUI
 
 struct NPQueueSection: View {

@@ -5,7 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/12.
 //
 
-import SwiftTagger
+import SFBAudioEngine
 import SwiftUI
 
 struct FBAudioFileRow: View {
@@ -56,27 +56,23 @@ struct FBAudioFileRow: View {
         guard sortOption != .fileName, file.isTaggableAudio() else {
             return nil
         }
-        do {
-            let audioFile = try AudioFile(location: URL(fileURLWithPath: file.path))
-            switch sortOption {
-            case .fileName:
-                return nil
-            case .trackTitle:
-                let title = audioFile.title ?? ""
-                return title.isEmpty ? nil : title
-            case .trackNumber:
-                let track = audioFile.trackNumber.index
-                return track != 0 ? String(track) : nil
-            case .albumName:
-                let album = audioFile.album ?? ""
-                return album.isEmpty ? nil : album
-            case .artistName:
-                let artist = audioFile.artist ?? ""
-                return artist.isEmpty ? nil : artist
-            }
-        } catch {
-            debugPrint("Error reading tag for subtitle: \(error.localizedDescription)")
+        guard let audioFile = AudioFile.read(for: file) else {
             return nil
+        }
+        switch sortOption {
+        case .fileName:
+            return nil
+        case .trackTitle:
+            let title = audioFile.title ?? ""
+            return title.isEmpty ? nil : title
+        case .trackNumber:
+            return audioFile.trackNumber.map(String.init)
+        case .albumName:
+            let album = audioFile.albumTitle ?? ""
+            return album.isEmpty ? nil : album
+        case .artistName:
+            let artist = audioFile.artist ?? ""
+            return artist.isEmpty ? nil : artist
         }
     }
 }

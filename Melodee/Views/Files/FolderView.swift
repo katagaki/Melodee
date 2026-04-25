@@ -5,8 +5,7 @@
 //  Created by シン・ジャスティン on 2023/09/11.
 //
 
-import Komponents
-import SwiftTagger
+import SFBAudioEngine
 import SwiftUI
 import TipKit
 
@@ -154,17 +153,13 @@ struct FolderView: View {
                     Image(systemName: "music.note.list")
                 }
             }
-            if #available(iOS 26.0, *) {
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
             ToolbarItemGroup(placement: .topBarTrailing) {
                 if folderContainsTaggableFiles() {
                     FBMenu(files: $files)
                 }
             }
-            if #available(iOS 26.0, *) {
-                ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            }
+            ToolbarSpacer(.fixed, placement: .topBarTrailing)
             ToolbarItemGroup(placement: .topBarTrailing) {
                 FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
             }
@@ -385,13 +380,9 @@ struct FolderView: View {
         var tagCache: [String: AudioFile] = [:]
         if state.sortOption != .fileName {
             for item in audioFiles {
-                if let file = item as? FSFile, file.isTaggableAudio() {
-                    do {
-                        let audioFile = try AudioFile(location: URL(fileURLWithPath: file.path))
-                        tagCache[file.path] = audioFile
-                    } catch {
-                        debugPrint("Error reading tags for sort: \(error.localizedDescription)")
-                    }
+                if let file = item as? FSFile, file.isTaggableAudio(),
+                   let audioFile = AudioFile.read(for: file) {
+                    tagCache[file.path] = audioFile
                 }
             }
         }
@@ -410,16 +401,16 @@ struct FolderView: View {
                 let rhsTitle = tagCache[rhsFile.path]?.title ?? ""
                 comparison = lhsTitle.localizedStandardCompare(rhsTitle)
             case .trackNumber:
-                let lhsTrack = tagCache[lhsFile.path]?.trackNumber.index ?? Int.max
-                let rhsTrack = tagCache[rhsFile.path]?.trackNumber.index ?? Int.max
+                let lhsTrack = tagCache[lhsFile.path]?.trackNumber ?? Int.max
+                let rhsTrack = tagCache[rhsFile.path]?.trackNumber ?? Int.max
                 if lhsTrack != rhsTrack {
                     comparison = lhsTrack < rhsTrack ? .orderedAscending : .orderedDescending
                 } else {
                     comparison = .orderedSame
                 }
             case .albumName:
-                let lhsAlbum = tagCache[lhsFile.path]?.album ?? ""
-                let rhsAlbum = tagCache[rhsFile.path]?.album ?? ""
+                let lhsAlbum = tagCache[lhsFile.path]?.albumTitle ?? ""
+                let rhsAlbum = tagCache[rhsFile.path]?.albumTitle ?? ""
                 comparison = lhsAlbum.localizedStandardCompare(rhsAlbum)
             case .artistName:
                 let lhsArtist = tagCache[lhsFile.path]?.artist ?? ""

@@ -6,8 +6,8 @@
 //
 
 import PhotosUI
+import SFBAudioEngine
 import SwiftUI
-import SwiftTagger
 import TipKit
 
 struct TagEditorView: View {

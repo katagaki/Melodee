@@ -46,10 +46,19 @@ struct FSFile: FilesystemObject {
         return "Melodee"
     }
 
-    /// Returns true if this file is a taggable audio file (MP3 or M4A)
+    /// Returns true if this file is a taggable audio file (SFBAudioEngine-writable).
     func isTaggableAudio() -> Bool {
-        return self.extension == "mp3" || self.extension == "m4a"
+        return FSFile.taggableAudioExtensions.contains(self.extension)
     }
+
+    /// Audio file extensions for which SFBAudioEngine can both read and write metadata.
+    /// Excludes formats with read-only or partial metadata support (Shorten, tracker modules).
+    static let taggableAudioExtensions: Set<String> = [
+        "mp3", "m4a", "m4b", "aac", "alac",
+        "wav", "wave", "aif", "aiff", "aifc",
+        "flac", "ogg", "oga", "opus", "spx",
+        "ape", "wv", "mpc", "tta", "dsf"
+    ]
 
     /// Returns true if this audio file can be converted to other formats
     func isConvertibleAudio() -> Bool {

@@ -97,6 +97,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4A4D6562AAEF1200062D12C /* Build configuration list for PBXNativeTarget "Melodee" */;
 			buildPhases = (
+				E45CE7000000000000000001 /* Generate Licenses */,
 				E4A4D6432AAEF11F0062D12C /* Sources */,
 				E4A4D6442AAEF11F0062D12C /* Frameworks */,
 				E4A4D6452AAEF11F0062D12C /* Resources */,
@@ -193,6 +194,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		E45CE7000000000000000001 /* Generate Licenses */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Melodee.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved",
+				"$(SRCROOT)/Scripts/generate_licenses.sh",
+			);
+			name = "Generate Licenses";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Melodee/Licenses.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Scripts/generate_licenses.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

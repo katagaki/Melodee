@@ -146,25 +146,25 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "새 폴더"
+            "value" : "폴더 만들기"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thư mục mới"
+            "value" : "Tạo thư mục"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建文件夹"
+            "value" : "创建文件夹"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新增資料夾"
+            "value" : "建立資料夾"
           }
         }
       }
@@ -3368,25 +3368,25 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "새 폴더 이름"
+            "value" : "폴더 이름"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tên thư mục mới"
+            "value" : "Tên thư mục"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新文件夹名称"
+            "value" : "文件夹名称"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新資料夾名稱"
+            "value" : "資料夾名稱"
           }
         }
       }

@@ -94,7 +94,7 @@ extension AudioFile {
                 }
             }
             if let data = tagData.albumArt {
-                metadata.removeAttachedPictures(ofType: .frontCover)
+                metadata.removeAttachedPicturesOfType(.frontCover)
                 let picture = AttachedPicture(imageData: data, type: .frontCover)
                 metadata.attachPicture(picture)
             } else if tagData.shouldRemoveAlbumArt {

@@ -13,7 +13,7 @@ import UIKit
 
 // swiftlint:disable type_body_length file_length
 @Observable
-class MediaPlayerManager: NSObject, AudioPlayerDelegate {
+class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     @ObservationIgnored let notificationCenter = NotificationCenter.default
     @ObservationIgnored let audioSession = AVAudioSession.sharedInstance()

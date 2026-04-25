@@ -79,21 +79,20 @@ struct NowPlayingView: View {
         }
         .task {
             if previousQueueID != mediaPlayer.currentlyPlayingID {
-                await setAlbumArt()
+                setAlbumArt()
                 previousQueueID = mediaPlayer.currentlyPlayingID
             }
         }
         .onChange(of: mediaPlayer.currentlyPlayingID, { _, _ in
             Task {
-                await setAlbumArt()
+                setAlbumArt()
                 previousQueueID = mediaPlayer.currentlyPlayingID
             }
         })
     }
 
-    func setAlbumArt() async {
-        nonisolated(unsafe) let player = mediaPlayer
-        let albumArtUIImage = await player.albumArt()
+    func setAlbumArt() {
+        let albumArtUIImage = mediaPlayer.albumArt()
         withAnimation(.default.speed(2)) {
             albumArt = Image(uiImage: albumArtUIImage)
         }

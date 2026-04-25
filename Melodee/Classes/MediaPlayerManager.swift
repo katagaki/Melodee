@@ -276,7 +276,7 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         remoteCommandCenter.previousTrackCommand.isEnabled = canGoToPreviousTrack()
         remoteCommandCenter.changePlaybackPositionCommand.isEnabled = playing && audioPlayer.supportsSeeking
         // Set now playing info
-        let albumArt = await albumArt()
+        let albumArt = albumArt()
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = currentlyPlayingTitle() ?? ""
         nowPlayingInfo[MPMediaItemPropertyArtist] = "Melodee"
@@ -291,7 +291,7 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 
-    func albumArt() async -> UIImage {
+    func albumArt() -> UIImage {
         if let file = currentlyPlayingFile(),
            let metadata = try? readMetadata(for: file),
            let picture = metadata.attachedPictures(ofType: .frontCover).first

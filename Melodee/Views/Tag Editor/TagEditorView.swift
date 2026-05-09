@@ -107,14 +107,14 @@ struct TagEditorView: View {
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .center, spacing: 0.0) {
                 Button {
-                    if saveState == .notSaved {
-                        DispatchQueue.global(qos: .background).async {
-                            Task {
-                                await changeSaveState(to: .saving)
-                                await saveAllTagData()
-                                await readAllTagData()
-                                await changeSaveState(to: .saved)
-                            }
+                    if saveState == .notSaved && isInitialLoadCompleted {
+                        Task {
+                            changeSaveState(to: .saving)
+                            UIApplication.shared.isIdleTimerDisabled = true
+                            await saveAllTagData()
+                            await readAllTagData()
+                            UIApplication.shared.isIdleTimerDisabled = false
+                            changeSaveState(to: .saved)
                         }
                     }
                 } label: {
@@ -143,7 +143,7 @@ struct TagEditorView: View {
                 .padding([.leading, .trailing, .bottom], 16.0)
             }
         }
-        .disabled(saveState == .saving)
+        .disabled(saveState == .saving || !isInitialLoadCompleted)
         .scrollDismissesKeyboard(.interactively)
         .sheet(isPresented: $isSelectingFile) {
             DocumentPicker(allowedUTIs: [.image], onDocumentPicked: { url in

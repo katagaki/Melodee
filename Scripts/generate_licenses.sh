@@ -5,17 +5,22 @@ RESOLVED="${SRCROOT}/Melodee.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
 CHECKOUTS="${BUILD_DIR%Build/*}SourcePackages/checkouts"
 OUTPUT="${SRCROOT}/Melodee/Licenses.plist"
 
+mkdir -p "$(dirname "$OUTPUT")"
+
+echo '{}' | plutil -convert xml1 -o "$OUTPUT" -
+plutil -insert dependencies -array "$OUTPUT"
+
 if [ ! -f "$RESOLVED" ]; then
-    echo "error: Package.resolved not found at $RESOLVED"
-    exit 1
+    echo "warning: Package.resolved not found at $RESOLVED"
+    echo "Generated $OUTPUT with 0 entries"
+    exit 0
 fi
 
 if [ ! -d "$CHECKOUTS" ]; then
-    echo "error: SourcePackages/checkouts not found at $CHECKOUTS"
-    exit 1
+    echo "warning: SourcePackages/checkouts not found at $CHECKOUTS"
+    echo "Generated $OUTPUT with 0 entries"
+    exit 0
 fi
-
-mkdir -p "$(dirname "$OUTPUT")"
 
 PIN_COUNT=$(plutil -extract pins raw -o - "$RESOLVED")
 
@@ -64,9 +69,6 @@ done
 
 SORTED_TSV=$(mktemp)
 sort -t $'\t' -k1,1 "$ENTRIES_TSV" > "$SORTED_TSV"
-
-echo '{}' | plutil -convert xml1 -o "$OUTPUT" -
-plutil -insert dependencies -array "$OUTPUT"
 
 INDEX=0
 COUNT=0

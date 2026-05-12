@@ -408,10 +408,11 @@ struct FolderView: View {
         }
 
         // Build tag cache for tag-based sort options
+        // Skip evicted iCloud files to avoid triggering downloads that would freeze the UI
         var tagCache: [String: AudioFile] = [:]
         if state.sortOption != .fileName {
             for item in audioFiles {
-                if let file = item as? FSFile, file.isTaggableAudio(),
+                if let file = item as? FSFile, file.isTaggableAudio(), !file.isEvicted(),
                    let audioFile = AudioFile.read(for: file) {
                     tagCache[file.path] = audioFile
                 }

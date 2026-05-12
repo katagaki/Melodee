@@ -11,7 +11,7 @@ import Foundation
 import SFBAudioEngine
 import UIKit
 
-// swiftlint:disable type_body_length file_length
+// swiftlint:disable type_body_length
 @Observable
 class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
@@ -26,6 +26,12 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     var repeatMode: RepeatMode = .none
     var queue: [FSFile] = []
     var currentlyPlayingID: String = ""
+
+    @ObservationIgnored private var cachedMetadataID: String = ""
+    @ObservationIgnored private var cachedTitle: String?
+    @ObservationIgnored private var cachedArtist: String?
+    @ObservationIgnored private var cachedAlbum: String?
+    @ObservationIgnored private var cachedAlbumArt: UIImage?
 
     override init() {
         super.init()
@@ -64,7 +70,8 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     func currentlyPlayingTitle() -> String? {
         guard isPlaybackActive, let file = currentlyPlayingFile() else { return nil }
-        if file.isTaggableAudio(), let title = try? readMetadata(for: file)?.title, !title.isEmpty {
+        refreshMetadataCacheIfNeeded(for: file)
+        if let title = cachedTitle, !title.isEmpty {
             return title
         }
         return file.name
@@ -72,7 +79,8 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     func currentlyPlayingArtistName() -> String? {
         guard isPlaybackActive, let file = currentlyPlayingFile() else { return nil }
-        if file.isTaggableAudio(), let artist = try? readMetadata(for: file)?.artist, !artist.isEmpty {
+        refreshMetadataCacheIfNeeded(for: file)
+        if let artist = cachedArtist, !artist.isEmpty {
             return artist
         }
         return NSLocalizedString("Shared.UnknownArtist", comment: "")
@@ -80,15 +88,33 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     func currentlyPlayingAlbumName() -> String? {
         guard isPlaybackActive, let file = currentlyPlayingFile() else { return nil }
-        if file.isTaggableAudio(), let album = try? readMetadata(for: file)?.albumTitle, !album.isEmpty {
+        refreshMetadataCacheIfNeeded(for: file)
+        if let album = cachedAlbum, !album.isEmpty {
             return album
         }
         return file.containingFolderName()
     }
 
-    private func readMetadata(for file: FSFile) throws -> AudioMetadata? {
-        let fileURL = URL(fileURLWithPath: file.path)
-        return try AudioFile(readingPropertiesAndMetadataFrom: fileURL).metadata
+    private func refreshMetadataCacheIfNeeded(for file: FSFile) {
+        guard cachedMetadataID != currentlyPlayingID else { return }
+        cachedMetadataID = currentlyPlayingID
+        cachedTitle = nil
+        cachedArtist = nil
+        cachedAlbum = nil
+        cachedAlbumArt = nil
+        guard file.isTaggableAudio(),
+              FileManager.default.fileExists(atPath: file.path),
+              !file.isEvicted(),
+              let metadata = AudioFile.read(for: file)?.metadata else {
+            return
+        }
+        cachedTitle = metadata.title
+        cachedArtist = metadata.artist
+        cachedAlbum = metadata.albumTitle
+        if let data = (metadata.attachedPictures(ofType: .frontCover).first
+                        ?? metadata.attachedPictures.first)?.imageData {
+            cachedAlbumArt = UIImage(data: data)
+        }
     }
 
     func currentlyPlayingFile() -> FSFile? {
@@ -298,12 +324,11 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     }
 
     func albumArt() -> UIImage {
-        if let file = currentlyPlayingFile(),
-           let metadata = try? readMetadata(for: file),
-           let picture = metadata.attachedPictures(ofType: .frontCover).first
-            ?? metadata.attachedPictures.first,
-           let image = UIImage(data: picture.imageData) {
-            return image
+        if let file = currentlyPlayingFile() {
+            refreshMetadataCacheIfNeeded(for: file)
+            if let image = cachedAlbumArt {
+                return image
+            }
         }
         return UIImage(named: "Album.Generic") ?? UIImage()
     }
@@ -397,4 +422,4 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         }
     }
 }
-// swiftlint:enable type_body_length file_length
+// swiftlint:enable type_body_length

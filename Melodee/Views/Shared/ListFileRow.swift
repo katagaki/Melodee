@@ -85,41 +85,51 @@ struct ListFileRow: View {
         }
         .task {
             if !isThumbnailFetchCompleted {
-                // Don't try to read thumbnails from evicted iCloud files
-                guard !file.isEvicted() else {
-                    isThumbnailFetchCompleted = true
-                    return
-                }
-                let filePath = file.path
-                let isTaggable = file.isTaggableAudio()
-                let isImage = file.type == .image
-                Task.detached {
-                    let fileURL: URL = URL(filePath: filePath)
-                    if isTaggable {
-                        NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
-                            Task { @MainActor in
-                                let albumArt = await albumArt(at: url)
-                                withAnimation(.default.speed(2)) {
-                                    self.thumbnail = albumArt
-                                }
-                            }
+                fetchThumbnail()
+            }
+        }
+        .onChange(of: downloadManager.isDownloading(file)) { wasDownloading, isDownloading in
+            // When a download finishes, the thumbnail we tried (or skipped) earlier can now succeed.
+            if wasDownloading && !isDownloading {
+                fetchThumbnail()
+            }
+        }
+    }
+
+    private func fetchThumbnail() {
+        // Don't try to read thumbnails from evicted iCloud files
+        guard !file.isEvicted() else {
+            isThumbnailFetchCompleted = true
+            return
+        }
+        let filePath = file.path
+        let isTaggable = file.isTaggableAudio()
+        let isImage = file.type == .image
+        Task.detached {
+            let fileURL: URL = URL(filePath: filePath)
+            if isTaggable {
+                NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
+                    Task { @MainActor in
+                        let albumArt = await albumArt(at: url)
+                        withAnimation(.default.speed(2)) {
+                            self.thumbnail = albumArt
                         }
-                    } else if isImage {
-                        NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
-                            Task { @MainActor in
-                                if let thumbnail = await UIImage(contentsOfFile: url.path(percentEncoded: false))?
-                                    .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
-                                    withAnimation(.default.speed(2)) {
-                                        self.thumbnail = thumbnail
-                                    }
-                                }
+                    }
+                }
+            } else if isImage {
+                NSFileCoordinator().coordinate(readingItemAt: fileURL, error: .none) { url in
+                    Task { @MainActor in
+                        if let thumbnail = await UIImage(contentsOfFile: url.path(percentEncoded: false))?
+                            .byPreparingThumbnail(ofSize: CGSize(width: 100.0, height: 100.0)) {
+                            withAnimation(.default.speed(2)) {
+                                self.thumbnail = thumbnail
                             }
                         }
                     }
                 }
-                isThumbnailFetchCompleted = true
             }
         }
+        isThumbnailFetchCompleted = true
     }
 
     func albumArt(at url: URL) async -> UIImage {

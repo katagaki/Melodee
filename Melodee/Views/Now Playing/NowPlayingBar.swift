@@ -76,6 +76,9 @@ struct NowPlayingBar: View {
             setAlbumArt()
             previousQueueID = mediaPlayer.currentlyPlayingID
         })
+        .onChange(of: mediaPlayer.metadataRefreshTrigger, { _, _ in
+            setAlbumArt()
+        })
     }
 
     func setAlbumArt() {

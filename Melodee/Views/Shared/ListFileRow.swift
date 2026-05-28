@@ -17,6 +17,8 @@ struct ListFileRow: View {
     var subtitle: String?
     @State var thumbnail: UIImage?
     @State var isThumbnailFetchCompleted: Bool = false
+    @State var isEvicted: Bool = false
+    @State var fileSizeText: String = ""
 
     var body: some View {
         HStack(alignment: .center, spacing: 16.0) {
@@ -52,7 +54,7 @@ struct ListFileRow: View {
                     .font(.body)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                Text(subtitle ?? URL(filePath: file.path).fileSizeString)
+                Text(subtitle ?? fileSizeText)
                     .font(.caption)
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -67,7 +69,7 @@ struct ListFileRow: View {
                     ProgressView()
                         .controlSize(.small)
                 }
-            } else if file.isEvicted() {
+            } else if isEvicted {
                 Image(systemName: "icloud.and.arrow.down")
                     .font(.body)
                     .foregroundStyle(.secondary)
@@ -83,25 +85,38 @@ struct ListFileRow: View {
                     .clipShape(RoundedRectangle(cornerRadius: 4.0))
             }
         }
-        .task {
-            if !isThumbnailFetchCompleted {
-                fetchThumbnail()
-            }
+        .task(id: file.path) {
+            await loadFileMetadata()
         }
         .onChange(of: downloadManager.isDownloading(file)) { wasDownloading, isDownloading in
-            // When a download finishes, the thumbnail we tried (or skipped) earlier can now succeed.
+            // When a download finishes, the file is now local: refresh eviction state, size and
+            // the thumbnail we previously skipped.
             if wasDownloading && !isDownloading {
-                fetchThumbnail()
+                isThumbnailFetchCompleted = false
+                Task { await loadFileMetadata() }
             }
         }
     }
 
-    private func fetchThumbnail() {
-        // Don't try to read thumbnails from evicted iCloud files
-        guard !file.isEvicted() else {
-            isThumbnailFetchCompleted = true
-            return
+    /// Reads eviction status and file size off the main thread, then caches them in state, so the
+    /// row body never performs blocking iCloud filesystem I/O while rendering. Without this, every
+    /// download-progress update re-renders the row and freezes the UI during downloads.
+    private func loadFileMetadata() async {
+        let path = file.path
+        let wantSize = (subtitle == nil)
+        let result = await Task.detached(priority: .utility) { () -> (evicted: Bool, sizeText: String) in
+            let evicted = FSFile.isEvicted(atPath: path)
+            let sizeText = wantSize ? URL(filePath: path).fileSizeString : ""
+            return (evicted, sizeText)
+        }.value
+        isEvicted = result.evicted
+        fileSizeText = result.sizeText
+        if !result.evicted && !isThumbnailFetchCompleted {
+            fetchThumbnail()
         }
+    }
+
+    private func fetchThumbnail() {
         let filePath = file.path
         let isTaggable = file.isTaggableAudio()
         let isImage = file.type == .image

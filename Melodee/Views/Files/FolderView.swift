@@ -335,9 +335,9 @@ struct FolderView: View {
         updateFileManagerDirectory()
         withAnimation {
             if let path = currentDirectory?.path {
-                self.files = fileManager.files(in: URL(fileURLWithPath: path))
+                self.files = fileManager.files(in: URL(fileURLWithPath: path), recursive: false)
             } else {
-                self.files = fileManager.files()
+                self.files = fileManager.files(recursive: false)
             }
             sortFiles()
             state.isInitialLoadCompleted = true

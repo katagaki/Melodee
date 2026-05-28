@@ -24,8 +24,13 @@ struct FBAudioFileRow: View {
                 .tint(.primary)
         }
         .task(id: sortOption) {
-            // Don't read tags from evicted iCloud files
-            guard !file.isEvicted() else { return }
+            // Don't read tags from evicted iCloud files. Check eviction off the main thread so
+            // listing and scrolling never block on iCloud filesystem I/O.
+            let path = file.path
+            let evicted = await Task.detached(priority: .utility) {
+                FSFile.isEvicted(atPath: path)
+            }.value
+            guard !evicted else { return }
             tagSubtitle = readTagSubtitle()
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {

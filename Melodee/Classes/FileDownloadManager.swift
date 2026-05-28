@@ -13,6 +13,7 @@ class FileDownloadManager {
     @ObservationIgnored private var metadataQuery: NSMetadataQuery?
     @ObservationIgnored private var observer: Any?
     @ObservationIgnored private var pollTimer: Timer?
+    @ObservationIgnored private let ioQueue = DispatchQueue(label: "com.melodee.filedownload.io", qos: .utility)
 
     /// Map of file path → download progress (0.0 to 1.0), nil means no progress data yet
     var downloadProgress: [String: Double?] = [:]
@@ -29,17 +30,23 @@ class FileDownloadManager {
     }
 
     func startDownload(for file: FSFile, onComplete: (() -> Void)? = nil) {
-        let url = URL(filePath: file.path)
+        let path = file.path
         if let onComplete {
-            completionHandlers[file.path] = onComplete
+            completionHandlers[path] = onComplete
         }
-        downloadProgress[file.path] = .some(nil)
-        do {
-            try FileManager.default.startDownloadingUbiquitousItem(at: url)
-        } catch {
-            debugPrint("Failed to start downloading: \(error.localizedDescription)")
-            downloadProgress.removeValue(forKey: file.path)
-            completionHandlers.removeValue(forKey: file.path)
+        downloadProgress[path] = .some(nil)
+        // Request the (potentially blocking) iCloud download off the main thread.
+        nonisolated(unsafe) let managerRef = self
+        ioQueue.async {
+            do {
+                try FileManager.default.startDownloadingUbiquitousItem(at: URL(filePath: path))
+            } catch {
+                debugPrint("Failed to start downloading: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    managerRef.downloadProgress.removeValue(forKey: path)
+                    managerRef.completionHandlers.removeValue(forKey: path)
+                }
+            }
         }
     }
 
@@ -88,22 +95,36 @@ class FileDownloadManager {
     }
 
     private func pollForCompletedDownloads() {
-        for path in Array(downloadProgress.keys) {
-            let fileURL = URL(filePath: path)
-            // Check if the real file now exists on disk (not the .icloud placeholder)
-            guard FileManager.default.fileExists(atPath: fileURL.path(percentEncoded: false)) else {
-                continue
-            }
-            // Verify it's actually downloaded via resource values if it's a ubiquitous item
-            do {
-                let values = try fileURL.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
-                if let status = values.ubiquitousItemDownloadingStatus, status != .current {
+        let paths = Array(downloadProgress.keys)
+        guard !paths.isEmpty else { return }
+        // Perform the filesystem existence/status checks off the main thread so polling never
+        // stalls the UI while downloads are in progress.
+        nonisolated(unsafe) let managerRef = self
+        ioQueue.async {
+            var completedPaths: [String] = []
+            for path in paths {
+                let fileURL = URL(filePath: path)
+                // Check if the real file now exists on disk (not the .icloud placeholder)
+                guard FileManager.default.fileExists(atPath: fileURL.path(percentEncoded: false)) else {
                     continue
                 }
-            } catch {
-                // Not a ubiquitous item or error reading - if the file exists, treat as downloaded
+                // Verify it's actually downloaded via resource values if it's a ubiquitous item
+                do {
+                    let values = try fileURL.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
+                    if let status = values.ubiquitousItemDownloadingStatus, status != .current {
+                        continue
+                    }
+                } catch {
+                    // Not a ubiquitous item or error reading - if the file exists, treat as downloaded
+                }
+                completedPaths.append(path)
             }
-            markCompleted(path: path)
+            guard !completedPaths.isEmpty else { return }
+            DispatchQueue.main.async {
+                for path in completedPaths {
+                    managerRef.markCompleted(path: path)
+                }
+            }
         }
     }
 

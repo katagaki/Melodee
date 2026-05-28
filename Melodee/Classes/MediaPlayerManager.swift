@@ -26,6 +26,7 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     var repeatMode: RepeatMode = .none
     var queue: [FSFile] = []
     var currentlyPlayingID: String = ""
+    var metadataRefreshTrigger: UUID = UUID()
 
     @ObservationIgnored private var cachedMetadataID: String = ""
     @ObservationIgnored private var cachedTitle: String?
@@ -97,7 +98,6 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     private func refreshMetadataCacheIfNeeded(for file: FSFile) {
         guard cachedMetadataID != currentlyPlayingID else { return }
-        cachedMetadataID = currentlyPlayingID
         cachedTitle = nil
         cachedArtist = nil
         cachedAlbum = nil
@@ -106,8 +106,10 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
               FileManager.default.fileExists(atPath: file.path),
               !file.isEvicted(),
               let metadata = AudioFile.read(for: file)?.metadata else {
+            // Leave cachedMetadataID untouched so a later call can retry once the file is available.
             return
         }
+        cachedMetadataID = currentlyPlayingID
         cachedTitle = metadata.title
         cachedArtist = metadata.artist
         cachedAlbum = metadata.albumTitle
@@ -115,6 +117,11 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
                         ?? metadata.attachedPictures.first)?.imageData {
             cachedAlbumArt = UIImage(data: data)
         }
+    }
+
+    private func invalidateMetadataCache() {
+        cachedMetadataID = ""
+        metadataRefreshTrigger = UUID()
     }
 
     func currentlyPlayingFile() -> FSFile? {
@@ -159,6 +166,7 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
             isPlaybackActive = true
             isPaused = true
             downloadManager.startDownload(for: file) { [weak self] in
+                self?.invalidateMetadataCache()
                 self?.loadAndPlay(file)
             }
             return
@@ -224,6 +232,7 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
             isPlaybackActive = true
             isPaused = true
             downloadManager.startDownload(for: file) { [weak self] in
+                self?.invalidateMetadataCache()
                 self?.loadAndPlay(file)
             }
         } else {

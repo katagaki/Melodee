@@ -1,10 +1,3 @@
-//
-//  FileBrowser.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2025/08/30.
-//
-
 import SwiftUI
 
 struct FileBrowserNavigationDestinations: ViewModifier {
@@ -30,10 +23,6 @@ struct FileBrowserNavigationDestinations: ViewModifier {
                         fileManager: FilesystemManager(),
                         scopeRootURL: scopeRootURL
                     )
-                case .tagEditorSingle(let file):
-                    TagEditorView(files: [file])
-                case .tagEditorMultiple(let files):
-                    TagEditorView(files: files)
                 default: Color.clear
                 }
             })

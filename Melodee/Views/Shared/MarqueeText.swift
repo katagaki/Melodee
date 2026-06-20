@@ -1,10 +1,3 @@
-//
-//  MarqueeText.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2025/01/13.
-//
-
 // Adapted from https://github.com/joekndy/MarqueeText
 
 import SwiftUI

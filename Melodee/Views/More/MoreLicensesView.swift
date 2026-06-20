@@ -1,10 +1,3 @@
-//
-//  MoreLicensesView.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/11.
-//
-
 import SwiftUI
 
 struct MoreLicensesView: View {

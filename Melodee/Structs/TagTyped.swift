@@ -1,10 +1,3 @@
-//
-//  TagTyped.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/12.
-//
-
 @preconcurrency import AVFoundation
 import Foundation
 import SFBAudioEngine

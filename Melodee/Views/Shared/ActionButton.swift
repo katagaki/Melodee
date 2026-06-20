@@ -1,10 +1,3 @@
-//
-//  ActionButton.swift
-//  Melodee
-//
-//  Replacement for Komponents.ActionButton.
-//
-
 import SwiftUI
 
 struct ActionButton: View {
@@ -17,11 +10,11 @@ struct ActionButton: View {
     var body: some View {
         if isPrimary {
             button
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.glassProminent)
                 .clipShape(RoundedRectangle(cornerRadius: 99))
         } else {
             button
-                .buttonStyle(.bordered)
+                .buttonStyle(.glass)
                 .clipShape(RoundedRectangle(cornerRadius: 99))
         }
     }

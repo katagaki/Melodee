@@ -1,10 +1,3 @@
-//
-//  ListSectionHeader.swift
-//  Melodee
-//
-//  Replacement for Komponents.ListSectionHeader.
-//
-
 import SwiftUI
 
 struct ListSectionHeader: View {

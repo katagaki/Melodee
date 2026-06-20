@@ -1,10 +1,3 @@
-//
-//  TagEditorView+Functions.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2026/03/01.
-//
-
 @preconcurrency import SFBAudioEngine
 import SwiftUI
 

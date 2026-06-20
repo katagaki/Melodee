@@ -1,10 +1,3 @@
-//
-//  AudioFile.swift
-//  Melodee
-//
-//  Created by Claude on 2026/02/07.
-//
-
 import Foundation
 import SFBAudioEngine
 import UIKit

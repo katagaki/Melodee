@@ -1,10 +1,3 @@
-//
-//  App.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/11.
-//
-
 import SwiftUI
 
 @main
@@ -14,10 +7,11 @@ struct MelodeeApp: App {
     @State var mediaPlayerManager: MediaPlayerManager = MediaPlayerManager()
     @State var nowPlayingBarManager: NowPlayingBarManager = NowPlayingBarManager()
     @State var fileDownloadManager: FileDownloadManager = FileDownloadManager()
+    @State var externalFoldersManager: ExternalFoldersManager = ExternalFoldersManager()
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            MainView()
                 .task {
                     debugPrint("Creating placeholder files")
                     fileManager.createPlaceholders()
@@ -27,6 +21,7 @@ struct MelodeeApp: App {
                 .environment(mediaPlayerManager)
                 .environment(nowPlayingBarManager)
                 .environment(fileDownloadManager)
+                .environment(externalFoldersManager)
         }
     }
 }

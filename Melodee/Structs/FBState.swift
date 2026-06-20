@@ -1,15 +1,16 @@
-//
-//  FBState.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/12.
-//
-
 import Foundation
+
+struct TagEditorPresentation: Identifiable {
+    let id = UUID()
+    let files: [FSFile]
+}
 
 struct FBState {
     // State handling for display
     var isInitialLoadCompleted: Bool = false
+
+    // State handling for tag editing
+    var tagEditorPresentation: TagEditorPresentation?
 
     // State handling for file rename
     var isRenamingFile: Bool = false

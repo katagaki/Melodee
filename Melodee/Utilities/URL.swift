@@ -1,10 +1,3 @@
-//
-//  URL.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/24.
-//
-
 import Foundation
 
 extension URL {

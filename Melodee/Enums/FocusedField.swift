@@ -1,10 +1,3 @@
-//
-//  FocusedField.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/12.
-//
-
 import Foundation
 
 enum FocusedField: Int, Hashable {

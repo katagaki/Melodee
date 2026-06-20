@@ -1,10 +1,3 @@
-//
-//  FileDownloadManager.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2026/04/08.
-//
-
 import Foundation
 
 @Observable

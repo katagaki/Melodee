@@ -1,10 +1,3 @@
-//
-//  FileStateAlerts.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2025/07/12.
-//
-
 import SwiftUI
 
 struct FileBrowserAlerts: ViewModifier {

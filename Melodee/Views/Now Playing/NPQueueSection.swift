@@ -1,10 +1,3 @@
-//
-//  NPQueueSection.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/13.
-//
-
 import SwiftUI
 
 struct NPQueueSection: View {

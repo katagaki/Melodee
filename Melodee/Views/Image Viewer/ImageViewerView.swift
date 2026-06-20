@@ -1,10 +1,3 @@
-//
-//  ImageViewerView.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/14.
-//
-
 import SwiftUI
 import VariableBlurView
 

@@ -1,10 +1,3 @@
-//
-//  MediaPlayerManager.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/11.
-//
-
 @preconcurrency import AVFAudio
 import Foundation
 @preconcurrency import MediaPlayer

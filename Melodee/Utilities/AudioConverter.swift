@@ -1,10 +1,3 @@
-//
-//  AudioConverter.swift
-//  Melodee
-//
-//  Created by Claude on 2026/02/07.
-//
-
 @preconcurrency import AVFoundation
 import Foundation
 import SFBAudioEngine

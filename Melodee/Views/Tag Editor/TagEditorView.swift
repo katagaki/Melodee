@@ -1,10 +1,3 @@
-//
-//  TagEditorView.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/12.
-//
-
 import PhotosUI
 import SFBAudioEngine
 import SwiftUI
@@ -23,25 +16,14 @@ struct TagEditorView: View {
     @State var savePercentage: Int = 0
     @State var isInitialLoadCompleted: Bool = false
     @State var initialLoadPercentage: Int = 0
+    @State var isConfirmingAlbumArtDeletion: Bool = false
+    @State var isTokensPopoverPresented: Bool = false
     @FocusState var focusedField: FocusedField?
 
     var body: some View {
         List {
-            if files.count == 1 {
-                TETagDataSection(tagData: $tagData, focusedField: $focusedField)
-                    .popoverTip(TETokensTip(), arrowEdge: .top)
-            } else {
-                TETagDataSection(tagData: $tagData, focusedField: $focusedField,
-                               placeholder: NSLocalizedString("BatchEdit.Keep", comment: ""))
-            }
-            TEAvailableTokensSection()
-        }
-        .toolbarBackground(.hidden, for: .navigationBar)
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .top, spacing: 0.0) {
-            VStack {
-                HStack(alignment: .top, spacing: 16.0) {
+            Section {
+                VStack(spacing: 12.0) {
                     Group {
                         if let albumArt = tagData.albumArt,
                            let albumArtImage = UIImage(data: albumArt) {
@@ -53,59 +35,73 @@ struct TagEditorView: View {
                         }
                     }
                     .scaledToFill()
-                    .frame(width: 100.0, height: 100.0)
-                    .clipShape(RoundedRectangle(cornerRadius: 10.0))
+                    .frame(width: 240.0, height: 240.0)
+                    .clipShape(RoundedRectangle(cornerRadius: 16.0))
+                    .shadow(color: .black.opacity(0.15), radius: 8.0, y: 4.0)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 10.0)
+                        RoundedRectangle(cornerRadius: 16.0)
                             .stroke(.primary, lineWidth: 1/3)
                             .opacity(0.3)
                     )
-                    VStack(alignment: .leading) {
-                        Text(files.count == 1 ? files[0].name :
-                                NSLocalizedString("BatchEdit.MultipleFiles", comment: ""))
-                            .bold()
-                            .textCase(.none)
-                            .foregroundStyle(.primary)
-                        PhotosPicker(selection: $selectedPhoto,
-                                     matching: .images,
-                                     photoLibrary: .shared()) {
-                            Text("TagEditor.SelectAlbumArt")
-                                .bold()
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 99))
-                        .buttonStyle(.borderedProminent)
-                        .contextMenu {
+                    .overlay(alignment: .bottom) {
+                        HStack(spacing: 0.0) {
+                            PhotosPicker(selection: $selectedPhoto,
+                                         matching: .images,
+                                         photoLibrary: .shared()) {
+                                Image(systemName: "photo")
+                            }
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
                             Button {
                                 isSelectingFile = true
                             } label: {
-                                Text("TagEditor.SelectAlbumArt.FromFiles")
+                                Image(systemName: "folder")
                             }
-                            if tagData.albumArt != nil {
-                                Button(role: .destructive) {
-                                    selectedPhoto = nil
-                                    tagData.albumArt = nil
-                                    tagData.shouldRemoveAlbumArt = true
-                                } label: {
-                                    Text("TagEditor.RemoveAlbumArt")
-                                }
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                            Button(role: .destructive) {
+                                isConfirmingAlbumArtDeletion = true
+                            } label: {
+                                Image(systemName: "trash")
                             }
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                            .tint(.red)
+                            .disabled(tagData.albumArt == nil)
                         }
+                        .controlSize(.large)
+                        .imageScale(.large)
+                        .padding(.bottom, 12.0)
                     }
-                    Spacer(minLength: .zero)
+                    Text(files.count == 1 ? files[0].name :
+                            NSLocalizedString("BatchEdit.MultipleFiles", comment: ""))
+                        .bold()
+                        .textCase(.none)
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.center)
                 }
-                .padding(.top, 10.0)
-                .padding([.leading, .trailing, .bottom], 20.0)
+                .frame(maxWidth: .infinity)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 16.0, leading: 16.0, bottom: 16.0, trailing: 16.0))
             }
-            .frame(maxWidth: .infinity)
-            .background(Material.bar)
-            .overlay(alignment: .bottom) {
-                Rectangle()
-                    .frame(height: 1/3)
-                    .foregroundColor(.primary.opacity(0.2))
+            if files.count == 1 {
+                TETagDataSection(tagData: $tagData, focusedField: $focusedField)
+                    .popoverTip(TETokensTip(), arrowEdge: .top)
+            } else {
+                TETagDataSection(tagData: $tagData, focusedField: $focusedField,
+                               placeholder: NSLocalizedString("BatchEdit.Keep", comment: ""))
             }
         }
-        .safeAreaInset(edge: .bottom) {
-            VStack(alignment: .center, spacing: 0.0) {
+        .contentMargins(.top, 0.0, for: .scrollContent)
+        .navigationTitle("ViewTitle.TagEditor")
+        .navigationBarTitleDisplayMode(.inline)
+        .disabled(saveState == .saving || !isInitialLoadCompleted)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Spacer()
+            }
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     if saveState == .notSaved && isInitialLoadCompleted {
                         Task {
@@ -118,33 +114,44 @@ struct TagEditorView: View {
                         }
                     }
                 } label: {
-                    switch saveState {
-                    case .notSaved:
-                        LargeButtonLabel(iconName: "square.and.arrow.down.fill", text: "Shared.Save")
-                            .bold()
-                            .frame(maxWidth: .infinity)
-                    case .saving:
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .padding(.all, 8.0)
-                            .tint(.white)
-                    case .saved:
-                        Image(systemName: "checkmark")
-                            .font(.body)
-                            .bold()
-                            .padding([.top, .bottom], 8.0)
-                            .frame(maxWidth: .infinity)
+                    Group {
+                        switch saveState {
+                        case .notSaved:
+                            Text("Shared.Save")
+                                .bold()
+                        case .saving:
+                            ProgressView()
+                                .controlSize(.small)
+                                .tint(.white)
+                        case .saved:
+                            Image(systemName: "checkmark")
+                                .bold()
+                        }
                     }
+                    .foregroundStyle(.white)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(saveState == .saved ? .green : .accentColor)
-                .clipShape(RoundedRectangle(cornerRadius: 99))
-                .frame(minHeight: 56.0)
-                .padding([.leading, .trailing, .bottom], 16.0)
+                .disabled(!isInitialLoadCompleted)
+            }
+            ToolbarSpacer(.flexible, placement: .bottomBar)
+            ToolbarItem(placement: .bottomBar) {
+                Button {
+                    isTokensPopoverPresented = true
+                } label: {
+                    Image(systemName: "curlybraces")
+                }
+                .popover(isPresented: $isTokensPopoverPresented) {
+                    List {
+                        TEAvailableTokensSection()
+                    }
+                    .listStyle(.plain)
+                    .frame(minWidth: 320.0, idealWidth: 360.0, minHeight: 320.0, idealHeight: 440.0)
+                    .presentationCompactAdaptation(.popover)
+                }
             }
         }
-        .disabled(saveState == .saving || !isInitialLoadCompleted)
-        .scrollDismissesKeyboard(.interactively)
+        .scrollDismissesKeyboard(.immediately)
         .sheet(isPresented: $isSelectingFile) {
             DocumentPicker(allowedUTIs: [.image], onDocumentPicked: { url in
                 let isAccessSuccessful = url.startAccessingSecurityScopedResource()
@@ -157,6 +164,14 @@ struct TagEditorView: View {
                 url.stopAccessingSecurityScopedResource()
             })
             .ignoresSafeArea(edges: [.bottom])
+        }
+        .alert("TagEditor.RemoveAlbumArt", isPresented: $isConfirmingAlbumArtDeletion) {
+            Button("Shared.Delete", role: .destructive) {
+                selectedPhoto = nil
+                tagData.albumArt = nil
+                tagData.shouldRemoveAlbumArt = true
+            }
+            Button("Shared.Cancel", role: .cancel) { }
         }
         .overlay {
             if !isInitialLoadCompleted {

@@ -1,10 +1,3 @@
-//
-//  FolderView.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/11.
-//
-
 import SFBAudioEngine
 import SwiftUI
 import TipKit
@@ -15,6 +8,8 @@ struct FolderView: View {
     @State var fileManager: FilesystemManager
     @Environment(MediaPlayerManager.self) var mediaPlayer
 
+    @AppStorage("SelectedLibrarySource") var selectedSource: LibrarySource = .local
+
     @State var currentDirectory: FSDirectory?
     @State var files: [any FilesystemObject] = []
     @State var state = FBState()
@@ -23,17 +18,25 @@ struct FolderView: View {
     @State var isCreatingPlaylist = false
     @State var isCreatingFolder = false
     @State var newFolderName: String = ""
+    @State var isAttributionsPresented: Bool = false
 
     var overrideStorageLocation: StorageLocation?
+    var isLibraryRoot: Bool = false
 
     init(
         currentDirectory: FSDirectory? = nil,
         overrideStorageLocation: StorageLocation? = nil,
+        isLibraryRoot: Bool = false,
         fileManager: FilesystemManager? = nil
     ) {
         self.currentDirectory = currentDirectory
         self.overrideStorageLocation = overrideStorageLocation
+        self.isLibraryRoot = isLibraryRoot
         self._fileManager = State(initialValue: fileManager ?? FilesystemManager())
+    }
+
+    var isCloudAvailable: Bool {
+        FileManager.default.ubiquityIdentityToken != nil
     }
 
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
@@ -49,27 +52,29 @@ struct FolderView: View {
     var body: some View {
         List {
             Section {
-                Text(viewTitle())
-                .font(.largeTitle)
-                .textCase(.none)
-                .bold()
-                .foregroundColor(.primary)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
-                .listRowBackground(Color.clear)
-                .textSelection(.enabled)
-                .background {
-                    GeometryReader { geometry in
-                        DispatchQueue.main.async {
-                            withAnimation {
-                                scrollOffset = geometry.frame(in: .global).minY - statusBarHeight - 51.0
-                                heightOfTitle = geometry.frame(in: .local).height
+                if !isLibraryRoot {
+                    Text(viewTitle())
+                    .font(.largeTitle)
+                    .textCase(.none)
+                    .bold()
+                    .foregroundColor(.primary)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 8, trailing: 16))
+                    .listRowBackground(Color.clear)
+                    .textSelection(.enabled)
+                    .background {
+                        GeometryReader { geometry in
+                            DispatchQueue.main.async {
+                                withAnimation {
+                                    scrollOffset = geometry.frame(in: .global).minY - statusBarHeight - 51.0
+                                    heightOfTitle = geometry.frame(in: .local).height
+                                }
                             }
+                            return Color.clear
                         }
-                        return Color.clear
                     }
+                    .opacity(scrollOffset > -heightOfTitle ? 1 : 0)
                 }
-                .opacity(scrollOffset > -heightOfTitle ? 1 : 0)
                 HStack(alignment: .center, spacing: 8.0) {
                     Group {
                         ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
@@ -101,6 +106,7 @@ struct FolderView: View {
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden, edges: .top)
                 .alignmentGuide(.listRowSeparatorLeading) { _ in
                     return 0.0
                 }
@@ -139,6 +145,7 @@ struct FolderView: View {
         }
         .navigationTitle(viewTitle())
         .listStyle(.plain)
+        .playbackBarContentInset()
         .scrollContentBackground(.hidden)
         .background(
             .linearGradient(
@@ -148,45 +155,82 @@ struct FolderView: View {
             )
         )
         .toolbar {
-            if currentDirectory == nil {
-                ToolbarItem(placement: .topBarLeading) {
-                    MoreMenuButton()
-                }
-            }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Menu {
-                    Button {
-                        newFolderName = ""
-                        isCreatingFolder = true
-                    } label: {
-                        Label("Shared.Folder", systemImage: "folder")
+                    Section {
+                        Button {
+                            newFolderName = ""
+                            isCreatingFolder = true
+                        } label: {
+                            Label("Shared.Folder", systemImage: "folder")
+                        }
+                        Button {
+                            isCreatingPlaylist = true
+                        } label: {
+                            Label("Shared.Playlist", systemImage: "music.note.list")
+                        }
                     }
-                    Button {
-                        isCreatingPlaylist = true
-                    } label: {
-                        Label("Shared.Playlist", systemImage: "music.note.list")
+                    if folderContainsTaggableFiles() {
+                        Section {
+                            Button {
+                                state.tagEditorPresentation = TagEditorPresentation(files: taggableFiles())
+                            } label: {
+                                Label("Shared.EditTag.All", systemImage: "tag")
+                            }
+                        }
+                    }
+                    Section("Sort.Title") {
+                        Picker("Sort.SortBy", selection: $state.sortOption) {
+                            Label("Sort.FileName", systemImage: "doc")
+                                .tag(SortOption.fileName)
+                            Label("Sort.TrackTitle", systemImage: "music.note")
+                                .tag(SortOption.trackTitle)
+                            Label("Sort.TrackNumber", systemImage: "number")
+                                .tag(SortOption.trackNumber)
+                            Label("Sort.AlbumName", systemImage: "square.stack")
+                                .tag(SortOption.albumName)
+                            Label("Sort.ArtistName", systemImage: "music.mic")
+                                .tag(SortOption.artistName)
+                        }
+                    }
+                    .labelsVisibility(.visible)
+                    .menuActionDismissBehavior(.disabled)
+                    Section {
+                        Picker("Sort.Order", selection: $state.sortOrder) {
+                            Label("Sort.Ascending", systemImage: "arrow.up")
+                                .tag(SortOrder.ascending)
+                            Label("Sort.Descending", systemImage: "arrow.down")
+                                .tag(SortOrder.descending)
+                        }
+                    }
+                    .menuActionDismissBehavior(.disabled)
+                    Section {
+                        Link(destination: URL(string: "https://github.com/katagaki/Melodee")!) {
+                            Label("More.GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
+                        }
+                        Button("More.Attributions") {
+                            isAttributionsPresented = true
+                        }
                     }
                 } label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "ellipsis")
                 }
-            }
-            ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                if folderContainsTaggableFiles() {
-                    FBMenu(files: $files)
-                }
-            }
-            ToolbarSpacer(.fixed, placement: .topBarTrailing)
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                FBSortMenu(sortOption: $state.sortOption, sortOrder: $state.sortOrder)
             }
             ToolbarItem(placement: .principal) {
-                Text(viewTitle())
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .bold()
-                    .opacity(scrollOffset <= -heightOfTitle ? 1 : 0)
-                    .transition(.opacity.animation(.default.speed(0.2)))
+                if isLibraryRoot {
+                    LibrarySourcePicker(
+                        selectedSource: $selectedSource,
+                        isCloudAvailable: isCloudAvailable
+                    )
+                } else {
+                    Text(viewTitle())
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                        .frame(maxWidth: 200.0)
+                        .bold()
+                        .opacity(scrollOffset <= -heightOfTitle ? 1 : 0)
+                        .transition(.opacity.animation(.default.speed(0.2)))
+                }
             }
         }
         .overlay {
@@ -261,6 +305,18 @@ struct FolderView: View {
             sortFiles()
         }
         .fileBrowserAlerts(state: $state, refreshFiles: refreshFiles)
+        .sheet(item: $state.tagEditorPresentation) { presentation in
+            NavigationStack {
+                TagEditorView(files: presentation.files)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button(role: .close) {
+                                state.tagEditorPresentation = nil
+                            }
+                        }
+                    }
+            }
+        }
         .sheet(isPresented: $isCreatingPlaylist) {
             CreatePlaylistSheet(
                 scopeRootURL: scopeRootURL(),
@@ -268,6 +324,18 @@ struct FolderView: View {
                 fileManager: fileManager
             ) {
                 refreshFiles()
+            }
+        }
+        .sheet(isPresented: $isAttributionsPresented) {
+            NavigationStack {
+                MoreLicensesView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(role: .close) {
+                                isAttributionsPresented = false
+                            }
+                        }
+                    }
             }
         }
         .alert("Alert.CreateFolder.Title", isPresented: $isCreatingFolder) {
@@ -390,7 +458,11 @@ struct FolderView: View {
         files.contains { ($0 as? FSFile)?.isTaggableAudio() ?? false }
     }
 
-    func sortFiles() { // swiftlint:disable:this cyclomatic_complexity function_body_length
+    func taggableFiles() -> [FSFile] {
+        files.compactMap { $0 as? FSFile }.filter { $0.isTaggableAudio() }
+    }
+
+    func sortFiles() { // swiftlint:disable:this function_body_length
         // Separate into groups: folders > playlists > audio tracks > other files
         var directories = files.filter { $0 is FSDirectory }
         let allFiles = files.compactMap { $0 as? FSFile }

@@ -1,10 +1,3 @@
-//
-//  DocumentPicker.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2024/02/10.
-//
-
 import SwiftUI
 import UniformTypeIdentifiers
 

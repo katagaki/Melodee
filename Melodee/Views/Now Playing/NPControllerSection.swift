@@ -1,10 +1,3 @@
-//
-//  NPControllerSection.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/13.
-//
-
 import AVKit
 import SwiftUI
 

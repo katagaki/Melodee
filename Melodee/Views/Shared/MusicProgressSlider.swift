@@ -1,11 +1,3 @@
-//
-//  MusicProgressSlider.swift
-//  Custom Seekbar
-//
-//  Created by Pratik on 08/01/23.
-//  Modified by シン・ジャスティン on 2023/09/12.
-//
-
 import SwiftUI
 
 struct MusicProgressSlider<T: BinaryFloatingPoint>: View {

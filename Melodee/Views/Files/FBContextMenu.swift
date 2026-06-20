@@ -1,10 +1,3 @@
-//
-//  FBContextMenu.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2023/09/12.
-//
-
 import SwiftUI
 
 struct FBContextMenu: View {
@@ -61,7 +54,9 @@ struct FBContextMenu: View {
             }
             // Tag Editor menu items
             if file.isTaggableAudio() {
-                NavigationLink(value: ViewPath.tagEditorSingle(file: file)) {
+                Button {
+                    state.tagEditorPresentation = TagEditorPresentation(files: [file])
+                } label: {
                     Label("Shared.EditTag.Single", systemImage: "tag")
                 }
                 Divider()

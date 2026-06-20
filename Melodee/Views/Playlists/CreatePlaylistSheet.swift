@@ -1,10 +1,3 @@
-//
-//  CreatePlaylistSheet.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2024/03/16.
-//
-
 @preconcurrency import AVFoundation
 import SwiftUI
 
@@ -134,14 +127,6 @@ struct CreatePlaylistSheet: View {
                 }
             }
             .listStyle(.plain)
-            .scrollContentBackground(.hidden)
-            .background(
-                .linearGradient(
-                    colors: [.backgroundGradientTop, .backgroundGradientBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
             .navigationTitle("Playlists.CreatePlaylist")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

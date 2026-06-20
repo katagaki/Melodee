@@ -1,10 +1,3 @@
-//
-//  AdaptiveGlass.swift
-//  Melodee
-//
-//  Created by シン・ジャスティン on 2025/10/25.
-//
-
 import SwiftUI
 
 extension View {

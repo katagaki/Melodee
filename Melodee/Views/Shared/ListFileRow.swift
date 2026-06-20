@@ -89,8 +89,7 @@ struct ListFileRow: View {
             await loadFileMetadata()
         }
         .onChange(of: downloadManager.isDownloading(file)) { wasDownloading, isDownloading in
-            // When a download finishes, the file is now local: refresh eviction state, size and
-            // the thumbnail we previously skipped.
+            // When a download finishes, refresh eviction state, size and thumbnail
             if wasDownloading && !isDownloading {
                 isThumbnailFetchCompleted = false
                 Task { await loadFileMetadata() }
@@ -98,9 +97,7 @@ struct ListFileRow: View {
         }
     }
 
-    /// Reads eviction status and file size off the main thread, then caches them in state, so the
-    /// row body never performs blocking iCloud filesystem I/O while rendering. Without this, every
-    /// download-progress update re-renders the row and freezes the UI during downloads.
+    /// Reads eviction status and file size off the main thread and caches them in state.
     private func loadFileMetadata() async {
         let path = file.path
         let wantSize = (subtitle == nil)

@@ -35,7 +35,6 @@ class FileDownloadManager {
             completionHandlers[path] = onComplete
         }
         downloadProgress[path] = .some(nil)
-        // Request the (potentially blocking) iCloud download off the main thread.
         nonisolated(unsafe) let managerRef = self
         ioQueue.async {
             do {
@@ -97,8 +96,6 @@ class FileDownloadManager {
     private func pollForCompletedDownloads() {
         let paths = Array(downloadProgress.keys)
         guard !paths.isEmpty else { return }
-        // Perform the filesystem existence/status checks off the main thread so polling never
-        // stalls the UI while downloads are in progress.
         nonisolated(unsafe) let managerRef = self
         ioQueue.async {
             var completedPaths: [String] = []

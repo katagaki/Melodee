@@ -76,8 +76,6 @@ struct FSFile: FilesystemObject {
         return FSFile.isEvicted(atPath: path)
     }
 
-    /// Returns true if the file at `path` is stored in iCloud and not yet downloaded locally.
-    /// Performs blocking filesystem I/O, so prefer calling it off the main thread.
     static func isEvicted(atPath path: String) -> Bool {
         let url = URL(filePath: path)
         // Check if the .icloud placeholder file exists

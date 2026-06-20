@@ -58,9 +58,6 @@ class FilesystemManager {
                         }
 
                         if url.hasDirectoryPath {
-                            // Only descend into subdirectories when a recursive listing is requested.
-                            // The file browser shows a single level, so recursing there reads the
-                            // entire iCloud subtree synchronously and freezes the UI for no benefit.
                             return FSDirectory(name: url.lastPathComponent,
                                                path: url.path,
                                                files: recursive ? files(in: url, recursive: true) : [])

@@ -52,7 +52,7 @@ struct TagEditorView: View {
                             .opacity(0.3)
                     )
                     .overlay(alignment: .bottom) {
-                        HStack(spacing: 0.0) {
+                        HStack(spacing: albumArtControlsPadding) {
                             PhotosPicker(selection: $selectedPhoto,
                                          matching: .images,
                                          photoLibrary: .shared()) {
@@ -79,7 +79,6 @@ struct TagEditorView: View {
                         }
                         .controlSize(.large)
                         .imageScale(.large)
-                        .padding(albumArtControlsPadding)
                         .padding(.bottom, 12.0)
                     }
                     Text(files.count == 1 ? files[0].name :

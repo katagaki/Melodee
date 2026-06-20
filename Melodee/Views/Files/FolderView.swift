@@ -19,6 +19,9 @@ struct FolderView: View {
     @State var isCreatingFolder = false
     @State var newFolderName: String = ""
     @State var isAttributionsPresented: Bool = false
+    @State var searchText: String = ""
+    @State var searchFolderResults: [FSDirectory] = []
+    @State var searchFileResults: [FSFile] = []
 
     var overrideStorageLocation: StorageLocation?
     var isLibraryRoot: Bool = false
@@ -39,6 +42,10 @@ struct FolderView: View {
         FileManager.default.ubiquityIdentityToken != nil
     }
 
+    var isSearching: Bool {
+        !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     let statusBarHeight: CGFloat = UIApplication.shared.connectedScenes
             .filter {$0.activationState == .foregroundActive }
             .map {$0 as? UIWindowScene }
@@ -51,6 +58,22 @@ struct FolderView: View {
 
     var body: some View {
         List {
+            if isSearching {
+                if !searchFolderResults.isEmpty {
+                    Section("Search.Folders") {
+                        ForEach(searchFolderResults, id: \.path) { directory in
+                            fileBrowserRow(for: directory)
+                        }
+                    }
+                }
+                if !searchFileResults.isEmpty {
+                    Section("Search.Files") {
+                        ForEach(searchFileResults, id: \.path) { file in
+                            fileBrowserRow(for: file)
+                        }
+                    }
+                }
+            } else {
             Section {
                 if !isLibraryRoot {
                     Text(viewTitle())
@@ -115,35 +138,20 @@ struct FolderView: View {
             }
             Section {
                 ForEach($files, id: \.path) { $file in
-                    Group {
-                        if let directory = file as? FSDirectory {
-                            FBDirectoryRow(directory: directory, storageLocation: storageLocation)
-                        } else if let file = file as? FSFile {
-                            switch file.type {
-                            case .audio: FBAudioFileRow(file: file, sortOption: state.sortOption)
-                            case .image: FBImageFileRow(file: file)
-                            case .text: FBTextFileRow(file: file)
-                            case .pdf: FBPdfFileRow(file: file)
-                            case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
-                            case .playlist: FBPlaylistFileRow(file: file, scopeRootURL: scopeRootURL())
-                            default: ListFileRow(file: .constant(file))
-                            }
-                        }
-                    }
-                    .contextMenu {
-                        FBContextMenu(state: $state, file: file, extractZIPAction: {
-                            if let file = file as? FSFile {
-                                extractZIP(file: file)
-                            }
-                        }, refreshFilesAction: {
-                            refreshFiles()
-                        })
-                    }
-                    .listRowBackground(Color.clear)
+                    fileBrowserRow(for: file)
                 }
+            }
             }
         }
         .navigationTitle(viewTitle())
+        .searchable(
+            text: $searchText,
+            placement: .navigationBarDrawer(displayMode: .automatic),
+            prompt: Text("Search.Prompt")
+        )
+        .onChange(of: searchText) {
+            performSearch()
+        }
         .listStyle(.plain)
         .playbackBarContentInset()
         .scrollContentBackground(.hidden)
@@ -234,7 +242,11 @@ struct FolderView: View {
             }
         }
         .overlay {
-            if files.count == 0 && currentDirectory == nil && state.isInitialLoadCompleted {
+            if isSearching {
+                if searchFolderResults.isEmpty && searchFileResults.isEmpty {
+                    ContentUnavailableView.search(text: searchText)
+                }
+            } else if files.count == 0 && currentDirectory == nil && state.isInitialLoadCompleted {
                 // Show ContentUnavailableView with button for root directories
                 if storageLocation == .local || storageLocation == .cloud {
                     ContentUnavailableView {
@@ -347,6 +359,51 @@ struct FolderView: View {
             Button("Shared.Cancel", role: .cancel) {
                 newFolderName = ""
             }
+        }
+    }
+
+    @ViewBuilder
+    func fileBrowserRow(for file: any FilesystemObject) -> some View {
+        Group {
+            if let directory = file as? FSDirectory {
+                FBDirectoryRow(directory: directory, storageLocation: storageLocation)
+            } else if let file = file as? FSFile {
+                switch file.type {
+                case .audio: FBAudioFileRow(file: file, sortOption: state.sortOption)
+                case .image: FBImageFileRow(file: file)
+                case .text: FBTextFileRow(file: file)
+                case .pdf: FBPdfFileRow(file: file)
+                case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
+                case .playlist: FBPlaylistFileRow(file: file, scopeRootURL: scopeRootURL())
+                default: ListFileRow(file: .constant(file))
+                }
+            }
+        }
+        .contextMenu {
+            FBContextMenu(state: $state, file: file, extractZIPAction: {
+                if let file = file as? FSFile {
+                    extractZIP(file: file)
+                }
+            }, refreshFilesAction: {
+                refreshFiles()
+            })
+        }
+        .listRowBackground(Color.clear)
+    }
+
+    func performSearch() {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else {
+            searchFolderResults = []
+            searchFileResults = []
+            return
+        }
+        let results = fileManager.search(matching: query, in: currentDirectoryURL())
+        searchFolderResults = results.folders.sorted {
+            $0.name.localizedStandardCompare($1.name) == .orderedAscending
+        }
+        searchFileResults = results.files.sorted {
+            $0.name.localizedStandardCompare($1.name) == .orderedAscending
         }
     }
 

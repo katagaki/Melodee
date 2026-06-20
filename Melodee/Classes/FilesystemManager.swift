@@ -89,6 +89,28 @@ class FilesystemManager {
         return []
     }
 
+    /// Recursively searches for folders and files whose name matches the query, starting at `url`.
+    /// Folders and files are returned separately so they can be displayed in their own sections.
+    func search(matching query: String, in url: URL) -> (folders: [FSDirectory], files: [FSFile]) {
+        var matchedFolders: [FSDirectory] = []
+        var matchedFiles: [FSFile] = []
+        func walk(_ directoryURL: URL) {
+            for object in files(in: directoryURL, recursive: false) {
+                if let directory = object as? FSDirectory {
+                    if directory.name.localizedCaseInsensitiveContains(query) {
+                        matchedFolders.append(directory)
+                    }
+                    walk(URL(fileURLWithPath: directory.path))
+                } else if let file = object as? FSFile,
+                          file.name.localizedCaseInsensitiveContains(query) {
+                    matchedFiles.append(file)
+                }
+            }
+        }
+        walk(url)
+        return (matchedFolders, matchedFiles)
+    }
+
     func fileURL(for url: URL) -> URL {
         var fileName: String = url.lastPathComponent
         if fileName.hasPrefix(".") && fileName.hasSuffix(".icloud") {

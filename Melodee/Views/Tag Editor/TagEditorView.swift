@@ -60,6 +60,7 @@ struct TagEditorView: View {
                             }
                             .buttonStyle(.glass)
                             .buttonBorderShape(.circle)
+                            .accessibilityLabel("TagEditor.SelectAlbumArt")
                             Button {
                                 isSelectingFile = true
                             } label: {
@@ -67,6 +68,7 @@ struct TagEditorView: View {
                             }
                             .buttonStyle(.glass)
                             .buttonBorderShape(.circle)
+                            .accessibilityLabel("TagEditor.SelectAlbumArt.FromFiles")
                             Button(role: .destructive) {
                                 isConfirmingAlbumArtDeletion = true
                             } label: {
@@ -76,6 +78,7 @@ struct TagEditorView: View {
                             .buttonBorderShape(.circle)
                             .tint(.red)
                             .disabled(tagData.albumArt == nil)
+                            .accessibilityLabel("TagEditor.DeleteAlbumArt")
                         }
                         .controlSize(.large)
                         .imageScale(.large)
@@ -180,6 +183,8 @@ struct TagEditorView: View {
                 tagData.shouldRemoveAlbumArt = true
             }
             Button("Shared.Cancel", role: .cancel) { }
+        } message: {
+            Text("TagEditor.RemoveAlbumArt.Subtitle")
         }
         .overlay {
             if !isInitialLoadCompleted {

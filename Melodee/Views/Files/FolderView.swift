@@ -148,6 +148,11 @@ struct FolderView: View {
             )
         )
         .toolbar {
+            if currentDirectory == nil {
+                ToolbarItem(placement: .topBarLeading) {
+                    MoreMenuButton()
+                }
+            }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Menu {
                     Button {

@@ -46,11 +46,12 @@ struct MainTabView: View {
             Tab("Tab.ExternalFolders", systemImage: "folder.fill", value: 2) {
                 FilesView()
             }
-            Tab("Tab.More", systemImage: "ellipsis", value: 3) {
-                MoreView()
-            }
         }
         .task {
+            // The More tab (value 3) was removed; reset stale selections to the first tab.
+            if selectedTab == 3 {
+                selectedTab = 0
+            }
             try? Tips.configure([
                 .displayFrequency(.immediate),
                 .datastoreLocation(.applicationDefault)

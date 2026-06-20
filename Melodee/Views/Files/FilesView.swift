@@ -57,6 +57,9 @@ struct FilesView: View {
             )
             .navigationTitle("ViewTitle.ExternalFolders")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    MoreMenuButton()
+                }
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button {
                         isSelectingDirectory = true

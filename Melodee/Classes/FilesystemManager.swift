@@ -40,7 +40,7 @@ class FilesystemManager {
         }
     }
 
-    func files(in url: URL? = nil) -> [any FilesystemObject] {
+    func files(in url: URL? = nil, recursive: Bool = true) -> [any FilesystemObject] {
         debugPrint("Enumerating files in '\(url == nil ? directory?.absoluteString ?? "": url?.absoluteString ?? "")'.")
         do {
             if let directory = (url == nil ? directory : url), directoryOrFileExists(at: directory) {
@@ -60,7 +60,7 @@ class FilesystemManager {
                         if url.hasDirectoryPath {
                             return FSDirectory(name: url.lastPathComponent,
                                                path: url.path,
-                                               files: files(in: url))
+                                               files: recursive ? files(in: url, recursive: true) : [])
                         } else {
                             // Get actual path for dataless files
                             let fileURL: URL = fileURL(for: url)

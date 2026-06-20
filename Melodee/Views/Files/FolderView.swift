@@ -162,12 +162,12 @@ struct FolderView: View {
                             newFolderName = ""
                             isCreatingFolder = true
                         } label: {
-                            Label("Shared.Folder", systemImage: "folder")
+                            Label("Shared.NewFolder", systemImage: "folder")
                         }
                         Button {
                             isCreatingPlaylist = true
                         } label: {
-                            Label("Shared.Playlist", systemImage: "music.note.list")
+                            Label("Shared.NewPlaylist", systemImage: "music.note.list")
                         }
                     }
                     if folderContainsTaggableFiles() {

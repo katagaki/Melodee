@@ -20,6 +20,14 @@ struct TagEditorView: View {
     @State var isTokensPopoverPresented: Bool = false
     @FocusState var focusedField: FocusedField?
 
+    var albumArtControlsPadding: CGFloat {
+        if #available(iOS 27.0, *) {
+            8.0
+        } else {
+            0.0
+        }
+    }
+
     var body: some View {
         List {
             Section {
@@ -71,6 +79,7 @@ struct TagEditorView: View {
                         }
                         .controlSize(.large)
                         .imageScale(.large)
+                        .padding(albumArtControlsPadding)
                         .padding(.bottom, 12.0)
                     }
                     Text(files.count == 1 ? files[0].name :

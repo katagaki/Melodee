@@ -39,6 +39,11 @@ struct FSFile: FilesystemObject {
         return "Melodee"
     }
 
+    /// Returns true if this file can be added to the playback queue.
+    func isPlayableMedia() -> Bool {
+        return type == .audio || type == .video
+    }
+
     /// Returns true if this file is a taggable audio file (SFBAudioEngine-writable).
     func isTaggableAudio() -> Bool {
         return FSFile.taggableAudioExtensions.contains(self.extension)

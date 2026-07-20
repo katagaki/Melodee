@@ -1,4 +1,5 @@
 @preconcurrency import AVFAudio
+import AVKit
 import Foundation
 @preconcurrency import MediaPlayer
 import SFBAudioEngine
@@ -13,6 +14,8 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     @ObservationIgnored let remoteCommandCenter = MPRemoteCommandCenter.shared()
     @ObservationIgnored let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
     @ObservationIgnored let audioPlayer = AudioPlayer()
+    @ObservationIgnored let videoPlayer = AVPlayer()
+    @ObservationIgnored let videoPlayerController: AVPlayerViewController
     @ObservationIgnored var downloadManager: FileDownloadManager?
     var isPlaybackActive: Bool = false
     var isPaused: Bool = true
@@ -20,26 +23,59 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     var queue: [FSFile] = []
     var currentlyPlayingID: String = ""
     var metadataRefreshTrigger: UUID = UUID()
+    var videoAspectRatio: CGFloat?
 
     @ObservationIgnored private var cachedMetadataID: String = ""
     @ObservationIgnored private var cachedTitle: String?
     @ObservationIgnored private var cachedArtist: String?
     @ObservationIgnored private var cachedAlbum: String?
     @ObservationIgnored private var cachedAlbumArt: UIImage?
+    @ObservationIgnored private var videoItemStatusObservation: NSKeyValueObservation?
+    @ObservationIgnored private var videoTimeControlObservation: NSKeyValueObservation?
+    @ObservationIgnored private var videoPresentationSizeObservation: NSKeyValueObservation?
 
     override init() {
+        // The same controller instance is reused by the Now Playing sheet so that
+        // Picture in Picture keeps running when the sheet is dismissed.
+        videoPlayerController = MainActor.assumeIsolated {
+            let controller = AVPlayerViewController()
+            controller.allowsPictureInPicturePlayback = true
+            controller.canStartPictureInPictureAutomaticallyFromInline = true
+            controller.updatesNowPlayingInfoCenter = false
+            return controller
+        }
         super.init()
         audioPlayer.delegate = self
-        // Set up remote controls
+        // Advance the queue when a video finishes playing
+        notificationCenter.addObserver(self,
+                                       selector: #selector(videoPlayerItemDidPlayToEnd(_:)),
+                                       name: .AVPlayerItemDidPlayToEndTime,
+                                       object: nil)
+        // Keep isPaused in sync when the video is paused/resumed from the
+        // native player controls, PiP window, or fullscreen presentation
+        videoTimeControlObservation = videoPlayer.observe(\.timeControlStatus) { [weak self] player, _ in
+            guard let self else { return }
+            nonisolated(unsafe) let managerRef = self
+            let isNowPaused = player.timeControlStatus == .paused
+            Task { @MainActor in
+                guard managerRef.isCurrentlyPlayingVideo() else { return }
+                managerRef.isPaused = isNowPaused
+                managerRef.setNowPlaying()
+            }
+        }
+        setUpRemoteCommands()
+    }
+
+    private func setUpRemoteCommands() {
         remoteCommandCenter.playCommand.addTarget { _ in
-            if !self.audioPlayer.isPlaying, self.canStartPlayback() {
+            if !self.isEnginePlaying(), self.canStartPlayback() {
                 self.play()
                 return .success
             }
             return .commandFailed
         }
         remoteCommandCenter.pauseCommand.addTarget { _ in
-            if self.audioPlayer.isPlaying {
+            if self.isEnginePlaying() {
                 self.pause()
                 return .success
             }
@@ -121,6 +157,32 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         return queue.first(where: { $0.playbackQueueID == currentlyPlayingID })
     }
 
+    func isCurrentlyPlayingVideo() -> Bool {
+        return currentlyPlayingFile()?.type == .video
+    }
+
+    func isEnginePlaying() -> Bool {
+        return audioPlayer.isPlaying || videoPlayer.timeControlStatus != .paused
+    }
+
+    func supportsSeeking() -> Bool {
+        if isCurrentlyPlayingVideo() {
+            return videoPlayer.currentItem != nil
+        }
+        return audioPlayer.supportsSeeking
+    }
+
+    func playbackTime() -> (currentTime: TimeInterval, totalTime: TimeInterval)? {
+        if isCurrentlyPlayingVideo() {
+            guard let item = videoPlayer.currentItem else { return nil }
+            let totalTime = item.duration.seconds
+            guard totalTime.isFinite, totalTime > 0 else { return nil }
+            return (item.currentTime().seconds, totalTime)
+        }
+        guard let time = audioPlayer.time else { return nil }
+        return (time.currentTime, time.totalTime)
+    }
+
     func currentlyPlayingIndex() -> Int {
         return queue.firstIndex(where: { $0.playbackQueueID == currentlyPlayingID }) ?? 0
     }
@@ -140,8 +202,9 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     }
 
     func playImmediately(_ file: FSFile, addToQueue: Bool = true) {
-        // Stop audio if it's playing
+        // Stop any playback that is in progress
         audioPlayer.stop()
+        videoPlayer.pause()
         // Queue and/or play new file
         let currentlyPlayingIndex = currentlyPlayingIndex()
         if addToQueue {
@@ -170,6 +233,40 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     private func loadAndPlay(_ file: FSFile) {
         activateAudioSession()
         let url = URL(fileURLWithPath: file.path)
+        if file.type == .video {
+            audioPlayer.stop()
+            let item = AVPlayerItem(url: url)
+            videoAspectRatio = nil
+            // Size the Now Playing video surface to the video's own aspect ratio
+            videoPresentationSizeObservation = item.observe(
+                \.presentationSize,
+                 options: [.initial, .new]
+            ) { [weak self] item, _ in
+                let size = item.presentationSize
+                guard size.width > 0, size.height > 0, let self else { return }
+                nonisolated(unsafe) let managerRef = self
+                Task { @MainActor in
+                    managerRef.videoAspectRatio = size.width / size.height
+                }
+            }
+            videoItemStatusObservation = item.observe(\.status) { [weak self] item, _ in
+                guard item.status == .failed, let self else { return }
+                debugPrint("AVPlayer failed to load item: \(item.error?.localizedDescription ?? "unknown error")")
+                nonisolated(unsafe) let managerRef = self
+                Task { @MainActor in
+                    managerRef.handlePlaybackFailure()
+                }
+            }
+            videoPlayer.replaceCurrentItem(with: item)
+            videoPlayer.play()
+            isPlaybackActive = true
+            isPaused = false
+            setNowPlaying()
+            return
+        }
+        videoPlayer.replaceCurrentItem(with: nil)
+        videoPresentationSizeObservation = nil
+        videoAspectRatio = nil
         do {
             try audioPlayer.play(url)
             isPlaybackActive = true
@@ -177,11 +274,15 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
             setNowPlaying()
         } catch {
             debugPrint("Failed to start playback: \(error.localizedDescription)")
-            if canGoToNextTrack() {
-                skipToNextTrack()
-            } else {
-                stop()
-            }
+            handlePlaybackFailure()
+        }
+    }
+
+    private func handlePlaybackFailure() {
+        if canGoToNextTrack() {
+            skipToNextTrack()
+        } else {
+            stop()
         }
     }
 
@@ -199,6 +300,17 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     func play() {
         activateAudioSession()
+        if isCurrentlyPlayingVideo(), let item = videoPlayer.currentItem {
+            // Restart from the top if the video previously played to the end
+            if item.duration.isValid, !item.duration.isIndefinite, item.currentTime() >= item.duration {
+                videoPlayer.seek(to: .zero)
+            }
+            videoPlayer.play()
+            isPlaybackActive = true
+            isPaused = false
+            setNowPlaying()
+            return
+        }
         if audioPlayer.isPaused {
             do {
                 try audioPlayer.play()
@@ -247,11 +359,16 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
 
     func pause() {
         audioPlayer.pause()
+        videoPlayer.pause()
         isPaused = true
     }
 
     func stop() {
         audioPlayer.stop()
+        videoPlayer.replaceCurrentItem(with: nil)
+        videoItemStatusObservation = nil
+        videoPresentationSizeObservation = nil
+        videoAspectRatio = nil
         queue.removeAll()
         currentlyPlayingID = ""
         nowPlayingInfoCenter.nowPlayingInfo = nil
@@ -276,6 +393,13 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     }
 
     func seekTo(_ time: TimeInterval) {
+        if isCurrentlyPlayingVideo() {
+            videoPlayer.seek(to: CMTime(seconds: time, preferredTimescale: 600),
+                             toleranceBefore: .zero,
+                             toleranceAfter: .zero)
+            setNowPlaying()
+            return
+        }
         guard audioPlayer.supportsSeeking else { return }
         audioPlayer.seek(time: time)
         setNowPlaying()
@@ -297,12 +421,12 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
     @MainActor
     private func setNowPlayingOnMain() async {
         // Set remote command center command enable/disable
-        let playing = audioPlayer.isPlaying
+        let playing = isEnginePlaying()
         remoteCommandCenter.playCommand.isEnabled = canStartPlayback()
         remoteCommandCenter.pauseCommand.isEnabled = playing
         remoteCommandCenter.nextTrackCommand.isEnabled = canGoToNextTrack()
         remoteCommandCenter.previousTrackCommand.isEnabled = canGoToPreviousTrack()
-        remoteCommandCenter.changePlaybackPositionCommand.isEnabled = playing && audioPlayer.supportsSeeking
+        remoteCommandCenter.changePlaybackPositionCommand.isEnabled = playing && supportsSeeking()
         // Set now playing info
         let albumArt = albumArt()
         var nowPlayingInfo = [String: Any]()
@@ -313,7 +437,7 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         // inferred as @MainActor — otherwise Swift's isolation check crashes the process
         // (dispatch_assert_queue) when jpegDataWithSize: calls back off the main actor.
         nowPlayingInfo[MPMediaItemPropertyArtwork] = Self.makeArtwork(from: albumArt)
-        if let time = audioPlayer.time {
+        if let time = playbackTime() {
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time.currentTime
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = time.totalTime
         }
@@ -333,6 +457,17 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
             }
         }
         return UIImage(named: "Album.Generic") ?? UIImage()
+    }
+
+    // MARK: - Video playback events
+
+    @objc private func videoPlayerItemDidPlayToEnd(_ notification: Notification) {
+        guard let item = notification.object as? AVPlayerItem, item === videoPlayer.currentItem else { return }
+        debugPrint("AVPlayer finished playing video.")
+        nonisolated(unsafe) let managerRef = self
+        Task { @MainActor in
+            managerRef.handleRenderingComplete()
+        }
     }
 
     // MARK: - AudioPlayerDelegate
@@ -355,6 +490,8 @@ class MediaPlayerManager: NSObject, AudioPlayer.Delegate {
         nonisolated(unsafe) let managerRef = self
         let isNowPaused = playbackState != .playing
         Task { @MainActor in
+            // A stale .stopped state may arrive after playback has moved on to a video
+            guard !managerRef.isCurrentlyPlayingVideo() else { return }
             managerRef.isPaused = isNowPaused
             if playbackState == .playing {
                 managerRef.isPlaybackActive = true

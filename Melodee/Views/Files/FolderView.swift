@@ -103,7 +103,7 @@ struct FolderView: View {
                         ActionButton(text: "Shared.PlayAll", icon: "Play", isPrimary: true) {
                             mediaPlayer.stop()
                             for file in files {
-                                if let file = file as? FSFile, file.type == .audio {
+                                if let file = file as? FSFile, file.isPlayableMedia() {
                                     mediaPlayer.queueLast(file: file)
                                 }
                             }
@@ -113,7 +113,7 @@ struct FolderView: View {
                             mediaPlayer.stop()
                             var filesReordered: [FSFile] = []
                             for file in files {
-                                if let file = file as? FSFile, file.type == .audio {
+                                if let file = file as? FSFile, file.isPlayableMedia() {
                                     filesReordered.append(file)
                                 }
                             }
@@ -125,7 +125,7 @@ struct FolderView: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .disabled(!folderContainsPlayableAudio())
+                    .disabled(!folderContainsPlayableMedia())
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16))
                 .listRowBackground(Color.clear)
@@ -368,15 +368,7 @@ struct FolderView: View {
             if let directory = file as? FSDirectory {
                 FBDirectoryRow(directory: directory, storageLocation: storageLocation)
             } else if let file = file as? FSFile {
-                switch file.type {
-                case .audio: FBAudioFileRow(file: file, sortOption: state.sortOption)
-                case .image: FBImageFileRow(file: file)
-                case .text: FBTextFileRow(file: file)
-                case .pdf: FBPdfFileRow(file: file)
-                case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
-                case .playlist: FBPlaylistFileRow(file: file, scopeRootURL: scopeRootURL())
-                default: ListFileRow(file: .constant(file))
-                }
+                fileRow(for: file)
             }
         }
         .contextMenu {
@@ -389,6 +381,20 @@ struct FolderView: View {
             })
         }
         .listRowBackground(Color.clear)
+    }
+
+    @ViewBuilder
+    func fileRow(for file: FSFile) -> some View {
+        switch file.type {
+        case .audio: FBAudioFileRow(file: file, sortOption: state.sortOption)
+        case .video: FBVideoFileRow(file: file)
+        case .image: FBImageFileRow(file: file)
+        case .text: FBTextFileRow(file: file)
+        case .pdf: FBPdfFileRow(file: file)
+        case .zip: FBZipFileRow(file: file) { extractZIP(file: file) }
+        case .playlist: FBPlaylistFileRow(file: file, scopeRootURL: scopeRootURL())
+        default: ListFileRow(file: .constant(file))
+        }
     }
 
     func performSearch() {
@@ -507,8 +513,8 @@ struct FolderView: View {
         }
     }
 
-    func folderContainsPlayableAudio() -> Bool {
-        files.contains { ($0 as? FSFile)?.type == .audio }
+    func folderContainsPlayableMedia() -> Bool {
+        files.contains { ($0 as? FSFile)?.isPlayableMedia() ?? false }
     }
 
     func folderContainsTaggableFiles() -> Bool {

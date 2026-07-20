@@ -3,6 +3,7 @@ import SwiftUI
 
 enum FileType: String, Codable {
     case audio
+    case video
     case image
     case text
     case pdf
@@ -13,6 +14,7 @@ enum FileType: String, Codable {
     func icon() -> Image {
         switch self {
         case .audio: return Image(systemName: "music.note")
+        case .video: return Image(systemName: "film")
         case .image: return Image(systemName: "photo")
         case .pdf: return Image(systemName: "doc.richtext")
         case .text: return Image(systemName: "doc.text")
@@ -25,6 +27,7 @@ enum FileType: String, Codable {
     var iconColor: Color {
         switch self {
         case .audio: return .blue
+        case .video: return .purple
         case .image: return .orange
         case .pdf: return .red
         case .text: return .teal

@@ -124,6 +124,7 @@ class FilesystemManager {
     func fileType(for url: URL) -> FileType? {
         let fileExtension = url.pathExtension.lowercased()
         if FilesystemManager.audioExtensions.contains(fileExtension) { return .audio }
+        if FilesystemManager.videoExtensions.contains(fileExtension) { return .video }
         switch fileExtension {
         case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
         case "txt": return .text
@@ -137,6 +138,7 @@ class FilesystemManager {
 
     static func fileType(forExtension fileExtension: String) -> FileType {
         if audioExtensions.contains(fileExtension) { return .audio }
+        if videoExtensions.contains(fileExtension) { return .video }
         switch fileExtension {
         case "png", "jpg", "jpeg", "tif", "tiff", "heic": return .image
         case "txt": return .text
@@ -153,6 +155,11 @@ class FilesystemManager {
         "alac", "flac", "ogg", "oga", "opus", "spx",
         "ape", "wv", "mpc", "tta", "shn",
         "dsf", "dff"
+    ]
+
+    /// Video file extensions recognized by the file browser. AVPlayer decodes all of these.
+    static let videoExtensions: Set<String> = [
+        "mp4", "m4v", "mov", "3gp", "3g2"
     ]
 
     func createDirectory(at directoryPath: String) {

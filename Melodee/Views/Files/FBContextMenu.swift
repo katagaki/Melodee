@@ -14,7 +14,7 @@ struct FBContextMenu: View {
         if let file = file as? FSFile {
             // Context menu items for files
             // File type specific actions
-            if file.type == .audio {
+            if file.isPlayableMedia() {
                 Button {
                     mediaPlayer.playImmediately(file)
                 } label: {
@@ -130,7 +130,7 @@ struct FBContextMenu: View {
             let files = fileManager.files(in: url).filter({ $0 is FSFile })
             return files.contains(where: { file in
                 if let file = file as? FSFile {
-                    return file.type == .audio
+                    return file.isPlayableMedia()
                 }
                 return false
             })
@@ -147,7 +147,7 @@ struct FBContextMenu: View {
                     let filesInDirectory = fileManager.files(in: url)
                     if filesInDirectory.contains(where: { file in
                         if let file = file as? FSFile {
-                            return file.type == .audio
+                            return file.isPlayableMedia()
                         }
                         return false
                     }) {
@@ -168,7 +168,7 @@ struct FBContextMenu: View {
                 lhs.name < rhs.name
             }
             for content in contents {
-                if let file = content as? FSFile, file.type == .audio {
+                if let file = content as? FSFile, file.isPlayableMedia() {
                     mediaPlayer.queueLast(file: file)
                 }
             }

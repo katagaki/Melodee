@@ -17,15 +17,27 @@ struct NPControllerSection: View {
             VStack(alignment: .center, spacing: 16.0) {
                 ZStack {
                     Color.clear
-                    albumArt
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 16.0))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16.0)
-                                .stroke(.primary, lineWidth: 1/3)
-                                .opacity(0.3)
-                        )
+                    if mediaPlayer.isCurrentlyPlayingVideo() {
+                        NPVideoSurface()
+                            .aspectRatio(mediaPlayer.videoAspectRatio ?? 1.0, contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 16.0))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16.0)
+                                    .stroke(.primary, lineWidth: 1/3)
+                                    .opacity(0.3)
+                            )
+                            .animation(.default.speed(2), value: mediaPlayer.videoAspectRatio)
+                    } else {
+                        albumArt
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerRadius: 16.0))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16.0)
+                                    .stroke(.primary, lineWidth: 1/3)
+                                    .opacity(0.3)
+                            )
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1.0, contentMode: .fit)
@@ -156,7 +168,7 @@ struct NPControllerSection: View {
         }
         .onReceive(updateTimer, perform: { _ in
             if !isSeekbarSeeking {
-                if mediaPlayer.isPlaybackActive, let time = mediaPlayer.audioPlayer.time {
+                if mediaPlayer.isPlaybackActive, let time = mediaPlayer.playbackTime() {
                     currentDuration = time.currentTime
                     totalDuration = time.totalTime
                 } else {

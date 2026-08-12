@@ -32,10 +32,12 @@ struct MainView: View {
         .onOpenURL { url in
             // melodee://reonboard re-opens the onboarding sheet on demand.
             if url.scheme == "melodee", url.host == "reonboard" {
-                isOnboardingPresented = true
+                presentOnboarding()
             }
         }
-        .sheet(isPresented: $isOnboardingPresented) {
+        .sheet(isPresented: $isOnboardingPresented, onDismiss: {
+            NPQueueTip.isOnboardingActive = false
+        }) {
             OnboardingView {
                 lastOnboardedVersion = OnboardingView.appVersion
                 isOnboardingPresented = false
@@ -55,8 +57,14 @@ struct MainView: View {
             currentVersion: OnboardingView.appVersion,
             lastSeenVersion: lastOnboardedVersion
         ) {
-            isOnboardingPresented = true
+            presentOnboarding()
         }
+    }
+
+    func presentOnboarding() {
+        // Mark onboarding active before presenting so popover tips stay hidden.
+        NPQueueTip.isOnboardingActive = true
+        isOnboardingPresented = true
     }
 
     // MARK: - Source resolution

@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sbooth/CXXTagLib",
       "state" : {
-        "revision" : "a243fefb04d56eeade7669b4ec90dc2997089fbb",
-        "version" : "2.1.1"
+        "revision" : "9e499ea0a69d107791ac0a2fe9d6a59cf401c6f9",
+        "version" : "2.3.2"
       }
     },
     {

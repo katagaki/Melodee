@@ -6003,6 +6003,23 @@
         }
       }
     },
+    "TagEditor.InvalidNumber.Message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Track and disc numbers must be whole numbers."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "トラック番号とディスク番号には0以上の整数を入力してください。"
+          }
+        }
+      }
+    },
     "TagEditor.RemoveAlbumArt" : {
       "localizations" : {
         "en" : {
@@ -6079,6 +6096,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "儲存變更後，專輯封面將從曲目中移除。"
+          }
+        }
+      }
+    },
+    "TagEditor.SaveFailed.Message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some files could not be saved."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部のファイルを保存できませんでした。"
           }
         }
       }

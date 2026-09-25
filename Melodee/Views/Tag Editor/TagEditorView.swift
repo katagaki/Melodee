@@ -18,6 +18,7 @@ struct TagEditorView: View {
     @State var initialLoadPercentage: Int = 0
     @State var isConfirmingAlbumArtDeletion: Bool = false
     @State var isTokensPopoverPresented: Bool = false
+    @State var isShowingSaveError: Bool = false
     @FocusState var focusedField: FocusedField?
 
     var albumArtControlsPadding: CGFloat {
@@ -103,6 +104,11 @@ struct TagEditorView: View {
                 TETagDataSection(tagData: $tagData, focusedField: $focusedField,
                                placeholder: NSLocalizedString("BatchEdit.Keep", comment: ""))
             }
+            if !tagData.hasValidNumbers {
+                Text("TagEditor.InvalidNumber.Message")
+                    .font(.footnote)
+                    .foregroundStyle(.red)
+            }
         }
         .contentMargins(.top, 0.0, for: .scrollContent)
         .navigationTitle("ViewTitle.TagEditor")
@@ -118,10 +124,13 @@ struct TagEditorView: View {
                         Task {
                             changeSaveState(to: .saving)
                             UIApplication.shared.isIdleTimerDisabled = true
-                            await saveAllTagData()
-                            await readAllTagData()
+                            let didSave = await saveAllTagData()
+                            if didSave {
+                                await readAllTagData()
+                            }
                             UIApplication.shared.isIdleTimerDisabled = false
-                            changeSaveState(to: .saved)
+                            changeSaveState(to: didSave ? .saved : .notSaved)
+                            isShowingSaveError = !didSave
                         }
                     }
                 } label: {
@@ -143,7 +152,7 @@ struct TagEditorView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(saveState == .saved ? .green : .accentColor)
-                .disabled(!isInitialLoadCompleted)
+                .disabled(!isInitialLoadCompleted || !tagData.hasValidNumbers)
             }
             ToolbarSpacer(.flexible, placement: .bottomBar)
             ToolbarItem(placement: .bottomBar) {
@@ -185,6 +194,9 @@ struct TagEditorView: View {
             Button("Shared.Cancel", role: .cancel) { }
         } message: {
             Text("TagEditor.RemoveAlbumArt.Subtitle")
+        }
+        .alert("TagEditor.SaveFailed.Message", isPresented: $isShowingSaveError) {
+            Button("Shared.OK", role: .cancel) { }
         }
         .overlay {
             if !isInitialLoadCompleted {

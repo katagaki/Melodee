@@ -42,17 +42,18 @@ extension TagEditorView {
         }
     }
 
-    func saveAllTagData() async {
+    func saveAllTagData() async -> Bool {
         await MainActor.run {
             savePercentage = 0
         }
         let cachedAudioFiles = audioFiles
         let tagSnapshot = tagData
         let total = cachedAudioFiles.count
-        guard total > 0 else { return }
+        guard total == files.count, total > 0 else { return false }
 
         let maxConcurrentSaves = 4
         var savedCount = 0
+        var allSaved = true
         await withTaskGroup(of: Bool.self) { group in
             var iterator = cachedAudioFiles.makeIterator()
 
@@ -69,7 +70,8 @@ extension TagEditorView {
                 if !addNext() { break }
             }
 
-            while await group.next() != nil {
+            while let didSave = await group.next() {
+                allSaved = allSaved && didSave
                 savedCount += 1
                 let percentage = (savedCount * 100) / total
                 await MainActor.run {
@@ -78,6 +80,7 @@ extension TagEditorView {
                 _ = addNext()
             }
         }
+        return allSaved
     }
 
     func changeSaveState(to newState: SaveState) {

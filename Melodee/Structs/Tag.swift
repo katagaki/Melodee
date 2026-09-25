@@ -22,9 +22,7 @@ struct Tag {
         artist = tagCombined.artist
         album = tagCombined.album
         albumArtist = tagCombined.albumArtist
-        if let year = tagCombined.year {
-            self.year = String(year)
-        }
+        year = tagCombined.year
         if let track = tagCombined.track {
             self.track = String(track)
         }
@@ -33,5 +31,19 @@ struct Tag {
         if let discNumber = tagCombined.discNumber {
             self.discNumber = String(discNumber)
         }
+    }
+
+    var hasValidNumbers: Bool {
+        let trackIsValid = track.map {
+            $0.isEmpty || $0.uppercased() == "%TRACKNUMBER%" || Self.isWholeNumber($0)
+        } ?? true
+        let discIsValid = discNumber.map {
+            $0.isEmpty || Self.isWholeNumber($0)
+        } ?? true
+        return trackIsValid && discIsValid
+    }
+
+    static func isWholeNumber(_ value: String) -> Bool {
+        !value.isEmpty && value.allSatisfy { $0.isASCII && $0.isNumber } && Int(value) != nil
     }
 }

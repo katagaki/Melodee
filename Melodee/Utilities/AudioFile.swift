@@ -26,13 +26,6 @@ extension AudioFile {
     var trackNumber: Int? { metadata.trackNumber }
     var discNumber: Int? { metadata.discNumber }
 
-    /// Integer year parsed from the tag's release date string (best-effort: first 4 digits).
-    var year: Int? {
-        guard let releaseDate = metadata.releaseDate else { return nil }
-        let digits = releaseDate.prefix(4)
-        return Int(digits)
-    }
-
     /// Cover art as a UIImage, if any attached picture is present.
     var coverImage: UIImage? {
         guard let data = coverArtData else { return nil }
@@ -54,6 +47,11 @@ extension AudioFile {
     /// Writes the UI-layer `Tag` struct onto this file's metadata and saves to disk.
     func saveTagData(to file: FSFile, tagData: Tag) -> Bool {
         debugPrint("Attempting to save tag data...")
+        let trackValue = tagData.track.map { replaceTokens($0, file: file) }
+        guard tagData.hasValidNumbers,
+              trackValue.map({ $0.isEmpty || Tag.isWholeNumber($0) }) ?? true else {
+            return false
+        }
         do {
             if let value = tagData.title {
                 metadata.title = replaceTokens(value, file: file)
@@ -67,24 +65,20 @@ extension AudioFile {
             if let value = tagData.albumArtist {
                 metadata.albumArtist = replaceTokens(value, file: file)
             }
-            if let value = tagData.year, !value.isEmpty {
-                metadata.releaseDate = value
+            if let value = tagData.year {
+                metadata.releaseDate = value.isEmpty ? nil : value
             }
-            if let value = tagData.track, !value.isEmpty, let track = Int(value) {
-                metadata.trackNumber = track
+            if let trackValue {
+                metadata.trackNumber = trackValue.isEmpty ? nil : Int(trackValue)
             }
             if let value = tagData.genre {
-                metadata.genre = value
+                metadata.genre = value.isEmpty ? nil : value
             }
             if let value = tagData.composer {
                 metadata.composer = replaceTokens(value, file: file)
             }
             if let value = tagData.discNumber {
-                if value.isEmpty {
-                    metadata.discNumber = nil
-                } else if let disc = Int(value) {
-                    metadata.discNumber = disc
-                }
+                metadata.discNumber = value.isEmpty ? nil : Int(value)
             }
             if let data = tagData.albumArt {
                 metadata.removeAttachedPicturesOfType(.frontCover)
@@ -94,6 +88,12 @@ extension AudioFile {
                 metadata.removeAllAttachedPictures()
             }
             try writeMetadata()
+            if URL(fileURLWithPath: file.path).pathExtension.lowercased() == "mp3",
+               let date = metadata.releaseDate, !date.isEmpty,
+               !ID3DateWriter.writeDate(date, toMP3AtPath: file.path) {
+                debugPrint("Failed to write MP3 release date for \(file.name)")
+                return false
+            }
             return true
         } catch {
             debugPrint("Error occurred while saving tag: \(error.localizedDescription)")

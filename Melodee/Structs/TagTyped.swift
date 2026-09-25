@@ -5,8 +5,8 @@ import SFBAudioEngine
 struct TagTyped {
 
     var albumArt: Data?
-    var title, artist, album, albumArtist, genre, composer: String?
-    var year, track, discNumber: Int?
+    var title, artist, album, albumArtist, genre, composer, year: String?
+    var track, discNumber: Int?
 
     init() {
 
@@ -17,7 +17,7 @@ struct TagTyped {
         artist = audioFile.artist ?? ""
         album = audioFile.albumTitle ?? ""
         albumArtist = audioFile.albumArtist ?? ""
-        year = audioFile.year
+        year = audioFile.metadata.releaseDate
         track = audioFile.trackNumber
         genre = audioFile.genre ?? ""
         composer = audioFile.composer ?? ""
@@ -44,9 +44,7 @@ struct TagTyped {
         if albumArtist != audioFile.albumArtist ?? "" {
             albumArtist = nil
         }
-        if let yearFromTag = audioFile.year, year != yearFromTag {
-            year = nil
-        } else if audioFile.year == nil && year != nil {
+        if year != audioFile.metadata.releaseDate {
             year = nil
         }
         if let trackValue = audioFile.trackNumber, track != trackValue {
